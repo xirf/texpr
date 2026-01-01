@@ -363,3 +363,42 @@ class BinomExpr extends Expression {
   @override
   int get hashCode => n.hashCode ^ k.hashCode;
 }
+
+/// Gradient expression: \nabla f.
+///
+/// Represents the gradient operator applied to a scalar function.
+/// The gradient produces a vector of partial derivatives with respect
+/// to all variables in the expression.
+///
+/// Example: \nabla (x^2 + y^2) = [2x, 2y]
+class GradientExpr extends Expression {
+  /// The scalar function to compute the gradient of.
+  final Expression body;
+
+  /// Optional list of variables to compute gradient with respect to.
+  /// If null, variables are auto-discovered from the expression.
+  final List<String>? variables;
+
+  const GradientExpr(this.body, {this.variables});
+
+  @override
+  String toString() => 'GradientExpr(∇$body)';
+
+  @override
+  String toLatex() => '\\nabla ${body.toLatex()}';
+
+  @override
+  R accept<R, C>(ExpressionVisitor<R, C> visitor, C? context) {
+    return visitor.visitGradientExpr(this, context);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GradientExpr &&
+          runtimeType == other.runtimeType &&
+          body == other.body;
+
+  @override
+  int get hashCode => body.hashCode;
+}

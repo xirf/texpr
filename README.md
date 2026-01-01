@@ -1,6 +1,6 @@
 # TeXpr 🧮
 
-[![Tests](https://img.shields.io/badge/tests-1197%20passed-brightgreen)](https://github.com/xirf/texpr)
+[![Tests](https://img.shields.io/badge/tests-1874%20passed-brightgreen)](https://github.com/xirf/texpr)
 [![Dart](https://img.shields.io/badge/dart-%3E%3D3.0.0-blue)](https://github.com/xirf/texpr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Pub Version](https://img.shields.io/pub/v/texpr)](https://pub.dev/packages/texpr)
@@ -10,7 +10,7 @@ TeXpr is a Dart library that parses and evaluates mathematical expressions using
 ## ✨ Capabilities
 
 * 🎯 **LaTeX Parsing** – Parses standard LaTeX mathematical notation directly into Dart objects.
-* 🧮 **Symbolic Calculus** – Computes derivatives and simplifies expressions using algebraic rules.
+* 🧮 **Symbolic Calculus** – Computes derivatives and gradients (`\nabla`) using algebraic rules.
 * 🔢 **Advanced Mathematics** – Supports summations, products, limits, integrals, and special functions.
 * 📈 **Linear Algebra** – Supports matrix and vector operations, including determinants, inverses, and arithmetic.
 * 🔢 **Type Safety** – Returns results as `Numeric`, `Complex`, `Matrix`, or `Vector` via Dart 3 sealed classes.
@@ -55,7 +55,7 @@ print(hypotenuse); // 5.0
 
 ### 1. Symbolic Calculus & Differentiation
 
-The library supports exact symbolic differentiation rather than finite difference approximations.
+The library supports exact symbolic differentiation and gradient computation rather than finite difference approximations.
 
 ```dart
 // Differentiate with respect to x
@@ -64,10 +64,14 @@ final derivative = evaluator.differentiate(r'x^3 + \sin{x}', 'x');
 // Evaluate the derivative at x = 0
 print(evaluator.evaluateParsed(derivative, {'x': 0})); // 1.0
 
+// Compute Gradient (\nabla)
+// Auto-discovers variables in the expression
+final grad = evaluator.evaluate(r'\nabla{x^2 + y^2}', {'x': 1, 'y': 2});
+print(grad.asVector()); // [2.0, 4.0]
+
 // Differentiate piecewise functions
 final piecewise = evaluator.differentiate(r'|\sin{x}|, -3 < x < 3', 'x');
 print(evaluator.evaluateParsed(piecewise, {'x': 1})); // cos(1)
-
 ```
 
 ### 2. Complex Numbers & Matrices

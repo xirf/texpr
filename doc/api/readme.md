@@ -22,7 +22,7 @@ Welcome to the API reference for the `texpr` package. This documentation covers 
 ## AST (Abstract Syntax Tree)
 
 *   [Expression](ast.md): The base class for all parsed expression nodes.
-    *   Supports: Basic operations, Functions, Matrices, Vectors, Limits, Integrals (`\int`, `\oint`, `\iint`), Derivatives, Partial Derivatives.
+    *   Supports: Basic operations, Functions, Matrices, Vectors, Limits, Integrals (`\int`, `\oint`, `\iint`), Derivatives, Partial Derivatives, Gradient (`\nabla`).
     *   Logic: Comparisons, Piecewise functions (`\begin{cases}`).
 
 ## Exceptions

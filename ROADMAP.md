@@ -43,7 +43,7 @@
 - Einstein Field Equations
 - Normal distribution PDF
 
-**Test Coverage:** 1,864 tests passing
+**Test Coverage:** 1,874 tests passing
 
 ---
 
@@ -53,12 +53,12 @@ The following are known limitations discovered through testing:
 
 ### 1. Evaluation Limitations (Not Parsing)
 
-| Expression                        | Can Parse | Can Evaluate | Notes                                    |
-| --------------------------------- | --------- | ------------ | ---------------------------------------- |
-| `\nabla f`                        | ✅         | ❌            | Gradient requires vector calculus engine |
-| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only |
-| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable           |
-| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint   |
+| Expression                        | Can Parse | Can Evaluate | Notes                                     |
+| --------------------------------- | --------- | ------------ | ----------------------------------------- |
+| `\nabla f`                        | ✅         | ✅            | Gradient returns vector of partial derivs |
+| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only  |
+| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable            |
+| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint    |
 
 ### 2. Previously Missing LaTeX Commands ✅ Fixed
 
@@ -102,7 +102,7 @@ The following syntax variations are now automatically handled:
 | Add `\subset`, `\subseteq`, `\supset`              | ✅      | Set notation                   |
 | Add `\cup`, `\cap`, `\setminus`                    | ✅      | Set operations                 |
 | Add `\propto`, `\mapsto`                           | ✅      | Relation symbols               |
-| Test with 50+ real academic paper excerpts         | 📋      | Validate "just works" claim    |
+| Test with 50+ real academic paper excerpts         | ✅      | Validate "just works" claim    |
 
 ### Phase 2: Common Use Case Evaluation
 

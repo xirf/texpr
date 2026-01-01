@@ -12,6 +12,9 @@ This document provides a reference of all LaTeX commands supported by the `texpr
 | **Greek**      | `\alpha`–`\omega`, `\Alpha`–`\Psi`, `\varepsilon`, `\varphi`                      |
 | **Matrices**   | `\begin{matrix}`, `\begin{pmatrix}`, `\begin{bmatrix}`                            |
 | **Special**    | `\binom`, `\infty`, `\pi`, `\text{}`, `\mathbf{}`                                 |
+| **Logic**      | `\forall`, `\exists`, `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow`              |
+| **Sets**       | `\subset`, `\subseteq`, `\cup`, `\cap`, `\setminus`                               |
+| **Decoration** | `\dot`, `\ddot`, `\bar`, `\overline`                                              |
 
 ---
 
@@ -126,6 +129,17 @@ For more details, see [Miscellaneous Functions](functions/misc.md).
 | `\factorial{n}` or `n!` | Factorial               | `\factorial{5}` to `120` |
 | `\fibonacci{n}`         | Fibonacci number        | `\fibonacci{10}` to `55` |
 
+### Decoration Functions (Pass-through)
+
+These functions wrap an expression but return the evaluated value of the argument during numerical computation.
+
+| LaTeX          | Description       | Example               |
+| -------------- | ----------------- | --------------------- |
+| `\dot{x}`      | Time derivative   | `\dot{5}` to `5`      |
+| `\ddot{x}`     | Second derivative | `\ddot{5}` to `5`     |
+| `\bar{x}`      | Bar / Mean        | `\bar{5}` to `5`      |
+| `\overline{x}` | Overline          | `\overline{5}` to `5` |
+
 ### Complex Number Functions
 
 For more details, see [Complex Numbers](functions/complex.md).
@@ -204,9 +218,13 @@ Example: `\binom{10}{3}` to `120`
 | LaTeX                  | Description                   |
 | ---------------------- | ----------------------------- |
 | `\partial`             | Partial derivative symbol (∂) |
-| `\nabla`               | Gradient/Del operator (∇)     |
+| `\nabla`               | Gradient operator (∇)         |
 | `\infty`               | Infinity (∞)                  |
 | `\to` or `\rightarrow` | Arrow (to)                    |
+| `\mapsto`              | Maps to (↦)                   |
+| `\Rightarrow`          | Double right arrow (⇒)        |
+| `\Leftarrow`           | Double left arrow (⇐)         |
+| `\Leftrightarrow`      | Double left-right arrow (⇔)   |
 
 ---
 
@@ -311,14 +329,31 @@ For more details, see [Matrices](notation/matrices.md) and [Vectors](notation/ve
 
 ## Comparison Operators
 
-| LaTeX  | Symbol | Description           |
-| ------ | ------ | --------------------- |
-| `=`    | =      | Equal                 |
-| `\neq` | ≠      | Not equal             |
-| `<`    | <      | Less than             |
-| `>`    | >      | Greater than          |
-| `\leq` | ≤      | Less than or equal    |
-| `\geq` | ≥      | Greater than or equal |
+| LaTeX     | Symbol | Description           |
+| --------- | ------ | --------------------- |
+| `=`       | =      | Equal                 |
+| `\neq`    | ≠      | Not equal             |
+| `<`       | <      | Less than             |
+| `>`       | >      | Greater than          |
+| `\leq`    | ≤      | Less than or equal    |
+| `\geq`    | ≥      | Greater than or equal |
+| `\approx` | ≈      | Approximately equal   |
+| `\propto` | ∝      | Proportional to       |
+
+### Set Notation & Logic
+
+| LaTeX       | Symbol | Description       |
+| ----------- | ------ | ----------------- |
+| `\in`       | ∈      | Element of        |
+| `\subset`   | ⊂      | Proper subset     |
+| `\subseteq` | ⊆      | Subset or equal   |
+| `\supset`   | ⊃      | Proper superset   |
+| `\supseteq` | ⊇      | Superset or equal |
+| `\cup`      | ∪      | Union             |
+| `\cap`      | ∩      | Intersection      |
+| `\setminus` | \      | Set difference    |
+| `\forall`   | ∀      | For all           |
+| `\exists`   | ∃      | There exists      |
 
 ---
 

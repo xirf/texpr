@@ -4,7 +4,6 @@ import '../exceptions.dart';
 import 'base_parser.dart';
 
 const _partial = 'partial';
-const _nabla = 'nabla';
 const _d = 'd';
 
 mixin PrimaryParserMixin on BaseParser {
@@ -165,7 +164,38 @@ mixin PrimaryParserMixin on BaseParser {
 
     if (match1(TokenType.nabla)) {
       registerNode();
-      return Variable(_nabla);
+
+      // Check for nabla^2 (Laplacian operator) - treat as special symbol for now
+      // since Laplacian is not the same as gradient squared
+      if (check(TokenType.power)) {
+        advance(); // consume ^
+        // Parse the exponent - handle both braced {2} and bare 2
+        if (check(TokenType.lparen) && current.value == '{') {
+          parseLatexArgumentExpr(); // consume braced exponent
+        } else {
+          parsePrimary(); // consume bare exponent like 2
+        }
+        // Laplacian: nabla^2 - for now treat as variable for backwards compatibility
+        // When followed by an expression, it becomes nabla^2 f
+        // Return as Variable so implicit multiplication handles the rest
+        return Variable('laplacian');
+      }
+
+      // Parse the following expression as the body of the gradient
+      // Handle braced arguments: \nabla{f} or \nabla(f)
+      Expression body;
+      if (check(TokenType.lparen) && current.value == '{') {
+        body = parseLatexArgumentExpr();
+      } else {
+        // Parse a primary expression (handles \nabla f, \nabla x^2, etc.)
+        body = parsePrimary();
+        // Handle powers: \nabla f^2 means \nabla(f^2), not (\nabla f)^2
+        if (match1(TokenType.power)) {
+          final exponent = parseLatexArgumentExpr();
+          body = BinaryOp(body, BinaryOperator.power, exponent);
+        }
+      }
+      return GradientExpr(body);
     }
 
     if (match1(TokenType.text)) {
