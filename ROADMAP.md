@@ -43,7 +43,7 @@
 - Einstein Field Equations
 - Normal distribution PDF
 
-**Test Coverage:** 1,725 tests passing
+**Test Coverage:** 1,864 tests passing
 
 ---
 
@@ -60,19 +60,21 @@ The following are known limitations discovered through testing:
 | Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable           |
 | Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint   |
 
-### 2. Missing LaTeX Commands (Will Fail to Parse)
+### 2. Previously Missing LaTeX Commands ✅ Fixed
 
-| Command                | Description            | Priority |
-| ---------------------- | ---------------------- | -------- |
-| `\mapsto` (↦)          | Maps to arrow          | Low      |
-| `\Rightarrow` (⇒)      | Double arrow           | Low      |
-| `\approx` (≈)          | Approximately equal    | Medium   |
-| `\propto` (∝)          | Proportional to        | Low      |
-| `\subset`, `\subseteq` | Subset notation        | Low      |
-| `\cup`, `\cap`         | Set union/intersection | Low      |
-| `\forall`, `\exists`   | Quantifiers            | Low      |
-| `\dot{x}`, `\ddot{x}`  | Time derivatives       | Medium   |
-| `\bar{x}`              | Mean notation          | Medium   |
+All commands below now parse successfully:
+
+| Command                | Description            | Status |
+| ---------------------- | ---------------------- | ------ |
+| `\mapsto` (↦)          | Maps to arrow          | ✅      |
+| `\Rightarrow` (⇒)      | Double arrow           | ✅      |
+| `\approx` (≈)          | Approximately equal    | ✅      |
+| `\propto` (∝)          | Proportional to        | ✅      |
+| `\subset`, `\subseteq` | Subset notation        | ✅      |
+| `\cup`, `\cap`         | Set union/intersection | ✅      |
+| `\forall`, `\exists`   | Quantifiers            | ✅      |
+| `\dot{x}`, `\ddot{x}`  | Time derivatives       | ✅      |
+| `\bar{x}`              | Mean notation          | ✅      |
 
 ### 3. Syntax Variations ✅ Fixed
 
@@ -94,12 +96,12 @@ The following syntax variations are now automatically handled:
 
 | Task                                               | Status | Description                    |
 | -------------------------------------------------- | ------ | ------------------------------ |
-| Add `\approx`, `\bar`, `\dot`, `\ddot`             | 📋      | Common in physics papers       |
-| Add `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow` | 📋      | Logic notation                 |
-| Add `\forall`, `\exists`                           | 📋      | Quantifiers (parse as symbols) |
-| Add `\subset`, `\subseteq`, `\supset`              | 📋      | Set notation                   |
-| Add `\cup`, `\cap`, `\setminus`                    | 📋      | Set operations                 |
-| Add `\propto`, `\mapsto`                           | 📋      | Relation symbols               |
+| Add `\approx`, `\bar`, `\dot`, `\ddot`             | ✅      | Common in physics papers       |
+| Add `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow` | ✅      | Logic notation                 |
+| Add `\forall`, `\exists`                           | ✅      | Quantifiers (parse as symbols) |
+| Add `\subset`, `\subseteq`, `\supset`              | ✅      | Set notation                   |
+| Add `\cup`, `\cap`, `\setminus`                    | ✅      | Set operations                 |
+| Add `\propto`, `\mapsto`                           | ✅      | Relation symbols               |
 | Test with 50+ real academic paper excerpts         | 📋      | Validate "just works" claim    |
 
 ### Phase 2: Common Use Case Evaluation
@@ -109,7 +111,7 @@ The following syntax variations are now automatically handled:
 | Task                                          | Status | Description                             |
 | --------------------------------------------- | ------ | --------------------------------------- |
 | Unicode input support                         | 📋      | Accept `√`, `∑`, `∫`, `π` directly      |
-| Improved implicit multiplication heuristics   | 📋      | `e^ix` → `e^{i*x}`                      |
+| Improved implicit multiplication heuristics   | 📋      | `e^ix` to `e^{i*x}`                     |
 | Better error messages for evaluation failures | 📋      | "Cannot evaluate gradient symbolically" |
 
 ### Phase 3: Developer Experience
