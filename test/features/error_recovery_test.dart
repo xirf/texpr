@@ -123,8 +123,15 @@ void main() {
       expect(result.suggestion, isNotNull);
     });
 
-    test('frac without braces gets suggestion', () {
+    test('frac with braceless single digits parses successfully', () {
+      // \frac12 now works - braceless fractions with exactly 2 digits are supported
       final result = evaluator.validate(r'\frac12');
+      expect(result.isValid, isTrue);
+    });
+
+    test('frac with ambiguous 3+ digits still fails', () {
+      // \frac123 is ambiguous and should fail
+      final result = evaluator.validate(r'\frac123');
       expect(result.isValid, isFalse);
       expect(result.suggestion, isNotNull);
     });
@@ -279,10 +286,10 @@ void main() {
   });
 
   group('Common Mistake Detection', () {
-    test('frac without braces detected', () {
+    test('frac with braceless single digits now valid', () {
+      // \frac12 is now valid with braceless fraction support
       final result = evaluator.validate(r'\frac12');
-      expect(result.isValid, isFalse);
-      expect(result.suggestion, isNotNull);
+      expect(result.isValid, isTrue);
     });
 
     test('unmatched parenthesis detected', () {

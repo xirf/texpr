@@ -132,8 +132,9 @@ for (var x = 0.0; x < 100; x += 0.01) {
 
 #### Benchmark Context
 
-> [!IMPORTANT] Comparison Limitations
-> This performance comparison compares different tools with different purposes:
+> [!IMPORTANT] 
+> **Comparison Limitations**: This performance reference compares different tools with different purposes:
+> 
 > - **Dart**: Numeric evaluation of LaTeX syntax
 > - **Python**: Symbolic computation with SymPy (capable of algebra, not just evaluation)
 > - **JavaScript**: General-purpose math with mathjs (supports units, matrices, complex types)

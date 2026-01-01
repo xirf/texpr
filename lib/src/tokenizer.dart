@@ -9,6 +9,28 @@ import 'token.dart';
 import 'tokenizer/command_registry.dart';
 import 'tokenizer/command_normalizer.dart';
 
+/// Functions that can be written without backslash (e.g., sin, cos, tan).
+/// When followed by `(`, these are recognized as function calls.
+const _knownFunctions = <String>{
+  'sin',
+  'cos',
+  'tan',
+  'cot',
+  'sec',
+  'csc',
+  'arcsin',
+  'arccos',
+  'arctan',
+  'sinh',
+  'cosh',
+  'tanh',
+  'ln',
+  'log',
+  'exp',
+  'sqrt',
+  'abs',
+};
+
 /// Converts a LaTeX math string into a stream of tokens.
 class Tokenizer {
   final String _source;
@@ -142,6 +164,11 @@ class Tokenizer {
       default:
         if (_isLetter(char)) {
           if (_allowImplicitMultiplication) {
+            // Look ahead to check if this starts a known function name like sin(x)
+            final funcMatch = _tryMatchUnprefixedFunction(startPos);
+            if (funcMatch != null) {
+              return funcMatch;
+            }
             return Token(
                 type: TokenType.variable, value: char, position: startPos);
           } else {
@@ -151,10 +178,16 @@ class Tokenizer {
               buffer.write(_current);
               _position++;
             }
+            final word = buffer.toString();
+            // Check if this is a known function name without backslash
+            if (_knownFunctions.contains(word.toLowerCase())) {
+              return Token(
+                  type: TokenType.function,
+                  value: word.toLowerCase(),
+                  position: startPos);
+            }
             return Token(
-                type: TokenType.variable,
-                value: buffer.toString(),
-                position: startPos);
+                type: TokenType.variable, value: word, position: startPos);
           }
         }
         throw TokenizerException(
@@ -271,5 +304,47 @@ class Tokenizer {
       expression: _source,
       suggestion: 'Check if this is a valid LaTeX command or function name',
     );
+  }
+
+  /// Tries to match a known function name without backslash (e.g., sin, cos).
+  ///
+  /// Only matches when the function name is followed by `(` to avoid
+  /// misinterpreting variable names like `simple` or `sink`.
+  /// Returns a function token if matched, null otherwise.
+  Token? _tryMatchUnprefixedFunction(int startPos) {
+    // We've already consumed the first letter, so _position is at startPos+1
+    // and we already advanced past it. We need to look from startPos.
+
+    // Reset to startPos to read the full potential function name
+    final savedPos = _position;
+    _position = startPos;
+
+    // Read letters starting from startPos
+    final buffer = StringBuffer();
+    while (!_isAtEnd && _isLetter(_current)) {
+      buffer.write(_current);
+      _position++;
+    }
+
+    final word = buffer.toString().toLowerCase();
+
+    // Skip whitespace after the word
+    while (!_isAtEnd && _isWhitespace(_current)) {
+      _position++;
+    }
+
+    // Check if it's a known function followed by '('
+    if (_knownFunctions.contains(word) && !_isAtEnd && _current == '(') {
+      // It's a function call like sin(x)
+      return Token(
+        type: TokenType.function,
+        value: word,
+        position: startPos,
+      );
+    }
+
+    // Not a function call, restore position (only consumed first char)
+    _position = savedPos;
+    return null;
   }
 }

@@ -53,3 +53,6 @@ package-lock.json
 benchmark/wasm/
 !benchmark/wasm/wasm_benchmark.dart
 !benchmark/wasm/README.md
+
+# Integration test artifacts
+/test/integration/**/*.json

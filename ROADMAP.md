@@ -74,15 +74,15 @@ The following are known limitations discovered through testing:
 | `\dot{x}`, `\ddot{x}`  | Time derivatives       | Medium   |
 | `\bar{x}`              | Mean notation          | Medium   |
 
-### 3. Syntax Variations
+### 3. Syntax Variations ✅ Fixed
 
-Some valid LaTeX may require minor adjustments:
+The following syntax variations are now automatically handled:
 
-| Academic LaTeX          | Library Equivalent | Issue                            |
-| ----------------------- | ------------------ | -------------------------------- |
-| `\frac12` (braceless)   | `\frac{1}{2}`      | Parser suggests fix              |
-| `sin(x)` (no backslash) | `\sin{x}`          | Parser suggests fix              |
-| `e^{ix}`                | `e^{i*x}`          | May need explicit multiplication |
+| Academic LaTeX          | Library Support | Notes                                                                             |
+| ----------------------- | --------------- | --------------------------------------------------------------------------------- |
+| `\frac12` (braceless)   | ✅ Works         | Parses as `\frac{1}{2}`. Ambiguous cases like `\frac123` error with clear message |
+| `sin(x)` (no backslash) | ✅ Works         | Recognized when followed by `(`. Without `(`, remains as implicit mult            |
+| `e^{ix}`                | ✅ Works         | Implicit multiplication inside exponents is handled                               |
 
 ---
 
@@ -148,7 +148,7 @@ The following are explicitly **not** goals for this library:
 
 | Task                    | Status | Description                                      |
 | ----------------------- | ------ | ------------------------------------------------ |
-| Standardized Benchmark  | ✅      | Cross-language benchmark (Dart/JS/Python)        |
+| Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)       |
 | AOT Compilation Profile | 📋      | Verify performance in release builds             |
 | WebAssembly (Wasm)      | 📋      | Investigate compiling to Wasm for web apps       |
 | Parallel Evaluation     | 📋      | Evaluate independent sub-expressions in isolates |
