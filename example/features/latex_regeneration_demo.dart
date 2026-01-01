@@ -13,7 +13,7 @@ void main() {
   print('=== LaTeX Regeneration Demo ===\n');
 
   // Example 1: Round-trip parsing
-  print('1. Round-Trip: LaTeX → AST → LaTeX');
+  print('1. Round-Trip: LaTeX to AST to LaTeX');
   print("=" * 50);
 
   final expressions = [

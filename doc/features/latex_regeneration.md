@@ -184,7 +184,7 @@ assert(ast1 == ast2); // ASTs are equivalent for supported constructs
 Build expressions programmatically and export to LaTeX for display:
 
 ```dart
-// Simplify: (x+1)^2 → x^2 + 2x + 1
+// Simplify: (x+1)^2 to x^2 + 2x + 1
 // (simplified AST construction)
 final result = /* construct simplified form */;
 print(result.toLatex());

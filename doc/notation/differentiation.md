@@ -245,15 +245,15 @@ print(evaluator.evaluateParsed(secondDeriv, {'x': 2}).asNumeric());
 
 The differentiation engine performs basic algebraic simplifications:
 
-- `0 + x` → `x`
-- `x + 0` → `x`
-- `0 · x` → `0`
-- `1 · x` → `x`
-- `x · 1` → `x`
-- `x / 1` → `x`
-- `x ^ 0` → `1`
-- `x ^ 1` → `x`
-- `-(-x)` → `x`
+- `0 + x` to `x`
+- `x + 0` to `x`
+- `0 · x` to `0`
+- `1 · x` to `x`
+- `x · 1` to `x`
+- `x / 1` to `x`
+- `x ^ 0` to `1`
+- `x ^ 1` to `x`
+- `-(-x)` to `x`
 
 This makes the derivative results more readable.
 

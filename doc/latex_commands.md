@@ -19,20 +19,20 @@ This document provides a reference of all LaTeX commands supported by the `texpr
 
 | LaTeX           | Description                  | Example                 |
 | --------------- | ---------------------------- | ----------------------- |
-| `+`             | Addition                     | `3 + 4` → `7`           |
-| `-`             | Subtraction                  | `5 - 2` → `3`           |
-| `*` or `\times` | Multiplication               | `3 \times 4` → `12`     |
-| `/` or `\div`   | Division                     | `8 \div 2` → `4`        |
-| `^`             | Exponentiation               | `2^{10}` → `1024`       |
+| `+`             | Addition                     | `3 + 4` to `7`          |
+| `-`             | Subtraction                  | `5 - 2` to `3`          |
+| `*` or `\times` | Multiplication               | `3 \times 4` to `12`    |
+| `/` or `\div`   | Division                     | `8 \div 2` to `4`       |
+| `^`             | Exponentiation               | `2^{10}` to `1024`      |
 | `\cdot`         | Dot product / Multiplication | `\vec{a} \cdot \vec{b}` |
 
 **Implicit Multiplication:** The parser supports implicit multiplication:
 
 ```latex
-2x         → 2 * x
-xy         → x * y
-2\pi r     → 2 * π * r
-\sin x \cos x → sin(x) * cos(x)
+2x         to 2 * x
+xy         to x * y
+2\pi r     to 2 * π * r
+\sin x \cos x to sin(x) * cos(x)
 ```
 
 ---
@@ -89,52 +89,52 @@ For more details, see [Trigonometry Documentation](functions/trigonometry.md).
 
 For more details, see [Logarithms Documentation](functions/logarithms.md).
 
-| LaTeX         | Description       | Example             |
-| ------------- | ----------------- | ------------------- |
-| `\ln{x}`      | Natural logarithm | `\ln{e}` → `1`      |
-| `\log{x}`     | Logarithm base 10 | `\log{100}` → `2`   |
-| `\log_{b}{x}` | Logarithm base b  | `\log_{2}{8}` → `3` |
-| `\exp{x}`     | Exponential (e^x) | `\exp{1}` → `e`     |
+| LaTeX         | Description       | Example              |
+| ------------- | ----------------- | -------------------- |
+| `\ln{x}`      | Natural logarithm | `\ln{e}` to `1`      |
+| `\log{x}`     | Logarithm base 10 | `\log{100}` to `2`   |
+| `\log_{b}{x}` | Logarithm base b  | `\log_{2}{8}` to `3` |
+| `\exp{x}`     | Exponential (e^x) | `\exp{1}` to `e`     |
 
 ### Power & Root Functions
 
-| LaTeX         | Description | Example              |
-| ------------- | ----------- | -------------------- |
-| `\sqrt{x}`    | Square root | `\sqrt{16}` → `4`    |
-| `\sqrt[n]{x}` | n-th root   | `\sqrt[3]{27}` → `3` |
+| LaTeX         | Description | Example               |
+| ------------- | ----------- | --------------------- |
+| `\sqrt{x}`    | Square root | `\sqrt{16}` to `4`    |
+| `\sqrt[n]{x}` | n-th root   | `\sqrt[3]{27}` to `3` |
 
 ### Rounding Functions
 
-| LaTeX       | Description        | Example             |
-| ----------- | ------------------ | ------------------- |
-| `\floor{x}` | Floor (round down) | `\floor{3.7}` → `3` |
-| `\ceil{x}`  | Ceiling (round up) | `\ceil{3.2}` → `4`  |
-| `\round{x}` | Round to nearest   | `\round{3.5}` → `4` |
+| LaTeX       | Description        | Example              |
+| ----------- | ------------------ | -------------------- |
+| `\floor{x}` | Floor (round down) | `\floor{3.7}` to `3` |
+| `\ceil{x}`  | Ceiling (round up) | `\ceil{3.2}` to `4`  |
+| `\round{x}` | Round to nearest   | `\round{3.5}` to `4` |
 
 ### Other Functions
 
 For more details, see [Miscellaneous Functions](functions/misc.md).
 
-| LaTeX                   | Description             | Example                 |
-| ----------------------- | ----------------------- | ----------------------- |
-| `\abs{x}` or `\|x\|`    | Absolute value          | `\abs{-5}` → `5`        |
-| `\sgn{x}` or `\sign{x}` | Sign function           | `\sgn{-3}` → `-1`       |
-| `\min{a, b}`            | Minimum                 | `\min{3, 5}` → `3`      |
-| `\max{a, b}`            | Maximum                 | `\max{3, 5}` → `5`      |
-| `\gcd{a, b}`            | Greatest common divisor | `\gcd{12, 8}` → `4`     |
-| `\lcm{a, b}`            | Least common multiple   | `\lcm{4, 6}` → `12`     |
-| `\factorial{n}` or `n!` | Factorial               | `\factorial{5}` → `120` |
-| `\fibonacci{n}`         | Fibonacci number        | `\fibonacci{10}` → `55` |
+| LaTeX                   | Description             | Example                  |
+| ----------------------- | ----------------------- | ------------------------ |
+| `\abs{x}` or `\|x\|`    | Absolute value          | `\abs{-5}` to `5`        |
+| `\sgn{x}` or `\sign{x}` | Sign function           | `\sgn{-3}` to `-1`       |
+| `\min{a, b}`            | Minimum                 | `\min{3, 5}` to `3`      |
+| `\max{a, b}`            | Maximum                 | `\max{3, 5}` to `5`      |
+| `\gcd{a, b}`            | Greatest common divisor | `\gcd{12, 8}` to `4`     |
+| `\lcm{a, b}`            | Least common multiple   | `\lcm{4, 6}` to `12`     |
+| `\factorial{n}` or `n!` | Factorial               | `\factorial{5}` to `120` |
+| `\fibonacci{n}`         | Fibonacci number        | `\fibonacci{10}` to `55` |
 
 ### Complex Number Functions
 
 For more details, see [Complex Numbers](functions/complex.md).
 
-| LaTeX                             | Description       | Example                         |
-| --------------------------------- | ----------------- | ------------------------------- |
-| `\Re{z}`                          | Real part         | `\Re{3 + 4i}` → `3`             |
-| `\Im{z}`                          | Imaginary part    | `\Im{3 + 4i}` → `4`             |
-| `\conjugate{z}` or `\overline{z}` | Complex conjugate | `\conjugate{3 + 4i}` → `3 - 4i` |
+| LaTeX                             | Description       | Example                          |
+| --------------------------------- | ----------------- | -------------------------------- |
+| `\Re{z}`                          | Real part         | `\Re{3 + 4i}` to `3`             |
+| `\Im{z}`                          | Imaginary part    | `\Im{3 + 4i}` to `4`             |
+| `\conjugate{z}` or `\overline{z}` | Complex conjugate | `\conjugate{3 + 4i}` to `3 - 4i` |
 
 ---
 
@@ -178,10 +178,10 @@ Example:
 
 ### Summation & Products
 
-| LaTeX                | Description | Example                      |
-| -------------------- | ----------- | ---------------------------- |
-| `\sum_{i=a}^{b}{f}`  | Summation   | `\sum_{i=1}^{10}{i}` → `55`  |
-| `\prod_{i=a}^{b}{f}` | Product     | `\prod_{i=1}^{5}{i}` → `120` |
+| LaTeX                | Description | Example                       |
+| -------------------- | ----------- | ----------------------------- |
+| `\sum_{i=a}^{b}{f}`  | Summation   | `\sum_{i=1}^{10}{i}` to `55`  |
+| `\prod_{i=a}^{b}{f}` | Product     | `\prod_{i=1}^{5}{i}` to `120` |
 
 ### Limits
 
@@ -189,7 +189,7 @@ Example:
 \lim_{x \to a} f(x)
 ```
 
-Example: `\lim_{x \to 0} \frac{\sin{x}}{x}` → `1`
+Example: `\lim_{x \to 0} \frac{\sin{x}}{x}` to `1`
 
 ### Binomial Coefficient
 
@@ -197,7 +197,7 @@ Example: `\lim_{x \to 0} \frac{\sin{x}}{x}` → `1`
 \binom{n}{k}
 ```
 
-Example: `\binom{10}{3}` → `120`
+Example: `\binom{10}{3}` to `120`
 
 ### Special Symbols
 
@@ -206,7 +206,7 @@ Example: `\binom{10}{3}` → `120`
 | `\partial`             | Partial derivative symbol (∂) |
 | `\nabla`               | Gradient/Del operator (∇)     |
 | `\infty`               | Infinity (∞)                  |
-| `\to` or `\rightarrow` | Arrow (→)                     |
+| `\to` or `\rightarrow` | Arrow (to)                    |
 
 ---
 

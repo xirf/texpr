@@ -91,9 +91,9 @@ import 'src/cache/cache_statistics.dart';
 /// A convenience class that combines tokenizing, parsing, and evaluation.
 ///
 /// Supports multi-layer caching for optimal performance:
-/// - L1: Parsed expression cache (String → AST)
-/// - L2: Evaluation result cache (AST + Variables → Result)
-/// - L3: Differentiation result cache (AST + Variable → Derivative)
+/// - L1: Parsed expression cache (String to AST)
+/// - L2: Evaluation result cache (AST + Variables to Result)
+/// - L3: Differentiation result cache (AST + Variable to Derivative)
 ///
 /// Example with advanced caching:
 /// ```dart

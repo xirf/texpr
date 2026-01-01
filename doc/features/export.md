@@ -41,8 +41,8 @@ Generates Python code compatible with the [SymPy](https://www.sympy.org/) librar
 
 **Capabilities:**
 
-- Maps standard functions (`\sin` → `sin`, `\ln` → `log`).
-- Handles calculus structure (`\int` → `integrate`, `\frac{d}{dx}` → `diff`).
+- Maps standard functions (`\sin` to `sin`, `\ln` to `log`).
+- Handles calculus structure (`\int` to `integrate`, `\frac{d}{dx}` to `diff`).
 - Generates valid Python syntax.
 
 **Example:**
