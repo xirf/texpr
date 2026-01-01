@@ -44,12 +44,12 @@ app.*.map.json
 /android/app/
 port
 
-# Benchmark
-/**/.venv
-/**/node_modules
-/**/package-lock.json
+# JS/Node
+node_modules/
+package-lock.json
+.venv/
 
-# Benchmark artifact and WASM
+# Benchmark
 benchmark/wasm/
 !benchmark/wasm/wasm_benchmark.dart
 !benchmark/wasm/README.md

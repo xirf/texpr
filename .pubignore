@@ -5,9 +5,11 @@ tool/
 build/
 .vscode/
 .dart_tool/
+.agent/
 AGENT.md
 TODOs.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 benchmark/
 ROADMAP.md
+analysis_options.yaml
