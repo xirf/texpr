@@ -4,8 +4,8 @@ import 'package:texpr/texpr.dart';
 /// Tests for LaTeX syntax tolerance features.
 ///
 /// These test the ability to parse common LaTeX variations without adjustment:
-/// - Braceless fractions: `\frac12` → `\frac{1}{2}`
-/// - Backslash-less functions: `sin(x)` → `\sin{x}`
+/// - Braceless fractions: `\frac12` to `\frac{1}{2}`
+/// - Backslash-less functions: `sin(x)` to `\sin{x}`
 /// - Implicit multiplication in exponents: `e^{ix}` (already works)
 void main() {
   late LatexMathEvaluator evaluator;

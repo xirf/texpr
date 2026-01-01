@@ -183,7 +183,7 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
     final body = node.body.accept(this, context);
 
     return _mrow('<munder>${_mo("lim")}'
-        '${_mrow("${_mi(node.variable)}${_mo("→")}$target")}'
+        '${_mrow("${_mi(node.variable)}${_mo("to")}$target")}'
         '</munder>$body');
   }
 
@@ -365,7 +365,7 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
     if (node.isUnitVector) {
       return '<mover>${_mrow(components)}${_mo("^")}</mover>';
     }
-    return '<mover>${_mrow(components)}${_mo("→")}</mover>';
+    return '<mover>${_mrow(components)}${_mo("to")}</mover>';
   }
 }
 

@@ -14,9 +14,9 @@ class PolynomialOperations {
   /// Expands polynomial expressions.
   ///
   /// Currently supports:
-  /// - (a+b)^2 → a^2 + 2*a*b + b^2
+  /// - (a+b)^2 to a^2 + 2*a*b + b^2
   /// - (a+b)^n for small integer n
-  /// - (a+b)(c+d) → a*c + a*d + b*c + b*d
+  /// - (a+b)(c+d) to a*c + a*d + b*c + b*d
   Expression expand(Expression expr) {
     return _expandRecursive(expr);
   }
@@ -133,8 +133,8 @@ class PolynomialOperations {
   /// Factors polynomial expressions.
   ///
   /// Currently supports:
-  /// - Difference of squares: x^2 - a^2 → (x-a)(x+a)
-  /// - Simple quadratics: x^2 + bx + c → (x+p)(x+q) when factorizable
+  /// - Difference of squares: x^2 - a^2 to (x-a)(x+a)
+  /// - Simple quadratics: x^2 + bx + c to (x+p)(x+q) when factorizable
   Expression factor(Expression expr) {
     // Try factoring difference of squares
     if (expr is BinaryOp && expr.operator == BinaryOperator.subtract) {

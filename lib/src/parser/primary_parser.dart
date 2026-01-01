@@ -277,7 +277,7 @@ mixin PrimaryParserMixin on BaseParser {
       );
     }
 
-    // Support braceless fractions: \frac12 → \frac{1}{2} (exactly 2 single-char tokens)
+    // Support braceless fractions: \frac12 to \frac{1}{2} (exactly 2 single-char tokens)
     final numerator = _parseFracArgument();
     final denominator = _parseFracArgument();
     registerNode();

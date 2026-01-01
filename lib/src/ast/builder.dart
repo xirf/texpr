@@ -114,7 +114,7 @@ class ExpressionBuilder {
 
   /// Creates a limit expression.
   ///
-  /// Example: lim(x→a) f(x)
+  /// Example: lim(xtoa) f(x)
   Expression limit(
           Expression body, String variable, Expression approachValue) =>
       LimitExpr(variable, approachValue, body);

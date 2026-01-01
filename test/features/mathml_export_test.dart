@@ -158,7 +158,7 @@ void main() {
         final mathml = expr.toMathML();
 
         expect(mathml, contains('<mo>lim</mo>'));
-        expect(mathml, contains('<mo>→</mo>'));
+        expect(mathml, contains('<mo>to</mo>'));
         expect(mathml, contains('<munder>'));
       });
 
@@ -226,7 +226,7 @@ void main() {
         final mathml = expr.toMathML();
 
         expect(mathml, contains('<mover>'));
-        expect(mathml, contains('<mo>→</mo>'));
+        expect(mathml, contains('<mo>to</mo>'));
       });
     });
 
