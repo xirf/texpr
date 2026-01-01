@@ -1,0 +1,79 @@
+{
+  "passed": 20,
+  "failed": 0,
+  "errors": 0,
+  "results": [
+    {
+      "test": "Addition",
+      "status": "pass"
+    },
+    {
+      "test": "Subtraction",
+      "status": "pass"
+    },
+    {
+      "test": "Multiplication",
+      "status": "pass"
+    },
+    {
+      "test": "Division",
+      "status": "pass"
+    },
+    {
+      "test": "Power",
+      "status": "pass"
+    },
+    {
+      "test": "Sine of 0",
+      "status": "pass"
+    },
+    {
+      "test": "Cosine of 0",
+      "status": "pass"
+    },
+    {
+      "test": "Square root",
+      "status": "pass"
+    },
+    {
+      "test": "Cube root",
+      "status": "pass"
+    },
+    {
+      "test": "Natural log of e",
+      "status": "pass"
+    },
+    {
+      "test": "Absolute value",
+      "status": "pass"
+    },
+    {
+      "test": "Quadratic at x=3",
+      "status": "pass"
+    },
+    {
+      "test": "Pythagorean identity",
+      "status": "pass"
+    },
+    {
+      "test": "Binomial coefficient",
+      "status": "pass"
+    },
+    {
+      "test": "Factorial of 5",
+      "status": "pass"
+    },
+    {
+      "test": "e to the 0",
+      "status": "pass"
+    },
+    {
+      "test": "Pi constant",
+      "status": "pass"
+    },
+    {
+      "test": "Standard normal PDF at x=0",
+      "status": "pass"
+    }
+  ]
+}

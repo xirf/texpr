@@ -1,0 +1,13 @@
+doc/
+test/
+.github/
+tool/
+build/
+.vscode/
+.dart_tool/
+AGENT.md
+TODOs.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+benchmark/
+ROADMAP.md

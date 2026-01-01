@@ -1,0 +1,14 @@
+name: texpr
+description: A Dart library for parsing, evaluating, and analyzing mathematical expressions in LaTeX. Supports symbolic calculus, matrices, and complex numbers.
+version: 0.0.1
+homepage: https://github.com/xirf/texpr
+repository: https://github.com/xirf/texpr
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.28.0
+  lints: ^6.0.0
+  math_expressions: ^2.6.0 # For benchmarking comparison
+  benchmark_harness: ^2.3.1 

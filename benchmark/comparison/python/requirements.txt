@@ -1,0 +1,7 @@
+# Python benchmark dependencies
+# Install with: pip install -r requirements.txt
+
+pytest>=7.0.0
+pytest-benchmark>=4.0.0
+sympy>=1.12
+antlr4-python3-runtime>=4.9.0

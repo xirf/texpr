@@ -1,0 +1,87 @@
+{
+  "passed": 20,
+  "failed": 0,
+  "errors": 0,
+  "results": [
+    {
+      "test": "Number literal",
+      "status": "pass"
+    },
+    {
+      "test": "Variable",
+      "status": "pass"
+    },
+    {
+      "test": "Greek letter",
+      "status": "pass"
+    },
+    {
+      "test": "Addition",
+      "status": "pass"
+    },
+    {
+      "test": "Fraction",
+      "status": "pass"
+    },
+    {
+      "test": "Superscript",
+      "status": "pass"
+    },
+    {
+      "test": "Sine function",
+      "status": "pass"
+    },
+    {
+      "test": "Square root",
+      "status": "pass"
+    },
+    {
+      "test": "Cube root",
+      "status": "pass"
+    },
+    {
+      "test": "Logarithm with base",
+      "status": "pass"
+    },
+    {
+      "test": "Absolute value",
+      "status": "pass"
+    },
+    {
+      "test": "Summation",
+      "status": "pass"
+    },
+    {
+      "test": "Product",
+      "status": "pass"
+    },
+    {
+      "test": "Definite integral",
+      "status": "pass"
+    },
+    {
+      "test": "Limit",
+      "status": "pass"
+    },
+    {
+      "test": "Binomial coefficient",
+      "status": "pass"
+    },
+    {
+      "test": "Less than",
+      "status": "pass"
+    },
+    {
+      "test": "Less or equal",
+      "status": "pass"
+    },
+    {
+      "test": "Matrix",
+      "status": "pass"
+    },
+    {
+      "test": "Quadratic formula",
+      "status": "pass"
+    }
+  ]
+}

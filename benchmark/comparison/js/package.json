@@ -1,0 +1,13 @@
+{
+  "name": "latex-benchmark-js",
+  "version": "1.0.0",
+  "description": "JavaScript benchmark for math expression evaluation",
+  "main": "benchmark_suite.js",
+  "scripts": {
+    "benchmark": "node benchmark_suite.js"
+  },
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "mathjs": "^12.0.0"
+  }
+}
