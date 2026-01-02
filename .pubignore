@@ -13,3 +13,4 @@ CONTRIBUTING.md
 benchmark/
 ROADMAP.md
 analysis_options.yaml
+wasm/
