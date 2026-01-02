@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-02T15:45:37.784865",
+  "generated_at": "2026-01-02T16:53:42.586575",
   "test_cases": [
     {
       "description": "Number literal",
@@ -145,8 +145,8 @@
     {
       "description": "Limit",
       "latex": "\\lim_{x \\to 0} x",
-      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><munder><mo>lim</mo><mrow><mi>x</mi><mo>→</mo><mn>0</mn></mrow></munder><mi>x</mi></mrow></math>",
-      "mathml_content": "<mrow><munder><mo>lim</mo><mrow><mi>x</mi><mo>→</mo><mn>0</mn></mrow></munder><mi>x</mi></mrow>",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><munder><mo>lim</mo><mrow><mi>x</mi><mo>to</mo><mn>0</mn></mrow></munder><mi>x</mi></mrow></math>",
+      "mathml_content": "<mrow><munder><mo>lim</mo><mrow><mi>x</mi><mo>to</mo><mn>0</mn></mrow></munder><mi>x</mi></mrow>",
       "expected_elements": [
         "munder",
         "mo"
