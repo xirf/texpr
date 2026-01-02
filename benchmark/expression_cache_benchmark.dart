@@ -1,7 +1,7 @@
 import 'package:texpr/texpr.dart';
 
 void benchmarkEvaluate(
-    {required LatexMathEvaluator evaluator,
+    {required Texpr evaluator,
     required String label,
     required String expression,
     required int iterations}) {
@@ -15,9 +15,7 @@ void benchmarkEvaluate(
 }
 
 void benchmarkFibonacci(
-    {required LatexMathEvaluator evaluator,
-    required int n,
-    required int iterations}) {
+    {required Texpr evaluator, required int n, required int iterations}) {
   final actual = '\\fibonacci{$n}';
   print('Fibonacci benchmark (n=$n):');
   final sw = Stopwatch()..start();
@@ -39,10 +37,10 @@ void main(List<String> args) {
   // parsedExpressionCacheSize: 0 alone only disables L1 (parse cache)
   // but L2 (evaluation cache), L3 (differentiation cache), L4 (sub-expression cache)
   // would still be active with defaults!
-  final withCache = LatexMathEvaluator(
+  final withCache = Texpr(
     cacheConfig: CacheConfig.highPerformance,
   );
-  final withoutCache = LatexMathEvaluator(
+  final withoutCache = Texpr(
     cacheConfig: CacheConfig.disabled,
   );
 
@@ -71,7 +69,7 @@ void main(List<String> args) {
 
   // For parse-once vs re-parse comparison, disable all caches
   // This measures: does parsing once help when caching is off?
-  final evaluatorParseOnce = LatexMathEvaluator(
+  final evaluatorParseOnce = Texpr(
     cacheConfig: CacheConfig.disabled,
   );
 
@@ -96,7 +94,7 @@ void main(List<String> args) {
       'evaluate (parse every time): ${sw2.elapsedMilliseconds} ms; avg ${(sw2.elapsedMilliseconds / iterations).toStringAsFixed(4)} ms/op');
 
   print('\nFibonacci memoization benchmark:');
-  final fibEval = LatexMathEvaluator();
+  final fibEval = Texpr();
   final n = 40; // moderate index to show cost
   // first run (should compute and cache values upto n)
   benchmarkFibonacci(evaluator: fibEval, n: n, iterations: 5);

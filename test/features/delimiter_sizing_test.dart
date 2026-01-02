@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 void main() {
   group('Delimiter Sizing Commands', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('\\left and \\right', () {

@@ -46,7 +46,7 @@ evaluator.evaluate(r'\log_{-2}{8}');   // Throws: Invalid logarithm base
 ## Examples
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Natural log
 e.evaluate(r'\ln{x}', {'x': 2.71828});  // ~1.0

@@ -41,7 +41,7 @@ bool _isExpectedException(Object e) {
 void main() {
   group('Property-based tests', () {
     test('commutativity of addition (within tolerance)', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       final r = math.Random(1234);
 
       for (int i = 0; i < 200; i++) {
@@ -54,7 +54,7 @@ void main() {
     });
 
     test('commutativity of multiplication (within tolerance)', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       final r = math.Random(5678);
 
       for (int i = 0; i < 200; i++) {
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('associativity of addition (within tolerance)', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       final r = math.Random(9012);
 
       for (int i = 0; i < 200; i++) {
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('associativity of multiplication (within tolerance)', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       final r = math.Random(3456);
 
       for (int i = 0; i < 200; i++) {
@@ -97,7 +97,7 @@ void main() {
 
   group('Fuzzing', () {
     test('random expressions do not crash', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       final r = math.Random(424242);
 
       for (int i = 0; i < 500; i++) {

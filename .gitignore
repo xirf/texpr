@@ -56,3 +56,10 @@ benchmark/wasm/
 
 # Integration test artifacts
 /test/integration/**/*.json
+
+# WASM build artifacts
+wasm/build/*
+!wasm/build/index.html
+*.wasm
+*.mjs
+*.wasm.map

@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 void main() {
   group('Cases Environment Parser Tests', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Basic Parsing', () {

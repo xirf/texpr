@@ -18,7 +18,7 @@ import 'package:texpr/texpr.dart';
 class ParseAndEvaluateBenchmark extends BenchmarkBase {
   final String latex;
   final Map<String, double> variables;
-  late final LatexMathEvaluator evaluator;
+  late final Texpr evaluator;
 
   ParseAndEvaluateBenchmark(super.name, this.latex,
       [this.variables = const {}]);
@@ -26,7 +26,7 @@ class ParseAndEvaluateBenchmark extends BenchmarkBase {
   @override
   void setup() {
     // Use disabled cache to measure raw parsing + evaluation each time
-    evaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+    evaluator = Texpr(cacheConfig: CacheConfig.disabled);
   }
 
   @override
@@ -43,7 +43,7 @@ class ParseAndEvaluateBenchmark extends BenchmarkBase {
 class EvaluateOnlyBenchmark extends BenchmarkBase {
   final String latex;
   final Map<String, double> variables;
-  late final LatexMathEvaluator evaluator;
+  late final Texpr evaluator;
   late final Expression parsed;
 
   EvaluateOnlyBenchmark(String name, this.latex, [this.variables = const {}])
@@ -51,7 +51,7 @@ class EvaluateOnlyBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    evaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+    evaluator = Texpr(cacheConfig: CacheConfig.disabled);
     parsed = evaluator.parse(latex);
   }
 

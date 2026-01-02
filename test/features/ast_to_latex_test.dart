@@ -2,10 +2,10 @@ import 'package:texpr/texpr.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('AST to LaTeX Round-Trip Tests', () {

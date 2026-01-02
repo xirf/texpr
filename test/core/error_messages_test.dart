@@ -4,10 +4,10 @@ import 'package:texpr/src/parser/error_suggestions.dart';
 
 void main() {
   group('Improved Error Messages', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Error Suggestion Utilities', () {

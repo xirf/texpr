@@ -8,7 +8,7 @@ void main() {
       return Parser(tokens).parse();
     }
 
-    final evaluator = LatexMathEvaluator();
+    final evaluator = Texpr();
 
     group('1. Binomial Coefficient & Auto-sizing Delimiters', () {
       test('parses binomial theorem expression', () {

@@ -6,11 +6,11 @@ import 'dart:math' as math;
 /// Edge case tests for logarithm laws - v0.2.0 milestone verification
 void main() {
   late SymbolicEngine engine;
-  late LatexMathEvaluator latexEvaluator;
+  late Texpr latexEvaluator;
 
   setUp(() {
     engine = SymbolicEngine();
-    latexEvaluator = LatexMathEvaluator();
+    latexEvaluator = Texpr();
   });
 
   group('Nested Logarithms', () {

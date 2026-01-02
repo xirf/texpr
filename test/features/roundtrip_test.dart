@@ -4,10 +4,10 @@ import 'package:texpr/texpr.dart';
 /// LaTeX round-trip tests to verify that AST generation
 /// properly supports toLatex() round-trip conversion.
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   /// Helper to test round-trip: parse, toLatex, parse again, compare by evaluation

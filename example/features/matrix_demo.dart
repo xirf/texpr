@@ -1,7 +1,7 @@
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('--- Matrix Evaluation Demo ---\n');
 

@@ -2,8 +2,8 @@ import 'package:test/test.dart';
 import 'package:texpr/texpr.dart';
 
 void main() {
-  group('LatexMathEvaluator Integration', () {
-    final evaluator = LatexMathEvaluator();
+  group('Texpr Integration', () {
+    final evaluator = Texpr();
 
     group('basic arithmetic', () {
       test('addition', () {

@@ -2,7 +2,7 @@ import 'package:texpr/texpr.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   test('isValid should accept expression with unary minus and power', () {
     expect(evaluator.isValid(r'-(x-1)^{2}+4'), isTrue);

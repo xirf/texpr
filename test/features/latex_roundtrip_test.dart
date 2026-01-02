@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 /// LaTeX round-trip tests - verification
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   /// Helper to test round-trip: parse, toLatex, parse again, compare semantically

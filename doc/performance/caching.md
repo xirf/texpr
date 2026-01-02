@@ -48,7 +48,7 @@ evaluator.evaluateParsed(ast, {'x': 5.0});
 
 ```dart
 // Default: default cache sizes, LRU eviction, no statistics
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 ```
 
 ### Custom Configuration
@@ -64,20 +64,20 @@ final config = CacheConfig(
   collectStatistics: true,           // Enable stats
 );
 
-final evaluator = LatexMathEvaluator(cacheConfig: config);
+final evaluator = Texpr(cacheConfig: config);
 ```
 
 ### Preset Configurations
 
 ```dart
 // Disable all caching
-final noCache = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+final noCache = Texpr(cacheConfig: CacheConfig.disabled);
 
 // High-performance for graphing/animations
-final graphing = LatexMathEvaluator(cacheConfig: CacheConfig.highPerformance);
+final graphing = Texpr(cacheConfig: CacheConfig.highPerformance);
 
 // With statistics for debugging
-final withStats = LatexMathEvaluator(cacheConfig: CacheConfig.withStatistics);
+final withStats = Texpr(cacheConfig: CacheConfig.withStatistics);
 ```
 
 ## Eviction Policies
@@ -105,7 +105,7 @@ final config = CacheConfig(
 Monitor cache performance for tuning:
 
 ```dart
-final evaluator = LatexMathEvaluator(
+final evaluator = Texpr(
   cacheConfig: CacheConfig.withStatistics,
 );
 
@@ -130,7 +130,7 @@ print(stats.differentiation);     // Hit/miss for differentiation
 Preload frequently-used expressions:
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Warm up cache with common expressions
 evaluator.warmUpCache([

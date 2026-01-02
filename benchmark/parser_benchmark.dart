@@ -24,7 +24,7 @@ void main() {
   for (var i = 0; i < iterations; i++) {
     for (final expr in expressions) {
       try {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         evaluator.parse(expr);
       } catch (e) {
         // Ignore evaluation errors, we're testing parsing

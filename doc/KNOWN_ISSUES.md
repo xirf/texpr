@@ -75,7 +75,7 @@ All calculations use Dart's `double` type (IEEE 754 64-bit binary floating-point
 
 ### 3. Recursion Depth Limit
 
-**Limit:** Default maximum recursion depth is 500, but this is configurable via `maxRecursionDepth` in the `LatexMathEvaluator` constructor.
+**Limit:** Default maximum recursion depth is 500, but this is configurable via `maxRecursionDepth` in the `Texpr` constructor.
 
 **Worst Case:** Deeply nested right-associative trees (e.g., `a^(b^(c^(...)))`) hit this limit fastest.
 

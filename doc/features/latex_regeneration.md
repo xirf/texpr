@@ -12,7 +12,7 @@ The TeXpr supports **round-trip LaTeX processing**: you can parse LaTeX into an 
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   
   // Parse LaTeX to AST
   final ast = evaluator.parse(r'\frac{x^2 + 1}{2}');

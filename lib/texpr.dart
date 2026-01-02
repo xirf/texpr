@@ -6,23 +6,23 @@
 /// import 'package:texpr/texpr.dart';
 ///
 /// // Parse and evaluate a simple expression
-/// final result = LatexMathEvaluator().evaluate('2 + 3 \\times 4');
+/// final result = Texpr().evaluate('2 + 3 \\times 4');
 /// print(result.asNumeric()); // 14.0
 ///
 /// // With variables
-/// final result2 = LatexMathEvaluator().evaluate('x^{2} + 1', {'x': 3});
+/// final result2 = Texpr().evaluate('x^{2} + 1', {'x': 3});
 /// print(result2.asNumeric()); // 10.0
 ///
 /// // Logarithms
-/// final result3 = LatexMathEvaluator().evaluate('\\log_{2}{8}');
+/// final result3 = Texpr().evaluate('\\log_{2}{8}');
 /// print(result3.asNumeric()); // 3.0
 ///
 /// // Limits
-/// final result4 = LatexMathEvaluator().evaluate('\\lim_{x \\to 0} x');
+/// final result4 = Texpr().evaluate('\\lim_{x \\to 0} x');
 /// print(result4.asNumeric()); // 0.0
 ///
 /// // Pattern matching on result type
-/// final result5 = LatexMathEvaluator().evaluate('2 + 3');
+/// final result5 = Texpr().evaluate('2 + 3');
 /// switch (result5) {
 ///   case NumericResult(:final value):
 ///     print('Got number: $value');
@@ -34,7 +34,7 @@
 /// ## Parse Once, Evaluate Many Times (Memory Efficient)
 ///
 /// ```dart
-/// final evaluator = LatexMathEvaluator();
+/// final evaluator = Texpr();
 ///
 /// // Parse the expression once
 /// final equation = evaluator.parse('x^{2} + 2x + 1');
@@ -57,7 +57,7 @@
 ///   }
 ///   return null;
 /// });
-/// final evaluator = LatexMathEvaluator(extensions: registry);
+/// final evaluator = Texpr(extensions: registry);
 */
 
 // Public API - organized by module
@@ -98,18 +98,18 @@ import 'src/cache/cache_statistics.dart';
 /// Example with advanced caching:
 /// ```dart
 /// // High-performance configuration for graphing
-/// final evaluator = LatexMathEvaluator(
+/// final evaluator = Texpr(
 ///   cacheConfig: CacheConfig.highPerformance,
 /// );
 ///
 /// // With statistics for monitoring
-/// final evaluatorWithStats = LatexMathEvaluator(
+/// final evaluatorWithStats = Texpr(
 ///   cacheConfig: CacheConfig.withStatistics,
 /// );
 /// // After some evaluations...
 /// print(evaluatorWithStats.cacheStatistics);
 /// ```
-class LatexMathEvaluator {
+class Texpr {
   final ExtensionRegistry? _extensions;
   final bool allowImplicitMultiplication;
   late final Evaluator _evaluator;
@@ -136,7 +136,7 @@ class LatexMathEvaluator {
   /// [maxRecursionDepth]: Maximum recursion depth for parsing and evaluation.
   /// Defaults to 500.
   /// @deprecated Use [cacheConfig] instead for more control.
-  LatexMathEvaluator({
+  Texpr({
     ExtensionRegistry? extensions,
     this.allowImplicitMultiplication = true,
     CacheConfig? cacheConfig,
@@ -162,7 +162,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator(
+  /// final evaluator = Texpr(
   ///   cacheConfig: CacheConfig.withStatistics,
   /// );
   ///
@@ -194,7 +194,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   /// evaluator.warmUpCache([
   ///   'x^2',
   ///   'sin(x)',
@@ -217,7 +217,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   /// final equation = evaluator.parse('x^{2} + 2x + 1');
   ///
   /// // Reuse the parsed equation with different values
@@ -256,7 +256,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   /// final equation = evaluator.parse('x + y');
   /// final result = evaluator.evaluateParsed(equation, {'x': 10, 'y': 5});
   /// print(result.asNumeric()); // 15.0
@@ -303,7 +303,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   /// final result = evaluator.evaluate('2 + 3');
   /// print(result.asNumeric()); // 5.0
   ///
@@ -336,7 +336,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// final result = evaluator.evaluateNumeric('2 + 3'); // 5.0
   /// final result2 = evaluator.evaluateNumeric('x^{2}', {'x': 3}); // 9.0
@@ -361,7 +361,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// final matrix = evaluator.evaluateMatrix(r'\begin{matrix} 1 & 2 \\ 3 & 4 \end{matrix}');
   /// print(matrix); // [[1.0, 2.0], [3.0, 4.0]]
@@ -384,7 +384,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// evaluator.isValid(r'2 + 3');        // true
   /// evaluator.isValid(r'\sin{x}');      // true (variables are OK)
@@ -418,7 +418,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// final result = evaluator.validate(r'\sin{');
   /// if (!result.isValid) {
@@ -478,7 +478,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// // Option 1: Parse then differentiate
   /// final expr = evaluator.parse('x^{2}');
@@ -534,7 +534,7 @@ class LatexMathEvaluator {
   ///
   /// Example:
   /// ```dart
-  /// final evaluator = LatexMathEvaluator();
+  /// final evaluator = Texpr();
   ///
   /// // Option 1: Parse then integrate
   /// final expr = evaluator.parse('x^2');

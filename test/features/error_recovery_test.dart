@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 /// Integration tests for error recovery - v0.2.0 milestone verification
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('Multiple Errors Detection', () {
@@ -272,14 +272,14 @@ void main() {
 
   group('Integration with Implicit Multiplication', () {
     test('validation with implicit multiplication enabled', () {
-      final eval = LatexMathEvaluator(allowImplicitMultiplication: true);
+      final eval = Texpr(allowImplicitMultiplication: true);
       expect(eval.isValid('2x'), isTrue);
       expect(eval.isValid('xy'), isTrue);
       expect(eval.isValid('2x + 3y'), isTrue);
     });
 
     test('error recovery with implicit multiplication', () {
-      final eval = LatexMathEvaluator(allowImplicitMultiplication: true);
+      final eval = Texpr(allowImplicitMultiplication: true);
       final result = eval.validate(r'2x + \invalid');
       expect(result.isValid, isFalse);
     });

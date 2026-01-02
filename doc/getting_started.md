@@ -21,7 +21,7 @@ flutter pub get
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Basic expression
   print(evaluator.evaluate(r'2 + 3'));  // 5.0
@@ -80,7 +80,7 @@ The evaluator supports an LRU cache to reuse parsed ASTs for repeated evaluation
 
 ```dart
 // Enable advanced caching configuration
-final evaluator = LatexMathEvaluator(
+final evaluator = Texpr(
   cacheConfig: CacheConfig(
     parsedExpressionCacheSize: 256,
     evaluationResultCacheSize: 512,
@@ -88,7 +88,7 @@ final evaluator = LatexMathEvaluator(
 );
 
 // High performance preset for graphing
-final graphing = LatexMathEvaluator(
+final graphing = Texpr(
   cacheConfig: CacheConfig.highPerformance,
 );
 ```
@@ -96,7 +96,7 @@ final graphing = LatexMathEvaluator(
 **Cache management**:
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 // Parse and evaluate
 var result = evaluator.evaluate('\sqrt{16}');
 
@@ -111,5 +111,5 @@ For deeply nested expressions, you can configure the maximum recursion depth (de
 
 ```dart
 // Increase limit for deep nesting
-final evaluator = LatexMathEvaluator(maxRecursionDepth: 2000);
+final evaluator = Texpr(maxRecursionDepth: 2000);
 ```

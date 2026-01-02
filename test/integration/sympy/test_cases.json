@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-01-02T15:45:37.814318",
+  "test_cases": [
+    {
+      "type": "numeric",
+      "description": "Addition",
+      "latex": "2 + 3",
+      "sympy_code": "2 + 3",
+      "variables": {},
+      "dart_result": 5.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Subtraction",
+      "latex": "10 - 4",
+      "sympy_code": "10 - 4",
+      "variables": {},
+      "dart_result": 6.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Multiplication",
+      "latex": "6 \\times 7",
+      "sympy_code": "6*7",
+      "variables": {},
+      "dart_result": 42.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Division",
+      "latex": "\\frac{20}{4}",
+      "sympy_code": "(20)/(4)",
+      "variables": {},
+      "dart_result": 5.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Power",
+      "latex": "2^{10}",
+      "sympy_code": "2**10",
+      "variables": {},
+      "dart_result": 1024.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Sine of 0",
+      "latex": "\\sin{0}",
+      "sympy_code": "sin(0)",
+      "variables": {},
+      "dart_result": 0.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Cosine of 0",
+      "latex": "\\cos{0}",
+      "sympy_code": "cos(0)",
+      "variables": {},
+      "dart_result": 1.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Square root",
+      "latex": "\\sqrt{16}",
+      "sympy_code": "sqrt(16)",
+      "variables": {},
+      "dart_result": 4.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Cube root",
+      "latex": "\\sqrt[3]{27}",
+      "sympy_code": "root(27, 3)",
+      "variables": {},
+      "dart_result": 3.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Natural log of e",
+      "latex": "\\ln{e}",
+      "sympy_code": "log(E)",
+      "variables": {},
+      "dart_result": 1.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Absolute value",
+      "latex": "|{-5}|",
+      "sympy_code": "Abs(-5)",
+      "variables": {},
+      "dart_result": 5.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Quadratic at x=3",
+      "latex": "x^2 + 2x + 1",
+      "sympy_code": "x**2 + 2*x + 1",
+      "variables": {
+        "x": 3.0
+      },
+      "dart_result": 16.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Pythagorean identity",
+      "latex": "\\sin{x}^2 + \\cos{x}^2",
+      "sympy_code": "sin(x)**2 + cos(x)**2",
+      "variables": {
+        "x": 1.0
+      },
+      "dart_result": 1.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "symbolic",
+      "description": "Integral of x^2",
+      "latex": "\\int x^2 dx",
+      "sympy_code": "integrate(x**2, x)",
+      "expected_sympy_result": "x**3/3"
+    },
+    {
+      "type": "symbolic",
+      "description": "Derivative of x^3",
+      "latex": "\\frac{d}{dx}(x^3)",
+      "sympy_code": "diff(x**3, x)",
+      "expected_sympy_result": "3*x**2"
+    },
+    {
+      "type": "numeric",
+      "description": "Binomial coefficient",
+      "latex": "\\binom{10}{3}",
+      "sympy_code": "binomial(10, 3)",
+      "variables": {},
+      "dart_result": 120.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Factorial of 5",
+      "latex": "\\factorial{5}",
+      "sympy_code": "factorial(5)",
+      "variables": {},
+      "dart_result": 120.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "e to the 0",
+      "latex": "e^{0}",
+      "sympy_code": "E**0",
+      "variables": {},
+      "dart_result": 1.0,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Pi constant",
+      "latex": "\\pi",
+      "sympy_code": "pi",
+      "variables": {},
+      "dart_result": 3.141592653589793,
+      "tolerance": 1e-10
+    },
+    {
+      "type": "numeric",
+      "description": "Standard normal PDF at x=0",
+      "latex": "\\frac{1}{\\sqrt{2\\pi}} e^{-\\frac{x^2}{2}}",
+      "sympy_code": "(1)/(sqrt(2*pi))*E**-((x**2)/(2))",
+      "variables": {
+        "x": 0.0
+      },
+      "dart_result": 0.3989422804014327,
+      "tolerance": 0.000001
+    }
+  ]
+}

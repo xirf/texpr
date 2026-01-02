@@ -5,10 +5,10 @@ import 'package:texpr/texpr.dart';
 /// These tests verify that copy-paste from textbooks works correctly.
 void main() {
   group('Textbook LaTeX Compatibility', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Function Power Notation', () {

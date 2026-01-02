@@ -148,7 +148,7 @@ Returns the inverse hyperbolic tangent of x. Domain: -1 < x < 1
 ## Example
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Using with pi constant
 e.evaluate(r'\sin{x}', {'x': 3.14159 / 2});  // ~1.0

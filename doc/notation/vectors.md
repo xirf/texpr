@@ -17,7 +17,7 @@ Create a vector by listing components in `\vec{}`:
 **Example:**
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 final result = evaluator.evaluate(r'\vec{1, 2, 3}');
 final vec = result.asVector();

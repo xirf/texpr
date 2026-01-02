@@ -25,7 +25,7 @@ void main() async {
   print('\n--- Mode 1: No Cache (CacheConfig.disabled) ---');
   print('Measures: Full parse + evaluate on every call\n');
 
-  final uncached = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+  final uncached = Texpr(cacheConfig: CacheConfig.disabled);
 
   for (final (desc, latex, vars) in expressions) {
     // Warmup
@@ -48,7 +48,7 @@ void main() async {
   print('\n--- Mode 2: With Cache (default) ---');
   print('Measures: Cached parse + cached evaluate results\n');
 
-  final cached = LatexMathEvaluator(); // Default caching enabled
+  final cached = Texpr(); // Default caching enabled
 
   for (final (desc, latex, vars) in expressions) {
     // Warmup (also primes the cache)
@@ -71,7 +71,7 @@ void main() async {
   print('\n--- Mode 3: Parse Once + evaluateParsed() ---');
   print('Measures: Pre-parsed AST, evaluate only (no cache lookup overhead)\n');
 
-  final parseOnce = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+  final parseOnce = Texpr(cacheConfig: CacheConfig.disabled);
 
   for (final (desc, latex, vars) in expressions) {
     final ast = parseOnce.parse(latex);

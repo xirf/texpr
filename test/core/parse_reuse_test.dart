@@ -3,7 +3,7 @@ import 'package:texpr/texpr.dart';
 
 void main() {
   group('Parse and Reuse', () {
-    final evaluator = LatexMathEvaluator();
+    final evaluator = Texpr();
 
     test('parse returns an Expression', () {
       final ast = evaluator.parse('2 + 3');

@@ -27,7 +27,7 @@ Constants are used as fallback when a variable is not provided by the user.
 Constants can be accessed using their standard LaTeX commands or as variables:
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // LaTeX command notation (Recommended for multi-character)
 evaluator.evaluateNumeric(r'\hbar');  // 1.05457...

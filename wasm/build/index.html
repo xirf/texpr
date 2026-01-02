@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>texpr WASM Demo</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        background: #1a1a2e;
+        color: #eee;
+      }
+      h1 {
+        color: #00d4ff;
+      }
+      .status {
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+      .loading {
+        background: #2d2d44;
+      }
+      .success {
+        background: #1a4d2e;
+      }
+      .error {
+        background: #4d1a1a;
+      }
+      code {
+        background: #2d2d44;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+      }
+      pre {
+        background: #16213e;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>texpr WASM Demo</h1>
+    <p>LaTeX math expression parser/evaluator running in WebAssembly.</p>
+
+    <div id="status" class="status loading">Loading WASM module...</div>
+
+    <h2>Console Output</h2>
+    <pre id="output">Waiting for WASM execution...</pre>
+
+    <h2>About</h2>
+    <p>
+      This demo compiles the <code>texpr</code> Dart library to WebAssembly
+      using <code>dart compile wasm</code>. Check the browser console for
+      detailed output.
+    </p>
+
+    <script src="main.dart.js" type="module"></script>
+    <script>
+      // Capture console.log output
+      const output = document.getElementById("output");
+      const status = document.getElementById("status");
+      const logs = [];
+
+      const originalLog = console.log;
+      console.log = function (...args) {
+        originalLog.apply(console, args);
+        logs.push(args.join(" "));
+        output.textContent = logs.join("\n");
+      };
+
+      const originalError = console.error;
+      console.error = function (...args) {
+        originalError.apply(console, args);
+        status.className = "status error";
+        status.textContent = "Error: " + args.join(" ");
+      };
+
+      // Update status on successful load
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          if (logs.length > 0) {
+            status.className = "status success";
+            status.textContent =
+              "WASM module loaded and executed successfully!";
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

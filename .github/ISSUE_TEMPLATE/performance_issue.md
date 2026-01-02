@@ -22,7 +22,7 @@ assignees: ""
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   // Code that demonstrates the performance issue
 }
 ```

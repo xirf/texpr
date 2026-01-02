@@ -21,7 +21,7 @@ Base sealed class for all exceptions thrown by the library.
 
 ## ValidationResult
 
-Returned by `LatexMathEvaluator.validate()`. The `validate()` method performs automatic error recovery, allowing it to collect multiple errors in a single pass.
+Returned by `Texpr.validate()`. The `validate()` method performs automatic error recovery, allowing it to collect multiple errors in a single pass.
 
 ### Properties
 

@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('Equations with Constraints', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Curly brace notation: f(x)=expr{condition}', () {
