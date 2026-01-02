@@ -3,7 +3,7 @@ import 'package:texpr/texpr.dart';
 void main() {
   print('=== Type-Safe Result API Demo ===\n');
 
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Example 1: Using .asNumeric() for numeric results
   print('Example 1: Numeric Results');

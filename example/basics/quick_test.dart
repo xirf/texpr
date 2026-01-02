@@ -9,6 +9,6 @@ void main() {
   }
 
   print('\nEvaluating...');
-  final e = LatexMathEvaluator();
+  final e = Texpr();
   print(e.evaluate(r'\sqrt{|x|}', {'x': -4}));
 }

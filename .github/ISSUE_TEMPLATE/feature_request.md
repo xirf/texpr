@@ -25,7 +25,7 @@ assignees: ""
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   // Example of how the feature would be used
 }
 ```

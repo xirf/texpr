@@ -4,10 +4,10 @@ import 'package:texpr/src/complex.dart';
 
 void main() {
   group('Complex Number Support', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     test('Complex arithmetic', () {

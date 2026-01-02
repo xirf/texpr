@@ -134,9 +134,9 @@ void main() {
     });
   });
 
-  group('LatexMathEvaluator with advanced caching', () {
+  group('Texpr with advanced caching', () {
     test('accepts CacheConfig', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.highPerformance,
       );
 
@@ -146,12 +146,12 @@ void main() {
     });
 
     test('backwards compatible with parsedExpressionCacheSize', () {
-      final evaluator = LatexMathEvaluator(parsedExpressionCacheSize: 512);
+      final evaluator = Texpr(parsedExpressionCacheSize: 512);
       expect(evaluator.cacheConfig.parsedExpressionCacheSize, equals(512));
     });
 
     test('cacheStatistics returns statistics', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.withStatistics,
       );
 
@@ -164,7 +164,7 @@ void main() {
     });
 
     test('clearAllCaches clears everything', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
 
       // Populate cache
       evaluator.parse('x^2');
@@ -177,7 +177,7 @@ void main() {
     });
 
     test('warmUpCache preloads expressions', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.withStatistics,
       );
 
@@ -191,7 +191,7 @@ void main() {
     });
 
     test('evaluation result caching works for constant expressions', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.withStatistics,
       );
 
@@ -209,7 +209,7 @@ void main() {
     test('cheap expressions with variables bypass L2 cache (cost-aware)', () {
       // This is intentional: for cheap expressions, cache lookup overhead
       // exceeds evaluation cost. L2 is only consulted for costly operations.
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.withStatistics,
       );
 
@@ -224,7 +224,7 @@ void main() {
     });
 
     test('differentiation caching works', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.withStatistics,
       );
 
@@ -241,7 +241,7 @@ void main() {
     });
 
     test('disabled cache still works', () {
-      final evaluator = LatexMathEvaluator(
+      final evaluator = Texpr(
         cacheConfig: CacheConfig.disabled,
       );
 

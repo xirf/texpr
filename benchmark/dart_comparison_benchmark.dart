@@ -19,14 +19,14 @@ import 'package:math_expressions/math_expressions.dart' as me;
 class LatexBenchmark extends BenchmarkBase {
   final String latex;
   final Map<String, double> variables;
-  late final LatexMathEvaluator evaluator;
+  late final Texpr evaluator;
 
   LatexBenchmark(String name, this.latex, [this.variables = const {}])
       : super('LaTeX.$name');
 
   @override
   void setup() {
-    evaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+    evaluator = Texpr(cacheConfig: CacheConfig.disabled);
   }
 
   @override
@@ -42,7 +42,7 @@ class LatexBenchmark extends BenchmarkBase {
 class LatexEvalOnlyBenchmark extends BenchmarkBase {
   final String latex;
   final Map<String, double> variables;
-  late final LatexMathEvaluator evaluator;
+  late final Texpr evaluator;
   late final Expression parsed;
 
   LatexEvalOnlyBenchmark(String name, this.latex, [this.variables = const {}])
@@ -50,7 +50,7 @@ class LatexEvalOnlyBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    evaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+    evaluator = Texpr(cacheConfig: CacheConfig.disabled);
     parsed = evaluator.parse(latex);
   }
 

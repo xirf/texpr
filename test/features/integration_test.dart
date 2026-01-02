@@ -2,10 +2,10 @@ import 'package:test/test.dart';
 import 'package:texpr/texpr.dart';
 
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   Expression integrateLatex(String latex) {

@@ -42,7 +42,7 @@ You can also chain comparisons:
 ```dart
 import 'package:texpr/texpr.dart';
 
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Define a piecewise function: x^2 for -5 < x < 5
 final result1 = evaluator.evaluateNumeric(r'x^{2}, -5 < x < 5', {'x': 3.0});
@@ -195,7 +195,7 @@ The library now fully supports the standard LaTeX `\begin{cases}` environment fo
 ### Basic Usage
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Parse a piecewise function using \begin{cases}
 final expr = evaluator.parse(r'''
@@ -308,7 +308,7 @@ final deriv = evaluator.differentiate(r'|x|', 'x');
 ### Example 1: Piecewise Derivative
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Define and differentiate
 final derivative = evaluator.differentiate(r'x^{3} + 2x, -10 < x < 10', 'x');
@@ -324,7 +324,7 @@ print(evaluator.evaluateParsed(derivative, {'x': 15.0}).asNumeric().isNaN);
 ### Example 2: Absolute Value with Domain
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Differentiate |sin(x)| in the domain -3 < x < 3
 final derivative = evaluator.differentiate(r'|\sin{x}|, -3 < x < 3', 'x');
@@ -337,7 +337,7 @@ print(result.asNumeric()); // cos(1) ≈ 0.5403
 ### Example 3: Higher-Order Derivatives
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Second derivative
 final d2 = evaluator.differentiate(r'x^{4}, -5 < x < 5', 'x', order: 2);

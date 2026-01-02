@@ -1,7 +1,7 @@
 import 'package:texpr/texpr.dart';
 
 void benchmarkDerivativeEvaluation({
-  required LatexMathEvaluator evaluator,
+  required Texpr evaluator,
   required String label,
   required String expressionWithFrac, // \frac{d}{dx}(...) style string
   required Expression parsedExpression,
@@ -89,7 +89,7 @@ void benchmarkDerivativeEvaluation({
 }
 
 void benchmarkDifferentiateCost({
-  required LatexMathEvaluator evaluator,
+  required Texpr evaluator,
   required String expressionString,
   required Expression parsedExpression,
   required int iterations,
@@ -112,7 +112,7 @@ void main(List<String> args) {
   // Use caching intentionally for this benchmark - we're comparing
   // inline derivative evaluation vs pre-computed symbolic derivatives,
   // not measuring cache overhead
-  final evaluator = LatexMathEvaluator(
+  final evaluator = Texpr(
     cacheConfig: CacheConfig.highPerformance,
   );
   print('Derivative Benchmarks');

@@ -17,7 +17,7 @@ import '../ast/visitor.dart';
 /// ```dart
 /// import 'dart:convert';
 ///
-/// final evaluator = LatexMathEvaluator();
+/// final evaluator = Texpr();
 /// final expr = evaluator.parse(r'\frac{x^2 + 1}{2}');
 /// final json = expr.toJson();
 /// print(jsonEncode(json));

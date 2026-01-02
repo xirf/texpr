@@ -29,7 +29,7 @@ Computes the sum of an expression over a range.
 ### Dart Example
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 e.evaluate(r'\sum_{i=1}^{100} i');  // 5050
 e.evaluate(r'\sum_{i=1}^{n} i^{2}', {'n': 5});  // 55
@@ -63,7 +63,7 @@ Computes the product of an expression over a range.
 ### Dart Example
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Factorial
 e.evaluate(r'\prod_{i=1}^{6} i');  // 720 (6!)

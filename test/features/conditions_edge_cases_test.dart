@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('Conditions Edge Cases', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     test('Big numbers in condition', () {

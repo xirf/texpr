@@ -5,7 +5,7 @@ This example shows how the error messages help debug LaTeX expressions. */
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('=== Error Messages with Position Markers Demo ===\n');
 

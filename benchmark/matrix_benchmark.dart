@@ -4,7 +4,7 @@ import 'package:texpr/texpr.dart';
 void main() {
   // Disable all caches to measure actual computation time
   // Without this, L2 evaluation cache returns cached matrix results
-  final evaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+  final evaluator = Texpr(cacheConfig: CacheConfig.disabled);
 
   print('Matrix Performance Benchmarks');
   print('=' * 60);
@@ -24,7 +24,7 @@ void main() {
   }
 }
 
-void benchmarkDeterminant(LatexMathEvaluator evaluator, int size) {
+void benchmarkDeterminant(Texpr evaluator, int size) {
   // Create a random matrix
   final random = math.Random(42); // Fixed seed for reproducibility
   final matrixStr = _createRandomMatrix(size, random);
@@ -50,7 +50,7 @@ void benchmarkDeterminant(LatexMathEvaluator evaluator, int size) {
   print('${size}x$size determinant: ${avgTimeMs.toStringAsFixed(2)} ms/op');
 }
 
-void benchmarkMultiplication(LatexMathEvaluator evaluator, int size) {
+void benchmarkMultiplication(Texpr evaluator, int size) {
   final random = math.Random(42);
   final matrix1 = _createRandomMatrix(size, random);
   final matrix2 = _createRandomMatrix(size, random);

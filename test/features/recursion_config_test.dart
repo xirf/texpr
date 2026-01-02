@@ -4,18 +4,18 @@ import 'package:texpr/texpr.dart';
 void main() {
   group('Recursion Configuration', () {
     test('Default maxRecursionDepth is 500', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       expect(evaluator.maxRecursionDepth, 500);
     });
 
     test('Can configure custom maxRecursionDepth', () {
-      final evaluator = LatexMathEvaluator(maxRecursionDepth: 100);
+      final evaluator = Texpr(maxRecursionDepth: 100);
       expect(evaluator.maxRecursionDepth, 100);
     });
 
     test('Low recursion limit prevents deep nesting', () {
       // Set a very low limit
-      final evaluator = LatexMathEvaluator(maxRecursionDepth: 10);
+      final evaluator = Texpr(maxRecursionDepth: 10);
 
       // Create an expression deeper than 10 levels
       // 1+(1+(1+(...)))
@@ -39,7 +39,7 @@ void main() {
 
     test('High recursion limit allows deep nesting', () {
       // Set a higher limit
-      final evaluator = LatexMathEvaluator(maxRecursionDepth: 2000);
+      final evaluator = Texpr(maxRecursionDepth: 2000);
 
       // Create an expression deeper than default but within new limit
       final sb = StringBuffer();

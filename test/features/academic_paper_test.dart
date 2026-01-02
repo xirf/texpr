@@ -10,10 +10,10 @@ import 'package:texpr/texpr.dart';
 /// - Signal Processing
 /// - General Mathematics
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('Quantum Mechanics', () {

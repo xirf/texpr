@@ -214,7 +214,7 @@ evaluator.evaluate(r'\functionname{x}', {'x': 10}); // Result
 ```dart
 // example/[category]/[newfeature_demo].dart
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Basic usage
   print(evaluator.evaluate(r'\newfeature{5}'));

@@ -11,10 +11,10 @@ import 'package:texpr/texpr.dart';
 /// 3. Saves test data to a JSON file
 /// 4. A Python script validates the MathML XML structure
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('MathML Integration Export', () {
@@ -215,7 +215,7 @@ void main() {
 
 void _addCase(
   List<Map<String, dynamic>> cases,
-  LatexMathEvaluator evaluator, {
+  Texpr evaluator, {
   required String latex,
   required String description,
   required List<String> expectedElements,

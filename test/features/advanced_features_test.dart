@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Advanced Matrix Operations', () {
-    final evaluator = LatexMathEvaluator();
+    final evaluator = Texpr();
 
     test('Matrix Transpose', () {
       // A = [[1, 2], [3, 4]]
@@ -46,7 +46,7 @@ void main() {
   });
 
   group('Numerical Integration', () {
-    final evaluator = LatexMathEvaluator();
+    final evaluator = Texpr();
 
     test('Integral of x dx', () {
       // \int_0^1 x dx = [x^2/2]_0^1 = 0.5

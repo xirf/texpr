@@ -12,10 +12,10 @@ import 'package:texpr/texpr.dart';
 /// 4. Saves test data to a JSON file
 /// 5. A Python script reads this and verifies with SymPy
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('SymPy Integration Export', () {
@@ -209,7 +209,7 @@ void main() {
 
 void _addCase(
   List<Map<String, dynamic>> cases,
-  LatexMathEvaluator evaluator, {
+  Texpr evaluator, {
   required String latex,
   required String description,
   required Map<String, double> variables,
@@ -241,7 +241,7 @@ void _addCase(
 
 void _addSymbolicCase(
   List<Map<String, dynamic>> cases,
-  LatexMathEvaluator evaluator, {
+  Texpr evaluator, {
   required String latex,
   required String description,
   required String expectedSympy,

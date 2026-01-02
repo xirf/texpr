@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.1.0 – 2026-01-02
+
+**Draft Release: Benchmarks, WASM, and Documentation Overhaul.**
+
+* **WASM Support:** Added initial WebAssembly compilation targets and examples (`wasm/`).
+* **Benchmarks:** Benchmarking suite added (`benchmark/`).
+* **Documentation:** Updates to API docs and feature guides.
+* **Testing:** Expanded test coverage for complex features and edge cases.
+
 ## 0.0.1 – 2026-01-01
 
 **Initial release of TeXpr.**

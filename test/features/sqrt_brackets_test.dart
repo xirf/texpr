@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 void main() {
   group('Square Root with Optional Parameter', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Cube roots (n=3)', () {

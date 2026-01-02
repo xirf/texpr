@@ -3,7 +3,7 @@ import 'package:texpr/src/symbolic/assumptions.dart';
 
 void main() {
   final engine = SymbolicEngine();
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('=== Symbolic Algebra Engine Demo ===\n');
 

@@ -5,10 +5,10 @@ import 'dart:math' as math;
 
 void main() {
   group('Complex Function Support', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Complex Trigonometric Functions', () {

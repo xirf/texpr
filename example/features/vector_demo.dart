@@ -1,7 +1,7 @@
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final e = LatexMathEvaluator();
+  final e = Texpr();
 
   print('--- Vector Demo ---\n');
 
