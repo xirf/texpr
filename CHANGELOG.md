@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.1.1-Nightly - 2026-01-02
+## [Unreleased]
 
 ### Added
 
@@ -14,20 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Relation & Set Operators: `\approx`, `\propto`, `\cup`, `\cap`, `\setminus`, `\subset`, `\subseteq`, `\supset`, `\supseteq`.
   - Quantifiers: `\forall` and `\exists` (parsed as variables for syntax tolerance).
   - Decorations: `\dot`, `\ddot`, and `\bar` functions for physics and statistical notation.
-- **WASM Support:** Added dedicated WebAssembly build artifacts and examples.
-- **CI/CD:** Automated publishing to pub.dev via GitHub Actions using the official Dart-lang workflow.
 
 ### Changed
 
-- **Breaking Change:** Renamed base exception from `LatexException` (or similar) to `TexprException` to align with the new branding.
-- **Parser:** Improved syntax tolerance for certain mathematical notations.
-- **Documentation:** Comprehensive updates to feature guides, notation references, and example code.
+- **Breaking Change:** Renamed `LatexException` to `TexprException` (and `LatexParserException` -> `ParserException`, etc.) to better align with the library name.
+- **Error Messages:** Significantly improved parser error clarity. Error messages now use readable symbols (e.g., `got: '*'`) instead of internal enum names (e.g., `got: multiply`).
+- **Parser:** Improved syntax tolerance for known commands on implicit multiplication (e.g., `sin(x)`).
+- **Documentation:** Updated feature guides, notation references, and example code.
 
-### Fixed
-
-- Resolved several merge conflicts and stabilized the integration test pipeline.
-- Fixed workflow syntax errors that prevented automated publishing.
-- Improved test coverage for core LaTeX commands and edge cases.
 
 ## 0.1.0 - 2026-01-02
 

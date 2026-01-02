@@ -93,7 +93,7 @@ class EvaluatorException extends TexprException {
   });
 }
 
-/// Result of validating a LaTeX math expression.
+/// Result of validating a Texpr math expression.
 ///
 /// Contains information about whether the expression is valid and,
 /// if not, details about the error including position and suggestions.
@@ -196,7 +196,7 @@ class ValidationResult {
       } else if (message.contains("expected '{'") ||
           message.contains("expected \"{\"")) {
         suggestion =
-            'Missing opening brace { - LaTeX commands require braces: \\func{arg}';
+            'Missing opening brace { - Commands require braces: \\func{arg}';
       } else if (message.contains('expected expression')) {
         suggestion =
             'Check for missing operands or invalid syntax near this position';
