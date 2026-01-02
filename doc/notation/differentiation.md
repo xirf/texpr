@@ -99,7 +99,7 @@ The library supports differentiation of piecewise functions (conditional express
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Constant rule
   print(evaluator.evaluateNumeric(r'\frac{d}{dx}(5)'));
@@ -204,7 +204,7 @@ print(evaluator.evaluateNumeric(r'\frac{d^{4}}{dx^{4}}(x^{4})', {'x': 2}));
 The `differentiate()` method allows you to obtain symbolic derivatives that can be reused:
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Parse the original expression (optional)
 final expr = evaluator.parse(r'x^{2} + 3x + 1');

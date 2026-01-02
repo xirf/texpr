@@ -38,7 +38,7 @@ Use `\infty` for limits at infinity:
 ## Dart Example
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 e.evaluate(r'\lim_{x \to 0} x^{2}');  // 0.0
 e.evaluate(r'\lim_{x \to 2} (x + 3)');  // 5.0

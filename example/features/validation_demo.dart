@@ -4,7 +4,7 @@ import 'package:texpr/texpr.dart';
 void main() {
   print('=== LaTeX Math Validation Demo ===\n');
 
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Example 1: Basic isValid() usage
   print('1. Basic Validation with isValid()');
@@ -73,9 +73,8 @@ void main() {
   // Example 6: Validation with implicit multiplication
   print('6. Validation with Implicit Multiplication');
   print('   ----------------------------------------');
-  final evalWithImplicit =
-      LatexMathEvaluator(allowImplicitMultiplication: true);
-  final evalNoImplicit = LatexMathEvaluator(allowImplicitMultiplication: false);
+  final evalWithImplicit = Texpr(allowImplicitMultiplication: true);
+  final evalNoImplicit = Texpr(allowImplicitMultiplication: false);
 
   print('   With implicit multiplication enabled:');
   print('     2x is valid: ${evalWithImplicit.isValid('2x')}');
@@ -103,14 +102,14 @@ void main() {
 }
 
 /// Helper function to demonstrate isValid()
-void _checkValid(LatexMathEvaluator evaluator, String expression) {
+void _checkValid(Texpr evaluator, String expression) {
   final isValid = evaluator.isValid(expression);
   final status = isValid ? '✓' : '✗';
   print('   $status "$expression" - ${isValid ? 'Valid' : 'Invalid'}');
 }
 
 /// Helper function to demonstrate validate()
-void _detailedValidation(LatexMathEvaluator evaluator, String expression) {
+void _detailedValidation(Texpr evaluator, String expression) {
   final result = evaluator.validate(expression);
 
   if (result.isValid) {

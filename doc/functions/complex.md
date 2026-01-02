@@ -52,7 +52,7 @@ Returns the complex conjugate of z (negates the imaginary part).
 ## Examples
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 e.evaluate(r'\Re{3+4i}');        // 3.0
 e.evaluate(r'\Im{3+4i}');        // 4.0

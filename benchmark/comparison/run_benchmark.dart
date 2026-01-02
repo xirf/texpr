@@ -122,7 +122,7 @@ void main() async {
   // Note: parsedExpressionCacheSize: 0 alone only disables L1 (parse cache),
   // but L2 (evaluation result cache) was still active - that's what made
   // the integral appear faster than arithmetic (result was cached).
-  final dartEvaluator = LatexMathEvaluator(cacheConfig: CacheConfig.disabled);
+  final dartEvaluator = Texpr(cacheConfig: CacheConfig.disabled);
   final dartResults = <String, double>{};
 
   for (final (desc, latex, _, vars) in expressions) {

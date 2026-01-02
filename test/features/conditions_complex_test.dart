@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('Conditions Complex Scenarios', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     test('Condition with function calls', () {

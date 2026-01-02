@@ -3,7 +3,7 @@ import 'package:texpr/texpr.dart';
 void main() {
   print('=== Parse Once, Evaluate Multiple Times Demo ===\n');
 
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   // Example 1: Quadratic equation
   print('1. Quadratic Equation: x^2 + 2x + 1');

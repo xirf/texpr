@@ -38,7 +38,7 @@ See the runnable demo in example/misc/parse_reuse_example.dart for a parse-once 
 ### Basic Usage
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Parse once
 final equation = evaluator.parse(r'x^{2} + 2x + 1');

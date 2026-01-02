@@ -13,7 +13,7 @@ final registry = ExtensionRegistry();
 
 // Register your extensions...
 
-final evaluator = LatexMathEvaluator(extensions: registry);
+final evaluator = Texpr(extensions: registry);
 ```
 
 ## Adding Custom Commands
@@ -69,7 +69,7 @@ void main() {
     return null;
   });
   
-  final evaluator = LatexMathEvaluator(extensions: registry);
+  final evaluator = Texpr(extensions: registry);
   
   print(evaluator.evaluate(r'\cbrt{27}'));  // 3.0
   print(evaluator.evaluate(r'\cbrt{8}'));   // 2.0

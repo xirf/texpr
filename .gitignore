@@ -53,3 +53,10 @@ package-lock.json
 benchmark/wasm/
 !benchmark/wasm/wasm_benchmark.dart
 !benchmark/wasm/README.md
+
+# WASM build artifacts
+wasm/build/*
+!wasm/build/index.html
+*.wasm
+*.mjs
+*.wasm.map

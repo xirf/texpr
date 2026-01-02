@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('Fibonacci function', () {
     test('basic values', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
 
       expect(evaluator.evaluateNumeric(r'\fibonacci{0}'), 0.0);
       expect(evaluator.evaluateNumeric(r'\fibonacci{1}'), 1.0);
@@ -14,7 +14,7 @@ void main() {
     });
 
     test('negative input throws', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
       expect(() => evaluator.evaluateNumeric(r'\fibonacci{-1}'),
           throwsA(isA<LatexMathException>()));
     });

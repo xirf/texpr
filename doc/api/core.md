@@ -1,12 +1,12 @@
 # Core API
 
-## LatexMathEvaluator
+## Texpr
 
-The `LatexMathEvaluator` class is the primary interface for using the library. It handles tokenizing, parsing, and evaluating LaTeX math expressions.
+The `Texpr` class is the primary interface for using the library. It handles tokenizing, parsing, and evaluating LaTeX math expressions.
 
 ### Constructors
 
-- `LatexMathEvaluator({ExtensionRegistry? extensions, bool allowImplicitMultiplication = true, CacheConfig? cacheConfig, int maxRecursionDepth = 500})`
+- `Texpr({ExtensionRegistry? extensions, bool allowImplicitMultiplication = true, CacheConfig? cacheConfig, int maxRecursionDepth = 500})`
   - Creates a new evaluator instance.
   - `extensions`: Optional registry for custom commands and functions.
   - `allowImplicitMultiplication`: If true, `xy` is treated as `x * y`.

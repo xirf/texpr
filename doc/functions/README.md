@@ -4,13 +4,13 @@ This library includes 30+ built-in mathematical functions organized by category.
 
 ## Categories
 
-| Category | Functions | Description |
-|----------|-----------|-------------|
-| [Trigonometry](trigonometry.md) | sin, cos, tan, asin, acos, atan | Standard trig functions |
-| [Hyperbolic](trigonometry.md#hyperbolic) | sinh, cosh, tanh | Hyperbolic functions |
-| [Logarithms](logarithms.md) | ln, log | Natural and base-10/custom |
-| [Rounding](rounding.md) | ceil, floor, round | Round to integers |
-| [Miscellaneous](misc.md) | sqrt, exp, abs, sgn, factorial, fibonacci | Other common functions |
+| Category                                 | Functions                                 | Description                |
+| ---------------------------------------- | ----------------------------------------- | -------------------------- |
+| [Trigonometry](trigonometry.md)          | sin, cos, tan, asin, acos, atan           | Standard trig functions    |
+| [Hyperbolic](trigonometry.md#hyperbolic) | sinh, cosh, tanh                          | Hyperbolic functions       |
+| [Logarithms](logarithms.md)              | ln, log                                   | Natural and base-10/custom |
+| [Rounding](rounding.md)                  | ceil, floor, round                        | Round to integers          |
+| [Miscellaneous](misc.md)                 | sqrt, exp, abs, sgn, factorial, fibonacci | Other common functions     |
 
 - **Vector and Matrix operations**: See [Vectors](../notation/vectors.md) and [Matrices](../notation/matrices.md) for notation and behavior.  
 
@@ -34,7 +34,7 @@ Some functions accept a subscript for additional parameters:
 ## Examples
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Trigonometry
 e.evaluate(r'\sin{0}');           // 0.0

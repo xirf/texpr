@@ -36,7 +36,7 @@ dependencies:
 ```dart
 import 'package:texpr/texpr.dart';
 
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // 1. Numeric evaluation
 final result = evaluator.evaluateNumeric(r'\frac{\sqrt{16}}{2} + \sin{\pi}');
@@ -112,7 +112,7 @@ try {
 
 ### 4. Caching
 
-The `LatexMathEvaluator` includes a configurable multi-layer LRU cache for repeated evaluations.
+The `Texpr` includes a configurable multi-layer LRU cache for repeated evaluations.
 
 ```dart
 // Parse once, evaluate multiple times (Recommended for loops)

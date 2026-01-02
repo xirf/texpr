@@ -69,7 +69,7 @@ void main() {
       });
 
       test('evaluates binom', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         expect(evaluator.evaluate(r'\binom{5}{2}').asNumeric(), 10.0);
       });
     });
@@ -84,7 +84,7 @@ void main() {
       });
 
       test('evaluates expressions with Greek variables', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         final result = evaluator.evaluate(r'\alpha \times 2', {'alpha': 5.0});
         expect(result.asNumeric(), 10.0);
       });

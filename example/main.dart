@@ -6,7 +6,7 @@ import 'package:texpr/texpr.dart';
 import 'dart:math' as math;
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('=== Basic Arithmetic ===');
   print('2 + 3 * 4 = ${evaluator.evaluateNumeric(r"2 + 3 \times 4")}');
@@ -81,13 +81,13 @@ void customExtensionExample() {
   });
 
   // Use with extensions
-  final evaluator = LatexMathEvaluator(extensions: registry);
+  final evaluator = Texpr(extensions: registry);
   print('∛27 = ${evaluator.evaluate(r"\cbrt{27}")}');
   print('∛8 = ${evaluator.evaluate(r"\cbrt{8}")}');
 }
 
 void fibonacciExample() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   print('fibonacci(0) = ${evaluator.evaluateNumeric(r"\fibonacci{0}")}');
   print('fibonacci(1) = ${evaluator.evaluateNumeric(r"\fibonacci{1}")}');
   print('fibonacci(10) = ${evaluator.evaluateNumeric(r"\fibonacci{10}")}');
@@ -95,7 +95,7 @@ void fibonacciExample() {
 
 void cachingExample() {
   // Show parsed expression cache usage and performance advantage.
-  final evaluator = LatexMathEvaluator(parsedExpressionCacheSize: 32);
+  final evaluator = Texpr(parsedExpressionCacheSize: 32);
   final expression = r'x^{2} + 2x + 1';
 
   final parsed = evaluator.parse(expression);

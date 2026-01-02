@@ -2,10 +2,10 @@ import 'package:texpr/texpr.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('isValid()', () {
@@ -203,15 +203,13 @@ void main() {
 
   group('Validation with implicit multiplication', () {
     test('validates with implicit multiplication enabled', () {
-      final evalWithImplicit =
-          LatexMathEvaluator(allowImplicitMultiplication: true);
+      final evalWithImplicit = Texpr(allowImplicitMultiplication: true);
       expect(evalWithImplicit.isValid('2x'), isTrue);
       expect(evalWithImplicit.isValid('3xy'), isTrue);
     });
 
     test('validates with implicit multiplication disabled', () {
-      final evalNoImplicit =
-          LatexMathEvaluator(allowImplicitMultiplication: false);
+      final evalNoImplicit = Texpr(allowImplicitMultiplication: false);
       // With implicit multiplication disabled, '2x' requires explicit operator
       // The tokenizer will treat '2x' as invalid without implicit multiplication
       expect(evalNoImplicit.isValid(r'2 \times x'), isTrue);
