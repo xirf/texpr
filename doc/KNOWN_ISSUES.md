@@ -182,7 +182,7 @@ All calculations use Dart's `double` type (IEEE 754 64-bit binary floating-point
 
 **Current Exception Types:**
 
-- `LatexMathException`: Sealed base class for all library exceptions
+- `TexprException`: Sealed base class for all library exceptions
 - `TokenizerException`: Lexical errors during tokenization
 - `ParserException`: Syntax errors during parsing
 - `EvaluatorException`: Runtime errors (division by zero, domain errors, undefined variables, etc.)

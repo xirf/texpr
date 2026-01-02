@@ -2,13 +2,13 @@
 library;
 
 /// Base exception for all TeXpr errors.
-sealed class LatexMathException implements Exception {
+sealed class TexprException implements Exception {
   final String message;
   final int? position;
   final String? expression;
   final String? suggestion;
 
-  const LatexMathException(
+  const TexprException(
     this.message, {
     this.position,
     this.expression,
@@ -64,7 +64,7 @@ sealed class LatexMathException implements Exception {
 }
 
 /// Exception thrown during tokenization.
-class TokenizerException extends LatexMathException {
+class TokenizerException extends TexprException {
   const TokenizerException(
     super.message, {
     super.position,
@@ -74,7 +74,7 @@ class TokenizerException extends LatexMathException {
 }
 
 /// Exception thrown during parsing.
-class ParserException extends LatexMathException {
+class ParserException extends TexprException {
   const ParserException(
     super.message, {
     super.position,
@@ -84,7 +84,7 @@ class ParserException extends LatexMathException {
 }
 
 /// Exception thrown during evaluation.
-class EvaluatorException extends LatexMathException {
+class EvaluatorException extends TexprException {
   const EvaluatorException(
     super.message, {
     super.position,
@@ -151,7 +151,7 @@ class ValidationResult {
   ///
   /// Analyzes the error message and provides context-aware suggestions.
   factory ValidationResult.fromException(
-    LatexMathException exception, {
+    TexprException exception, {
     String? expression,
   }) {
     String? suggestion = exception.suggestion;
@@ -231,7 +231,7 @@ class ValidationResult {
 
   /// Creates a failed validation result from a list of exceptions.
   factory ValidationResult.fromExceptions(
-    List<LatexMathException> exceptions, {
+    List<TexprException> exceptions, {
     String? expression,
   }) {
     if (exceptions.isEmpty) return const ValidationResult.valid();

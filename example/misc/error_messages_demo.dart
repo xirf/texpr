@@ -14,7 +14,7 @@ void main() {
   print('Expression: \\frac{1{2}\n');
   try {
     evaluator.evaluate(r'\frac{1{2}');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -24,7 +24,7 @@ void main() {
   print('Expression: \\unknowncommand{x}\n');
   try {
     evaluator.evaluate(r'\unknowncommand{x}');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -34,7 +34,7 @@ void main() {
   print('Expression: x + y + z\n');
   try {
     evaluator.evaluate(r'x + y + z', {'x': 1, 'y': 2});
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -44,7 +44,7 @@ void main() {
   print('Expression: 5 / 0\n');
   try {
     evaluator.evaluate(r'5 / 0');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -54,7 +54,7 @@ void main() {
   print('Expression: 2 + 3 @ 4\n');
   try {
     evaluator.evaluate(r'2 + 3 @ 4');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -64,7 +64,7 @@ void main() {
   print('Expression: (2 + 3 \\times 4\n');
   try {
     evaluator.evaluate(r'(2 + 3 \times 4');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -74,7 +74,7 @@ void main() {
   print('Expression: \\begin{pmatrix}1 & 2\\\\3 & 4\\end{bmatrix}\n');
   try {
     evaluator.evaluate(r'\begin{pmatrix}1 & 2\\3 & 4\end{bmatrix}');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");
@@ -97,7 +97,7 @@ void main() {
   print('Expression: \\sin{\\pi/2} + \\cos{\\pi} + \\tan{\\unknown}\n');
   try {
     evaluator.evaluate(r'\sin{\pi/2} + \cos{\pi} + \tan{\unknown}');
-  } on LatexMathException catch (e) {
+  } on TexprException catch (e) {
     print(e);
   }
   print("\n${'-' * 60}\n");

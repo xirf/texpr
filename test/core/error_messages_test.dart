@@ -93,7 +93,7 @@ void main() {
       test('validation of unclosed brace provides suggestion', () {
         try {
           evaluator.evaluate(r'\sin{x');
-        } on LatexMathException catch (e) {
+        } on TexprException catch (e) {
           final vr = ValidationResult.fromException(e);
           expect(vr.suggestion, isNotNull);
           // Just verify a suggestion exists, don't require specific text
@@ -115,7 +115,7 @@ void main() {
       test('ParserException includes position in toString', () {
         try {
           evaluator.evaluate(r'\sin{');
-        } on LatexMathException catch (e) {
+        } on TexprException catch (e) {
           final str = e.toString();
           expect(str, contains('at position'));
         }

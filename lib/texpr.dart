@@ -445,7 +445,7 @@ class LatexMathEvaluator {
       }
 
       return const ValidationResult.valid();
-    } on LatexMathException catch (e) {
+    } on TexprException catch (e) {
       return ValidationResult.fromException(e);
     } catch (e) {
       // Handle unexpected errors

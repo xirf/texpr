@@ -27,5 +27,5 @@ Welcome to the API reference for the `texpr` package. This documentation covers 
 
 ## Exceptions
 
-*   [LatexMathException](exceptions.md): Base class for all library exceptions.
+*   [TexprException](exceptions.md): Base class for all library exceptions.
 *   [ValidationResult](exceptions.md#validationresult): Detailed validation information.
