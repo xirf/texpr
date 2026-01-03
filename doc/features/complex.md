@@ -7,7 +7,7 @@ The library provides a complex number support with arithmetic, transcendental fu
 Complex numbers are created using the imaginary unit `i`:
 
 ```dart
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Basic complex arithmetic
 evaluator.evaluate('1 + 2*i');           // Complex(1, 2)

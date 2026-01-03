@@ -289,14 +289,13 @@ void main() {
     group('Implicit Multiplication Options', () {
       test('treats xy as x*y when implicit multiplication is enabled (default)',
           () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         expect(evaluator.evaluate('xy', {'x': 2, 'y': 3}).asNumeric(), 6.0);
       });
 
       test('treats xy as variable xy when implicit multiplication is disabled',
           () {
-        final evaluator =
-            LatexMathEvaluator(allowImplicitMultiplication: false);
+        final evaluator = Texpr(allowImplicitMultiplication: false);
         expect(evaluator.evaluate('xy', {'xy': 10}).asNumeric(), 10.0);
 
         // Should fail if we try to use x and y

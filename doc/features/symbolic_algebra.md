@@ -23,7 +23,7 @@ The `SymbolicEngine` class is the main entry point for symbolic operations. It p
 import 'package:texpr/texpr.dart';
 
 final engine = SymbolicEngine();
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Parse an expression
 final expr = evaluator.parse('0 + x');

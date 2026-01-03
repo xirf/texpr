@@ -122,25 +122,25 @@ void main() {
       });
 
       test('evaluates \\dot{x} to variable value', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         final result = evaluator.evaluate(r'\dot{x}', {'x': 5.0});
         expect(result.asNumeric(), 5.0);
       });
 
       test('evaluates \\ddot{x} to variable value', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         final result = evaluator.evaluate(r'\ddot{x}', {'x': 3.0});
         expect(result.asNumeric(), 3.0);
       });
 
       test('evaluates \\bar{x} to variable value', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         final result = evaluator.evaluate(r'\bar{x}', {'x': 7.5});
         expect(result.asNumeric(), 7.5);
       });
 
       test('evaluates complex expression with decorations', () {
-        final evaluator = LatexMathEvaluator();
+        final evaluator = Texpr();
         // \dot{x} + \bar{y} = x + y
         final result = evaluator.evaluate(
           r'\dot{x} + \bar{y}',

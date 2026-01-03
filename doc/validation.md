@@ -16,7 +16,7 @@ Use `isValid()` for a simple pass/fail check:
 ```dart
 import 'package:texpr/texpr.dart';
 
-final evaluator = LatexMathEvaluator();
+final evaluator = Texpr();
 
 // Valid expressions
 print(evaluator.isValid('2 + 3'));           // true
@@ -88,7 +88,7 @@ if (!result.isValid) {
 ```dart
 class MathExpressionField extends StatelessWidget {
   final TextEditingController controller;
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   String? validateExpression(String? value) {
     if (value == null || value.isEmpty) {
@@ -126,7 +126,7 @@ class ExpressionValidator extends StatefulWidget {
 }
 
 class _ExpressionValidatorState extends State<ExpressionValidator> {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   final controller = TextEditingController();
   ValidationResult? validationResult;
 
@@ -178,7 +178,7 @@ class _ExpressionValidatorState extends State<ExpressionValidator> {
 
 ```dart
 void validateExpressions(List<String> expressions) {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
   final invalid = <String, ValidationResult>{};
 
   for (final expr in expressions) {
@@ -294,7 +294,7 @@ final registry = ExtensionRegistry();
 registry.registerCommand('custom', (cmd, pos) =>
   Token(type: TokenType.function, value: 'custom', position: pos));
 
-final evaluator = LatexMathEvaluator(extensions: registry);
+final evaluator = Texpr(extensions: registry);
 
 // Now custom commands are valid
 print(evaluator.isValid(r'\custom{5}'));  // true

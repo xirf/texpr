@@ -8,7 +8,7 @@
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('=== Numeric Evaluation ===');
 

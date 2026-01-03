@@ -270,7 +270,7 @@ mixin PrimaryParserMixin on BaseParser {
     }
 
     final exception = ParserException(
-      'Expected expression, got: ${isAtEnd ? "EOF" : current.type.name}',
+      'Expected expression, got: ${isAtEnd ? "EOF" : current.type.readableName}',
       position: isAtEnd ? null : current.position,
       expression: sourceExpression,
       suggestion: 'Check for missing operands or invalid syntax',

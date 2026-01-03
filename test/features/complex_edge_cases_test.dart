@@ -9,10 +9,10 @@ double _cosh(double x) => (math.exp(x) + math.exp(-x)) / 2;
 
 /// Edge case tests for complex number support - v0.2.0 milestone verification
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('Branch Cut Edge Cases', () {

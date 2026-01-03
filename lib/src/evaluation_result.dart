@@ -13,7 +13,7 @@ import 'vector.dart';
 ///
 /// Example:
 /// ```dart
-/// final evaluator = LatexMathEvaluator();
+/// final evaluator = Texpr();
 /// final result = evaluator.evaluate('2 + 3');
 ///
 /// switch (result) {

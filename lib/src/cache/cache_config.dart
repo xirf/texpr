@@ -14,7 +14,7 @@
 ///   evictionPolicy: EvictionPolicy.lru,
 ///   collectStatistics: true,
 /// );
-/// final evaluator = LatexMathEvaluator(cacheConfig: config);
+/// final evaluator = Texpr(cacheConfig: config);
 /// ```
 class CacheConfig {
   /// Maximum entries in parsed expression cache (L1).

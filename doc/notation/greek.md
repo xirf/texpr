@@ -42,7 +42,7 @@ Alternative forms for certain Greek letters.
 Greek letters can be used just like any other variable.
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Evaluate with Greek variables
 e.evaluate(r'\alpha + \beta', {r'\alpha': 10, r'\beta': 20}); // 30.0

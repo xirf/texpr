@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 import 'dart:math' as math;
 
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('Logarithm Edge Cases', () {

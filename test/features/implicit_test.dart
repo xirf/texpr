@@ -4,10 +4,10 @@ import 'dart:math' as math;
 
 void main() {
   group('Implicit Multiplication Reproduction', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     test('2x + 1 with x=2', () {

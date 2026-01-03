@@ -133,7 +133,7 @@ Returns the minimum or maximum of two values.
 ## Examples
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 e.evaluate(r'\sqrt{16}');        // 4.0
 e.evaluate(r'\abs{-42}');        // 42.0

@@ -1,7 +1,7 @@
 import 'package:texpr/texpr.dart';
 
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   final tests = [
     (r'\sin{x}^2 + \cos{x}^2', 'sin²+cos² = 1'),

@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 void main() {
   group('Piecewise Integration Tests', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Symbolic Integration', () {
@@ -153,10 +153,10 @@ void main() {
   });
 
   group('Piecewise Differentiation Tests', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Symbolic Differentiation', () {
@@ -238,10 +238,10 @@ void main() {
   });
 
   group('Evaluation Tests', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     group('Basic Evaluation', () {

@@ -8,10 +8,10 @@ import 'package:texpr/texpr.dart';
 /// - Backslash-less functions: `sin(x)` to `\sin{x}`
 /// - Implicit multiplication in exponents: `e^{ix}` (already works)
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('Braceless Fractions', () {

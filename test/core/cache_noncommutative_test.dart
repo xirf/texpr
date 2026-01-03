@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('Cache Non-Commutative Operations', () {
-    late LatexMathEvaluator evaluator;
+    late Texpr evaluator;
 
     setUp(() {
-      evaluator = LatexMathEvaluator();
+      evaluator = Texpr();
     });
 
     test('cache distinguishes subtraction operand order', () {
@@ -74,7 +74,7 @@ void main() {
         parsedExpressionCacheSize: 100,
         evaluationResultCacheSize: 100,
       );
-      final evaluatorWithStats = LatexMathEvaluator(cacheConfig: config);
+      final evaluatorWithStats = Texpr(cacheConfig: config);
 
       // First evaluations - cache misses
       evaluatorWithStats.evaluate('5 - 3');

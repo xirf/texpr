@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 /// Tests for SymPy export functionality.
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('SymPy Export', () {

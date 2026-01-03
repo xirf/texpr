@@ -10,10 +10,10 @@ import 'package:texpr/texpr.dart';
 /// 4. Integer overflow in factorial/fibonacci calculations
 /// 5. Infinite loops in summation/product operations
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('DoS - Stack Overflow via Deep Recursion', () {
@@ -306,8 +306,7 @@ void main() {
   group('Memory Exhaustion', () {
     test('cache should have reasonable size limits', () {
       // CVE: Unbounded cache growth
-      final evaluatorWithCache =
-          LatexMathEvaluator(parsedExpressionCacheSize: 128);
+      final evaluatorWithCache = Texpr(parsedExpressionCacheSize: 128);
 
       // Try to fill cache with many unique expressions
       for (var i = 0; i < 10000; i++) {
@@ -455,7 +454,7 @@ void main() {
         return null;
       });
 
-      final customEvaluator = LatexMathEvaluator(extensions: customExt);
+      final customEvaluator = Texpr(extensions: customExt);
 
       expect(
         () => customEvaluator.evaluate(r'\malicious{1}'),
@@ -468,7 +467,7 @@ void main() {
   group('Symbolic Simplification - Infinite Loops', () {
     test('circular rewrite rules should not cause infinite loops', () {
       // CVE: Symbolic simplifier has maxIterations=100, test it
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
 
       // Expression that might trigger many simplification passes
       final expr = evaluator.parse(r'x + x + x + x + x + x');
@@ -481,7 +480,7 @@ void main() {
     });
 
     test('deeply recursive symbolic expressions should not overflow', () {
-      final evaluator = LatexMathEvaluator();
+      final evaluator = Texpr();
 
       // Create deeply nested parentheses to test recursion depth
       var expr = 'x';

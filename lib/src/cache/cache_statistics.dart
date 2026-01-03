@@ -4,7 +4,7 @@
 ///
 /// Example:
 /// ```dart
-/// final evaluator = LatexMathEvaluator(
+/// final evaluator = Texpr(
 ///   cacheConfig: CacheConfig.withStatistics,
 /// );
 ///

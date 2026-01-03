@@ -16,7 +16,7 @@ import '../ast/visitor.dart';
 /// ## Usage
 ///
 /// ```dart
-/// final evaluator = LatexMathEvaluator();
+/// final evaluator = Texpr();
 /// final expr = evaluator.parse(r'\frac{x^2 + 1}{2}');
 /// final mathml = expr.toMathML();
 /// // Returns: <math xmlns="..."><mfrac>...</mfrac></math>

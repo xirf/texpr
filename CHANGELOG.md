@@ -1,4 +1,36 @@
-# CHANGELOG
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- **LaTeX Commands:** Implemented support for common academic symbols:
+  - Arrows: `\mapsto`, `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow`.
+  - Relation & Set Operators: `\approx`, `\propto`, `\cup`, `\cap`, `\setminus`, `\subset`, `\subseteq`, `\supset`, `\supseteq`.
+  - Quantifiers: `\forall` and `\exists` (parsed as variables for syntax tolerance).
+  - Decorations: `\dot`, `\ddot`, and `\bar` functions for physics and statistical notation.
+
+### Changed
+
+- **Breaking Change:** Renamed `LatexException` to `TexprException` (and `LatexParserException` -> `ParserException`, etc.) to better align with the library name.
+- **Error Messages:** Significantly improved parser error clarity. Error messages now use readable symbols (e.g., `got: '*'`) instead of internal enum names (e.g., `got: multiply`).
+- **Parser:** Improved syntax tolerance for known commands on implicit multiplication (e.g., `sin(x)`).
+- **Documentation:** Updated feature guides, notation references, and example code.
+
+
+## 0.1.0 - 2026-01-02
+
+**Draft Release: Benchmarks, WASM, and Documentation Overhaul.**
+
+* **WASM Support:** Added initial WebAssembly compilation targets and examples (`wasm/`).
+* **Benchmarks:** Benchmarking suite added (`benchmark/`).
+* **Documentation:** Updates to API docs and feature guides.
+* **Testing:** Expanded test coverage for complex features and edge cases.
 
 ## 0.0.1 – 2026-01-01
 

@@ -3,10 +3,10 @@ import 'package:texpr/texpr.dart';
 
 /// Stress tests for extended LaTeX notation - v0.2.0 milestone verification
 void main() {
-  late LatexMathEvaluator evaluator;
+  late Texpr evaluator;
 
   setUp(() {
-    evaluator = LatexMathEvaluator();
+    evaluator = Texpr();
   });
 
   group('All Greek Letters in Expressions', () {

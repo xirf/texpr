@@ -1,6 +1,6 @@
 # Exceptions and Validation
 
-## LatexMathException
+## TexprException
 
 Base sealed class for all exceptions thrown by the library.
 
@@ -21,7 +21,7 @@ Base sealed class for all exceptions thrown by the library.
 
 ## ValidationResult
 
-Returned by `LatexMathEvaluator.validate()`. The `validate()` method performs automatic error recovery, allowing it to collect multiple errors in a single pass.
+Returned by `Texpr.validate()`. The `validate()` method performs automatic error recovery, allowing it to collect multiple errors in a single pass.
 
 ### Properties
 
@@ -35,5 +35,5 @@ Returned by `LatexMathEvaluator.validate()`. The `validate()` method performs au
 ### Methods
 
 *   `ValidationResult.valid()`: Creates a success result.
-*   `ValidationResult.fromException(LatexMathException e)`: Creates a failure result from an exception.
-*   `ValidationResult.fromExceptions(List<LatexMathException> exceptions)`: Creates a result from a list of exceptions.
+*   `ValidationResult.fromException(TexprException e)`: Creates a failure result from an exception.
+*   `ValidationResult.fromExceptions(List<TexprException> exceptions)`: Creates a result from a list of exceptions.

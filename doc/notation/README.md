@@ -40,7 +40,7 @@ f(x) = x^2{x > 0}
 ## Example
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 // Sum: 1 + 2 + 3 + 4 + 5 = 15
 e.evaluate(r'\sum_{i=1}^{5} i');  // 15.0

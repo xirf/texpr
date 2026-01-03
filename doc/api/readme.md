@@ -4,7 +4,7 @@ Welcome to the API reference for the `texpr` package. This documentation covers 
 
 ## Core
 
-*   [LatexMathEvaluator](core.md#latexmathevaluator): The main entry point for parsing and evaluating expressions.
+*   [Texpr](core.md#Texpr): The main entry point for parsing and evaluating expressions.
 *   [EvaluationResult](core.md#evaluationresult): The type-safe result returned by evaluation.
 
 ## Data Types
@@ -27,5 +27,5 @@ Welcome to the API reference for the `texpr` package. This documentation covers 
 
 ## Exceptions
 
-*   [LatexMathException](exceptions.md): Base class for all library exceptions.
+*   [TexprException](exceptions.md): Base class for all library exceptions.
 *   [ValidationResult](exceptions.md#validationresult): Detailed validation information.

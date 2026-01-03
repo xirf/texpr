@@ -195,7 +195,7 @@ class Tokenizer {
           position: startPos,
           expression: _source,
           suggestion:
-              'Remove this character or check if it should be part of a LaTeX command',
+              'Remove this character or check if it should be part of a command',
         );
     }
   }
@@ -238,8 +238,7 @@ class Tokenizer {
         'Unexpected end after backslash',
         position: startPos,
         expression: _source,
-        suggestion:
-            'Add a LaTeX command after the backslash (e.g., \\sin, \\pi)',
+        suggestion: 'Add a command after the backslash (e.g., \\sin, \\pi)',
       );
     }
 
@@ -299,10 +298,10 @@ class Tokenizer {
     }
 
     throw TokenizerException(
-      'Unknown LaTeX command: \\$command',
+      'Unknown command: \\$command',
       position: startPos,
       expression: _source,
-      suggestion: 'Check if this is a valid LaTeX command or function name',
+      suggestion: 'Check if this is a valid command or function name',
     );
   }
 

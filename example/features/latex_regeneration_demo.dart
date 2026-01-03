@@ -8,7 +8,7 @@ import 'package:texpr/texpr.dart';
 /// 3. AST manipulation with LaTeX output
 /// 4. Integration with visualization tools (MathJax, KaTeX)
 void main() {
-  final evaluator = LatexMathEvaluator();
+  final evaluator = Texpr();
 
   print('=== LaTeX Regeneration Demo ===\n');
 

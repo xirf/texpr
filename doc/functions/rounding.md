@@ -36,7 +36,7 @@ Returns the nearest integer to x. Rounds away from zero on .5.
 ## Examples
 
 ```dart
-final e = LatexMathEvaluator();
+final e = Texpr();
 
 e.evaluate(r'\ceil{3.14}');   // 4.0
 e.evaluate(r'\floor{3.14}');  // 3.0
