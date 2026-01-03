@@ -228,8 +228,16 @@ class Texpr {
   Expression parse(String expression) {
     final cached = _cacheManager.getParsedExpression(expression);
     if (cached != null) return cached;
+
     final ast = _parseInternal(expression);
-    _cacheManager.putParsedExpression(expression, ast);
+
+    // Skip L1 cache for oversized expressions to prevent memory exhaustion.
+    // This is a soft limit: large expressions parse normally, just aren't cached.
+    final maxLen = cacheConfig.maxCacheInputLength;
+    if (maxLen == 0 || expression.length <= maxLen) {
+      _cacheManager.putParsedExpression(expression, ast);
+    }
+
     return ast;
   }
 

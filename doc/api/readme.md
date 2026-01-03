@@ -29,3 +29,7 @@ Welcome to the API reference for the `texpr` package. This documentation covers 
 
 *   [TexprException](exceptions.md): Base class for all library exceptions.
 *   [ValidationResult](exceptions.md#validationresult): Detailed validation information.
+
+## Security
+
+*   [Security Considerations](../security.md): Overview of security mitigations and limits.

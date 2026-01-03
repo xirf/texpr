@@ -53,12 +53,15 @@ The following are known limitations discovered through testing:
 
 ### 1. Evaluation Limitations (Not Parsing)
 
-| Expression                        | Can Parse | Can Evaluate | Notes                                     |
-| --------------------------------- | --------- | ------------ | ----------------------------------------- |
-| `\nabla f`                        | ✅         | ✅            | Gradient returns vector of partial derivs |
-| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only  |
-| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable            |
-| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint    |
+| Expression                        | Can Parse | Can Evaluate | Notes                                        |
+| --------------------------------- | --------- | ------------ | -------------------------------------------- |
+| `\nabla{x^2 + y^2}`               | ✅         | ✅            | Concrete expressions with explicit vars      |
+| `\nabla f` (bare symbol)          | ✅         | ❌            | Symbolic only; no structure to differentiate |
+| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only     |
+| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable               |
+| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint       |
+
+
 
 ### 2. Previously Missing LaTeX Commands ✅ Fixed
 

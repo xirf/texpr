@@ -96,6 +96,14 @@ final matrixResult = evaluator.evaluate(r'''
 
 ### 3. Diagnostics
 
+## Exceptions
+
+*   [TexprException](exceptions.md): Base class for all library exceptions.
+*   [ValidationResult](exceptions.md#validationresult): Detailed validation information.
+
+## Security
+
+*   [Security Considerations](../security.md): Overview of security mitigations and limits.
 The parser provides error location offsets and suggestions for syntax errors.
 
 ```dart
@@ -193,6 +201,7 @@ Below is a selection of examples showcasing the library's capabilities.
 * **[Function Reference](doc/functions/README.md)**
 * **[Extending the Library](doc/extensions.md)**
 * **[Export Features](doc/features/export.md)**
+* **[Security Considerations](doc/security.md)**
 
 ## 🤝 Contributing
 

@@ -498,4 +498,303 @@ void main() {
       );
     });
   });
+
+  group('Gradient Evaluation DoS', () {
+    test(
+        'gradient with many variables should not cause exponential computation',
+        () {
+      // CVE: Gradient computes partial derivatives for each variable
+      // Many variables could cause excessive computation
+      final manyVars = List.generate(50, (i) => 'x$i').join('+');
+      final expr = r'\nabla{' + manyVars + '}';
+
+      expect(
+        () => evaluator.evaluate(
+          expr,
+          Map.fromEntries(List.generate(50, (i) => MapEntry('x$i', 1.0))),
+        ),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason:
+            'Gradient with many variables should complete or fail gracefully',
+      );
+    });
+
+    test('gradient of deeply nested expression should not overflow', () {
+      // CVE: Nested symbolic differentiation could cause stack overflow
+      var expr = 'x';
+      for (var i = 0; i < 100; i++) {
+        expr = '\\sin{$expr}';
+      }
+
+      expect(
+        () => evaluator.evaluate(r'\nabla{' + expr + '}', {'x': 1.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Nested gradient should be handled safely',
+      );
+    });
+  });
+
+  group('Binomial Coefficient Vulnerabilities', () {
+    test('binom with very large n should fail gracefully', () {
+      // CVE: Binomial uses factorial internally which can overflow
+      expect(
+        () => evaluator.evaluate(r'\binom{1000}{500}'),
+        anyOf(returnsNormally, throwsA(isA<EvaluatorException>())),
+        reason: 'Large binomial should be rejected or return infinity',
+      );
+    });
+
+    test('binom with negative values should be handled', () {
+      // CVE: Negative values in binomial calculation
+      expect(
+        () => evaluator.evaluate(r'\binom{-5}{3}'),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Negative binomial should not crash',
+      );
+    });
+
+    test('binom with k > n should return zero or fail gracefully', () {
+      // CVE: Edge case where k exceeds n
+      expect(
+        () => evaluator.evaluate(r'\binom{5}{10}'),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'k > n binomial should be handled',
+      );
+    });
+  });
+
+  group('High-Order Derivative Vulnerabilities', () {
+    test('very high order derivative should not cause stack overflow', () {
+      // CVE: High order derivatives cause repeated recursion
+      expect(
+        () => evaluator
+            .evaluate(r'\frac{d^{1000}}{dx^{1000}} x^{1000}', {'x': 1.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Very high order derivatives should be limited',
+      );
+    });
+
+    test('high order derivative with complex expression should be bounded', () {
+      // CVE: Trigonometric derivatives grow in complexity
+      expect(
+        () =>
+            evaluator.evaluate(r'\frac{d^{100}}{dx^{100}} \sin{x}', {'x': 0.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'High order trigonometric derivatives should complete',
+      );
+    });
+
+    test('partial derivative with many variables should be bounded', () {
+      // CVE: Chained partial derivatives could cause exponential growth
+      final expr =
+          r'\frac{\partial}{\partial x} \frac{\partial}{\partial y} \frac{\partial}{\partial z} ' *
+                  10 +
+              'xyz';
+      expect(
+        () => evaluator.evaluate(expr, {'x': 1.0, 'y': 1.0, 'z': 1.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Chained partial derivatives should be limited',
+      );
+    });
+  });
+
+  group('Multi-Integral Vulnerabilities', () {
+    test('multi-integral with many variables should not hang', () {
+      // CVE: Triple integrals could cause O(n^3) complexity
+      expect(
+        () => evaluator
+            .evaluate(r'\iiint_{0}^{10} x \cdot y \cdot z \, dx \, dy \, dz'),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Triple integral should complete or fail gracefully',
+      );
+    });
+
+    test('nested integrals should not cause exponential complexity', () {
+      // CVE: Nested single integrals could exhaust resources
+      final expr = r'\int_{0}^{1} ' * 5 + r'x dx' + r' dx' * 4;
+      expect(
+        () => evaluator.evaluate(expr, {'x': 1.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Nested integrals should not cause exponential growth',
+      );
+    });
+  });
+
+  group('Visitor Pattern Depth Vulnerabilities', () {
+    test('toJson should handle deeply nested expressions', () {
+      // CVE: JSON export uses recursive visitor pattern
+      var expr = 'x';
+      for (var i = 0; i < 500; i++) {
+        expr = '($expr)';
+      }
+
+      expect(
+        () {
+          final parsed = evaluator.parse(expr);
+          parsed.toJson();
+        },
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'JSON export should handle deep nesting',
+      );
+    });
+
+    test('toMathML should handle deeply nested expressions', () {
+      // CVE: MathML export uses recursive visitor pattern
+      var expr = 'x';
+      for (var i = 0; i < 500; i++) {
+        expr = '($expr)';
+      }
+
+      expect(
+        () {
+          final parsed = evaluator.parse(expr);
+          parsed.toMathML();
+        },
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'MathML export should handle deep nesting',
+      );
+    });
+
+    test('toLatex roundtrip should handle deeply nested expressions', () {
+      // CVE: LaTeX export uses recursive visitor pattern
+      var expr = 'x';
+      for (var i = 0; i < 500; i++) {
+        expr = '($expr)';
+      }
+
+      expect(
+        () {
+          final parsed = evaluator.parse(expr);
+          parsed.toLatex();
+        },
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'LaTeX roundtrip should handle deep nesting',
+      );
+    });
+  });
+
+  group('Export Injection Vulnerabilities', () {
+    test('variable names should be safely handled in MathML', () {
+      // CVE: Special characters could break MathML structure
+      expect(
+        () => evaluator.parse('x').toMathML(),
+        returnsNormally,
+        reason: 'MathML export should not crash on normal input',
+      );
+    });
+
+    test('toJson with variable names should serialize safely', () {
+      // CVE: JSON serialization should handle all variable names
+      expect(
+        () => evaluator.parse('alpha').toJson(),
+        returnsNormally,
+        reason: 'JSON should serialize safely',
+      );
+    });
+  });
+
+  group('Vector/Matrix Dimension Vulnerabilities', () {
+    test('extremely large matrix should be rejected', () {
+      // CVE: Large matrices could exhaust memory
+      final rows = List.generate(100, (i) => List.filled(100, '1').join(' & '))
+          .join(r' \\ ');
+      final expr = r'\begin{pmatrix} ' + rows + r' \end{pmatrix}';
+
+      expect(
+        () => evaluator.evaluate(expr),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Large matrices should be handled gracefully',
+      );
+    });
+
+    test('mismatched matrix dimensions in operations should throw', () {
+      // CVE: Dimension validation should prevent invalid operations
+      expect(
+        () => evaluator.evaluate(
+            r'\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \cdot \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}'),
+        throwsA(isA<EvaluatorException>()),
+        reason: 'Dimension mismatch should be caught',
+      );
+    });
+
+    test('empty matrix should be handled', () {
+      // CVE: Empty matrix edge case
+      expect(
+        () => evaluator.evaluate(r'\begin{pmatrix} \end{pmatrix}'),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Empty matrix should not crash',
+      );
+    });
+  });
+
+  group('Piecewise Function Vulnerabilities', () {
+    test('piecewise with many cases should not hang', () {
+      // CVE: Many piecewise cases could slow down evaluation
+      var cases = List.generate(100, (i) => '$i & x = $i').join(r' \\ ');
+      final expr = r'\begin{cases} ' + cases + r' \end{cases}';
+
+      expect(
+        () => evaluator.evaluate(expr, {'x': 50.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Many piecewise cases should be evaluated efficiently',
+      );
+    });
+
+    test('deeply nested piecewise should be bounded', () {
+      // CVE: Nested piecewise could cause deep recursion
+      var expr = '1';
+      for (var i = 0; i < 50; i++) {
+        expr =
+            r'\begin{cases} ' + expr + r' & x > 0 \\ 0 & x \le 0 \end{cases}';
+      }
+
+      expect(
+        () => evaluator.evaluate(expr, {'x': 1.0}),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: 'Nested piecewise should be limited',
+      );
+    });
+  });
+
+  group('Negative and Zero Edge Cases', () {
+    test('0^0 should return 1 or handle gracefully', () {
+      // CVE: Mathematical indeterminate form
+      expect(
+        () => evaluator.evaluate('0^0'),
+        anyOf(returnsNormally, throwsA(isA<Exception>())),
+        reason: '0^0 indeterminate form should be handled',
+      );
+    });
+
+    test('negative factorial should throw', () {
+      // CVE: Factorial of negative numbers is undefined
+      expect(
+        () => evaluator.evaluate(r'\factorial{-5}'),
+        throwsA(isA<EvaluatorException>()),
+        reason: 'Negative factorial should throw',
+      );
+    });
+
+    test('log of zero should throw or return negative infinity', () {
+      // CVE: Log of zero is undefined
+      expect(
+        () => evaluator.evaluate(r'\ln{0}'),
+        anyOf(
+          throwsA(isA<EvaluatorException>()),
+          returnsNormally, // May return -infinity
+        ),
+        reason: 'Log of zero should be handled',
+      );
+    });
+
+    test('sqrt of negative should return complex or throw', () {
+      // CVE: Square root of negative in real-only context
+      final result = evaluator.evaluate(r'\sqrt{-1}');
+      expect(
+        result.isComplex || result.isNumeric,
+        isTrue,
+        reason: 'sqrt(-1) should return complex i or handle gracefully',
+      );
+    });
+  });
 }

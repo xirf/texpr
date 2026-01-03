@@ -31,10 +31,10 @@ void main() {
     });
 
     group('Evaluation', () {
-      late LatexMathEvaluator evaluator;
+      late Texpr evaluator;
 
       setUp(() {
-        evaluator = LatexMathEvaluator();
+        evaluator = Texpr();
       });
 
       test('gradient of x^2 at x=3 is [6]', () {
