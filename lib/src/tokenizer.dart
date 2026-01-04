@@ -9,6 +9,95 @@ import 'token.dart';
 import 'tokenizer/command_registry.dart';
 import 'tokenizer/command_normalizer.dart';
 
+/// Maps Unicode mathematical symbols to their LaTeX equivalents.
+///
+/// This allows direct input of symbols like `√`, `π`, `∑`, `∫` without
+/// requiring backslash commands.
+const _unicodeToLatex = <String, String>{
+  // Operators
+  '√': r'\sqrt',
+  '∑': r'\sum',
+  '∫': r'\int',
+  '∬': r'\iint',
+  '∭': r'\iiint',
+  '∮': r'\oint',
+  '∂': r'\partial',
+  '∇': r'\nabla',
+  '±': r'\pm',
+  '∓': r'\mp',
+  '×': r'\times',
+  '÷': r'\div',
+  '·': r'\cdot',
+
+  // Comparisons
+  '≤': r'\leq',
+  '≥': r'\geq',
+  '≠': r'\neq',
+  '≈': r'\approx',
+  '∝': r'\propto',
+  '≡': r'\equiv',
+
+  // Set notation
+  '∈': r'\in',
+  '∉': r'\notin',
+  '⊂': r'\subset',
+  '⊃': r'\supset',
+  '⊆': r'\subseteq',
+  '⊇': r'\supseteq',
+  '∪': r'\cup',
+  '∩': r'\cap',
+  '∅': r'\emptyset',
+
+  // Greek letters (lowercase)
+  'α': r'\alpha',
+  'β': r'\beta',
+  'γ': r'\gamma',
+  'δ': r'\delta',
+  'ε': r'\epsilon',
+  'ζ': r'\zeta',
+  'η': r'\eta',
+  'θ': r'\theta',
+  'ι': r'\iota',
+  'κ': r'\kappa',
+  'λ': r'\lambda',
+  'μ': r'\mu',
+  'ν': r'\nu',
+  'ξ': r'\xi',
+  'π': r'\pi',
+  'ρ': r'\rho',
+  'σ': r'\sigma',
+  'τ': r'\tau',
+  'υ': r'\upsilon',
+  'φ': r'\phi',
+  'χ': r'\chi',
+  'ψ': r'\psi',
+  'ω': r'\omega',
+
+  // Greek letters (uppercase)
+  'Γ': r'\Gamma',
+  'Δ': r'\Delta',
+  'Θ': r'\Theta',
+  'Λ': r'\Lambda',
+  'Ξ': r'\Xi',
+  'Π': r'\Pi',
+  'Σ': r'\Sigma',
+  'Φ': r'\Phi',
+  'Ψ': r'\Psi',
+  'Ω': r'\Omega',
+
+  // Special symbols
+  '∞': r'\infty',
+  '∀': r'\forall',
+  '∃': r'\exists',
+  '→': r'\to',
+  '←': r'\leftarrow',
+  '↔': r'\leftrightarrow',
+  '⇒': r'\Rightarrow',
+  '⇐': r'\Leftarrow',
+  '⇔': r'\Leftrightarrow',
+  '↦': r'\mapsto',
+};
+
 /// Functions that can be written without backslash (e.g., sin, cos, tan).
 /// When followed by `(`, these are recognized as function calls.
 const _knownFunctions = <String>{
@@ -38,9 +127,10 @@ class Tokenizer {
   final bool _allowImplicitMultiplication;
   int _position = 0;
 
-  Tokenizer(this._source,
+  Tokenizer(String source,
       {ExtensionRegistry? extensions, bool allowImplicitMultiplication = true})
-      : _extensions = extensions,
+      : _source = _preprocessUnicode(source),
+        _extensions = extensions,
         _allowImplicitMultiplication = allowImplicitMultiplication {
     if (_source.length > maxInputLength) {
       throw TokenizerException(
@@ -51,6 +141,21 @@ class Tokenizer {
             'Reduce the size of your LaTeX expression to under $maxInputLength characters',
       );
     }
+  }
+
+  /// Preprocesses the input string by replacing Unicode symbols with LaTeX.
+  ///
+  /// This allows users to input mathematical expressions using Unicode symbols
+  /// like `√`, `π`, `∑`, `∫` directly, which are converted to their LaTeX
+  /// equivalents before tokenization.
+  static String _preprocessUnicode(String input) {
+    var result = input;
+    for (final entry in _unicodeToLatex.entries) {
+      if (result.contains(entry.key)) {
+        result = result.replaceAll(entry.key, entry.value);
+      }
+    }
+    return result;
   }
 
   /// Maximum allowed length for input string.

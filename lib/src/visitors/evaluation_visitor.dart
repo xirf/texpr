@@ -282,9 +282,11 @@ class EvaluationVisitor
 
     if (vars.isEmpty) {
       throw EvaluatorException(
-        'Cannot compute gradient: no variables found in expression',
+        'Cannot compute gradient: the expression must contain evaluable variables',
         suggestion:
-            'Provide variables in the expression or specify them explicitly',
+            'The gradient operator (∇) requires a concrete expression with variables like '
+            '"∇{x^2 + y^2}". Symbolic expressions like "∇f" cannot be evaluated numerically. '
+            'Provide variable values or expand the expression.',
       );
     }
 

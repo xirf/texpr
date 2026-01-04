@@ -111,22 +111,21 @@ The following syntax variations are now automatically handled:
 
 **Goal:** Expressions that can be numerically evaluated, are.
 
-| Task                                          | Status | Description                             |
-| --------------------------------------------- | ------ | --------------------------------------- |
-| Unicode input support                         | 📋      | Accept `√`, `∑`, `∫`, `π` directly      |
-| Improved implicit multiplication heuristics   | 📋      | `e^ix` to `e^{i*x}`                     |
-| Better error messages for evaluation failures | 📋      | "Cannot evaluate gradient symbolically" |
+| Task                                          | Status | Description                                              |
+| --------------------------------------------- | ------ | -------------------------------------------------------- |
+| Unicode input support                         | ✅      | Accept `√`, `∑`, `∫`, `π` directly                       |
+| Improved implicit multiplication heuristics   | ✅      | `e^{ix}` works, braces required for multi-char exponents |
+| Better error messages for evaluation failures | ✅      | "Cannot evaluate gradient symbolically"                  |
 
 ### Phase 3: Developer Experience
 
 **Goal:** Easy integration and debugging.
 
-| Task            | Status | Description                  |
-| --------------- | ------ | ---------------------------- |
-| JSON AST export | ✅      | For debugging and tooling    |
-| MathML export   | ✅      | For web display              |
-| SymPy export    | ✅      | For Python interoperability  |
-| CLI tool        | 📋      | `latexmath eval "x^2" --x=3` |
+| Task            | Status | Description                 |
+| --------------- | ------ | --------------------------- |
+| JSON AST export | ✅      | For debugging and tooling   |
+| MathML export   | ✅      | For web display             |
+| SymPy export    | ✅      | For Python interoperability |
 
 ---
 
@@ -160,4 +159,5 @@ The following are explicitly **not** goals for this library:
 
 ---
 
-**Last Updated:** 2025-12-30
+**Last Updated:** 2026-01-04
+
