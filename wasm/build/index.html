@@ -60,8 +60,9 @@
       detailed output.
     </p>
 
-    <script src="main.dart.js" type="module"></script>
-    <script>
+    <script type="module">
+      import { compileStreaming } from './main.mjs';
+
       // Capture console.log output
       const output = document.getElementById("output");
       const status = document.getElementById("status");
@@ -81,16 +82,33 @@
         status.textContent = "Error: " + args.join(" ");
       };
 
-      // Update status on successful load
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          if (logs.length > 0) {
+      async function init() {
+        try {
+          status.textContent = "Loading WASM module...";
+          const compiledApp = await compileStreaming(fetch('main.wasm'));
+          const app = await compiledApp.instantiate({});
+          
+          // Execute main() which sets up the exports
+          app.invokeMain();
+          
+          // Verify export
+          if (window.texpr) {
             status.className = "status success";
-            status.textContent =
-              "WASM module loaded and executed successfully!";
+            status.textContent = "WASM loaded. API ready at window.texpr";
+            
+            console.log("Found window.texpr. Testing...");
+            console.log("2 + 2 =", window.texpr.evaluate("2 + 2"));
+            console.log("\\sin(0) =", window.texpr.evaluate("\\sin(0)"));
+          } else {
+             throw new Error("window.texpr not found after invokeMain");
           }
-        }, 1000);
-      });
+
+        } catch (e) {
+           console.error("WASM Init Failed:", e);
+        }
+      }
+
+      init();
     </script>
   </body>
 </html>
