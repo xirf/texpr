@@ -190,6 +190,15 @@ class JsonAstVisitor implements ExpressionVisitor<Map<String, dynamic>, void> {
   }
 
   @override
+  Map<String, dynamic> visitGradientExpr(GradientExpr node, void context) {
+    return {
+      'type': 'GradientExpr',
+      'body': node.body.accept(this, context),
+      if (node.variables != null) 'variables': node.variables,
+    };
+  }
+
+  @override
   Map<String, dynamic> visitComparison(Comparison node, void context) {
     return {
       'type': 'Comparison',

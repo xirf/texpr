@@ -59,6 +59,7 @@ final config = CacheConfig(
   evaluationResultCacheSize: 512,   // L2 size
   differentiationCacheSize: 128,    // L3 size
   subExpressionCacheSize: 1024,     // L4 size
+  maxCacheInputLength: 5120,        // Skip L1 for inputs > 5KB
   evictionPolicy: EvictionPolicy.lru,
   timeToLive: Duration(minutes: 30), // Optional TTL
   collectStatistics: true,           // Enable stats
@@ -66,6 +67,8 @@ final config = CacheConfig(
 
 final evaluator = Texpr(cacheConfig: config);
 ```
+
+> **Note**: `maxCacheInputLength` prevents memory exhaustion from caching large ASTs. Expressions exceeding this limit are parsed and evaluated normally but not stored in L1 cache. Set to `0` to disable.
 
 ### Preset Configurations
 

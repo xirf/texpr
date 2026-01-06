@@ -273,6 +273,90 @@ class EvaluationVisitor
   }
 
   @override
+  dynamic visitGradientExpr(GradientExpr node, Map<String, double>? context) {
+    final variables = context ?? const {};
+
+    // Get the list of variables to differentiate with respect to
+    final vars =
+        node.variables ?? _findVariables(node.body, variables.keys.toSet());
+
+    if (vars.isEmpty) {
+      throw EvaluatorException(
+        'Cannot compute gradient: the expression must contain evaluable variables',
+        suggestion:
+            'The gradient operator (∇) requires a concrete expression with variables like '
+            '"∇{x^2 + y^2}". Symbolic expressions like "∇f" cannot be evaluated numerically. '
+            'Provide variable values or expand the expression.',
+      );
+    }
+
+    // Compute partial derivative for each variable and evaluate
+    final gradientComponents = <double>[];
+    for (final variable in vars) {
+      final derivative =
+          _differentiationEvaluator.differentiate(node.body, variable);
+      final value = _evaluateAsDouble(derivative, variables);
+      gradientComponents.add(value);
+    }
+
+    return Vector(gradientComponents);
+  }
+
+  /// Finds all free variables in an expression.
+  List<String> _findVariables(Expression expr, Set<String> knownVariables) {
+    final found = <String>{};
+    _collectVariables(expr, found, knownVariables);
+    // Sort for consistent ordering
+    final vars = found.toList()..sort();
+    return vars;
+  }
+
+  /// Recursively collects variable names from an expression.
+  void _collectVariables(
+      Expression expr, Set<String> found, Set<String> knownVariables) {
+    switch (expr) {
+      case Variable(:final name):
+        // Exclude constants and special symbols
+        if (!_isConstant(name) &&
+            (knownVariables.isEmpty || knownVariables.contains(name))) {
+          found.add(name);
+        }
+      case BinaryOp(:final left, :final right):
+        _collectVariables(left, found, knownVariables);
+        _collectVariables(right, found, knownVariables);
+      case UnaryOp(:final operand):
+        _collectVariables(operand, found, knownVariables);
+      case FunctionCall(:final args):
+        for (final arg in args) {
+          _collectVariables(arg, found, knownVariables);
+        }
+      case AbsoluteValue(:final argument):
+        _collectVariables(argument, found, knownVariables);
+      case GradientExpr(:final body):
+        _collectVariables(body, found, knownVariables);
+      default:
+        // Other expression types (constants, etc.) don't contain variables
+        break;
+    }
+  }
+
+  /// Checks if a name is a mathematical constant.
+  bool _isConstant(String name) {
+    const constants = {
+      'pi',
+      'e',
+      'tau',
+      'phi',
+      'i',
+      'infty',
+      'partial',
+      'nabla'
+    };
+    return constants.contains(name) ||
+        ConstantRegistry.instance.get(name) != null;
+  }
+
+  @override
   dynamic visitComparison(Comparison node, Map<String, double>? context) {
     final variables = context ?? const {};
     return _comparisonEvaluator.evaluateComparison(node, variables);

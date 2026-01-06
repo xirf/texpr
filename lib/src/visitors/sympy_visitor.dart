@@ -336,6 +336,19 @@ class SymPyVisitor implements ExpressionVisitor<String, void> {
   }
 
   @override
+  String visitGradientExpr(GradientExpr node, void context) {
+    final body = node.body.accept(this, context);
+    // SymPy uses gradient function from sympy.vector or derive manually
+    // For simplicity, we'll express it as a list of partial derivatives
+    if (node.variables != null && node.variables!.isNotEmpty) {
+      final derivs = node.variables!.map((v) => 'diff($body, $v)').join(', ');
+      return 'Matrix([$derivs])';
+    }
+    // Without explicit variables, we can't generate SymPy gradient
+    return 'gradient($body)';
+  }
+
+  @override
   String visitComparison(Comparison node, void context) {
     final left = node.left.accept(this, context);
     final right = node.right.accept(this, context);

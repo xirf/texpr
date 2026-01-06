@@ -43,7 +43,7 @@
 - Einstein Field Equations
 - Normal distribution PDF
 
-**Test Coverage:** 1,864 tests passing
+**Test Coverage:** 1,874 tests passing
 
 ---
 
@@ -53,12 +53,15 @@ The following are known limitations discovered through testing:
 
 ### 1. Evaluation Limitations (Not Parsing)
 
-| Expression                        | Can Parse | Can Evaluate | Notes                                    |
-| --------------------------------- | --------- | ------------ | ---------------------------------------- |
-| `\nabla f`                        | ✅         | ❌            | Gradient requires vector calculus engine |
-| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only |
-| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable           |
-| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint   |
+| Expression                        | Can Parse | Can Evaluate | Notes                                        |
+| --------------------------------- | --------- | ------------ | -------------------------------------------- |
+| `\nabla{x^2 + y^2}`               | ✅         | ✅            | Concrete expressions with explicit vars      |
+| `\nabla f` (bare symbol)          | ✅         | ❌            | Symbolic only; no structure to differentiate |
+| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only     |
+| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable               |
+| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint       |
+
+
 
 ### 2. Previously Missing LaTeX Commands ✅ Fixed
 
@@ -102,28 +105,27 @@ The following syntax variations are now automatically handled:
 | Add `\subset`, `\subseteq`, `\supset`              | ✅      | Set notation                   |
 | Add `\cup`, `\cap`, `\setminus`                    | ✅      | Set operations                 |
 | Add `\propto`, `\mapsto`                           | ✅      | Relation symbols               |
-| Test with 50+ real academic paper excerpts         | 📋      | Validate "just works" claim    |
+| Test with 50+ real academic paper excerpts         | ✅      | Validate "just works" claim    |
 
 ### Phase 2: Common Use Case Evaluation
 
 **Goal:** Expressions that can be numerically evaluated, are.
 
-| Task                                          | Status | Description                             |
-| --------------------------------------------- | ------ | --------------------------------------- |
-| Unicode input support                         | 📋      | Accept `√`, `∑`, `∫`, `π` directly      |
-| Improved implicit multiplication heuristics   | 📋      | `e^ix` to `e^{i*x}`                     |
-| Better error messages for evaluation failures | 📋      | "Cannot evaluate gradient symbolically" |
+| Task                                          | Status | Description                                              |
+| --------------------------------------------- | ------ | -------------------------------------------------------- |
+| Unicode input support                         | ✅      | Accept `√`, `∑`, `∫`, `π` directly                       |
+| Improved implicit multiplication heuristics   | ✅      | `e^{ix}` works, braces required for multi-char exponents |
+| Better error messages for evaluation failures | ✅      | "Cannot evaluate gradient symbolically"                  |
 
 ### Phase 3: Developer Experience
 
 **Goal:** Easy integration and debugging.
 
-| Task            | Status | Description                  |
-| --------------- | ------ | ---------------------------- |
-| JSON AST export | ✅      | For debugging and tooling    |
-| MathML export   | ✅      | For web display              |
-| SymPy export    | ✅      | For Python interoperability  |
-| CLI tool        | 📋      | `latexmath eval "x^2" --x=3` |
+| Task            | Status | Description                 |
+| --------------- | ------ | --------------------------- |
+| JSON AST export | ✅      | For debugging and tooling   |
+| MathML export   | ✅      | For web display             |
+| SymPy export    | ✅      | For Python interoperability |
 
 ---
 
@@ -157,4 +159,5 @@ The following are explicitly **not** goals for this library:
 
 ---
 
-**Last Updated:** 2025-12-30
+**Last Updated:** 2026-01-04
+

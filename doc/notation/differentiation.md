@@ -1,6 +1,23 @@
 # Symbolic Differentiation
 
-The library supports symbolic differentiation using the standard LaTeX notation `\frac{d}{dx}` for first derivatives and `\frac{d^n}{dx^n}` for higher-order derivatives.
+The library supports symbolic differentiation using the standard LaTeX notation for derivatives:
+
+| Notation                             | Description               |
+| ------------------------------------ | ------------------------- |
+| `\frac{d}{dx}(f)`                    | First derivative          |
+| `\frac{d^n}{dx^n}(f)`                | Higher-order derivative   |
+| `\frac{\partial}{\partial x}(f)`     | Partial derivative        |
+| `\frac{\partial^2}{\partial x^2}(f)` | Second partial derivative |
+
+### Gradient
+
+The gradient operator `\nabla` computes a vector of partial derivatives for all variables in an expression.
+
+```latex
+\nabla(expression)
+```
+
+Example: `\nabla(x^2 + y^2)` evaluates to `Vector([2x, 2y])`.
 
 ## Basic Syntax
 

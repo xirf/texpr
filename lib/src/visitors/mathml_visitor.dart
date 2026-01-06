@@ -291,6 +291,13 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
   }
 
   @override
+  String visitGradientExpr(GradientExpr node, void context) {
+    final body = node.body.accept(this, context);
+    // Use nabla symbol (∇) for gradient
+    return _mrow('${_mo("∇")}$body');
+  }
+
+  @override
   String visitComparison(Comparison node, void context) {
     final left = node.left.accept(this, context);
     final right = node.right.accept(this, context);

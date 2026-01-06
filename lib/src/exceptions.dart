@@ -206,6 +206,24 @@ class ValidationResult {
           message.contains('out of range')) {
         suggestion =
             'Input value is outside the valid domain for this function';
+      }
+      // Gradient and symbolic evaluation errors
+      else if (message.contains('gradient') || message.contains('nabla')) {
+        suggestion =
+            'The gradient operator (∇) requires a concrete expression like "∇{x² + y²}". '
+            'Symbolic gradients like "∇f" cannot be evaluated numerically';
+      } else if (message.contains('symbolic') ||
+          message.contains('cannot be evaluated')) {
+        suggestion =
+            'This expression contains symbolic notation that cannot be computed numerically. '
+            'Replace abstract symbols with concrete expressions';
+      } else if (message.contains('tensor') || message.contains('index')) {
+        suggestion =
+            'Tensor notation is supported for parsing but not for numerical evaluation. '
+            'TeXpr treats subscripted variables as composite names';
+      } else if (message.contains('matrix') && message.contains('dimension')) {
+        suggestion = 'Matrix dimensions must be compatible for this operation. '
+            'Check that row and column counts match';
       } else if (message.contains('expected')) {
         suggestion = 'Check syntax near this position';
       }
