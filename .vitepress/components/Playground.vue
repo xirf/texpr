@@ -8,11 +8,23 @@ const error = ref('')
 
 let texprApi = null
 
+const examples = [
+  { label: 'Arithmetic', code: '2 + 3 * 4' },
+  { label: 'Trig', code: '\\sin(\\pi) + \\cos(0)' },
+  { label: 'Matrix', code: '\\det \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}' },
+  { label: 'Complex', code: '(1 + 2i) * (3 - 4i)' },
+  { label: 'Calculus', code: '\\int_{0}^{1} x^2 dx' },
+  { label: 'Environment', code: 'let x = 10' }
+]
+
+function loadExample(ex) {
+  input.value = ex
+  evaluate()
+}
+
 onMounted(async () => {
   try {
     // Determine base URL (handle production/dev paths if needed)
-    // For now assume /wasm/ is available at root or relative
-    // VitePress treats public/ assets as root-relative
     const wasmUrl = '/wasm/main.wasm'
     const mjsUrl = '/wasm/main.mjs'
 
@@ -87,6 +99,20 @@ function evaluate() {
         <div class="result-box">
           <span v-if="output">{{ output }}</span>
           <span v-else-if="error" class="error-text">{{ error }}</span>
+        </div>
+      </div>
+
+      <div class="examples-group">
+        <label>Try examples:</label>
+        <div class="examples-list">
+          <button 
+            v-for="ex in examples" 
+            :key="ex.label"
+            class="example-btn"
+            @click="loadExample(ex.code)"
+          >
+            {{ ex.label }}
+          </button>
         </div>
       </div>
     </div>
@@ -164,5 +190,39 @@ button:hover {
   align-items: center;
   font-family: var(--vp-font-mono);
   font-size: 1.1em;
+}
+
+.examples-group {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--vp-c-divider);
+}
+
+.examples-group label {
+  font-size: 0.9em;
+  color: var(--vp-c-text-2);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.examples-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.example-btn {
+  font-size: 0.85em;
+  padding: 0.3rem 0.6rem;
+  background-color: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-1);
+  border: 1px solid var(--vp-c-border);
+  font-weight: normal;
+}
+
+.example-btn:hover {
+  background-color: var(--vp-c-bg-mute);
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
 }
 </style>
