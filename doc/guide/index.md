@@ -32,7 +32,7 @@ To set expectations correctly:
 - **Not a full LaTeX parser**: It handles math notation, not document formatting (`\documentclass`, `\begin{theorem}`, etc.)
 - **Not arbitrary precision**: Uses IEEE 754 doubles (~15 digits of precision)
 
-See [Known Issues](https://github.com/xirf/texpr/blob/main/KNOWN_ISSUES.md) for detailed limitations.
+See [Known Issues](/reference/known-issues) for detailed limitations.
 
 ## How It Works (In Brief)
 

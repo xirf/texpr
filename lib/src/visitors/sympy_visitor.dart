@@ -5,6 +5,7 @@ import '../ast/functions.dart';
 import '../ast/calculus.dart';
 import '../ast/logic.dart';
 import '../ast/matrix.dart';
+import '../ast/environment.dart';
 import '../ast/visitor.dart';
 
 /// Visitor that converts an AST to SymPy (Python) code.
@@ -419,6 +420,24 @@ class SymPyVisitor implements ExpressionVisitor<String, void> {
     final components =
         node.components.map((c) => c.accept(this, context)).join(', ');
     return 'Matrix([$components])'; // SymPy uses Matrix for vectors
+  }
+
+  @override
+  String visitAssignmentExpr(AssignmentExpr node, void context) {
+    final value = node.value.accept(this, context);
+    // Represent assignments as Equality in SymPy
+    return 'Eq(${node.variable}, $value)';
+  }
+
+  @override
+  String visitFunctionDefinitionExpr(
+      FunctionDefinitionExpr node, void context) {
+    final body = node.body.accept(this, context);
+    final params = node.parameters.join(', ');
+    if (node.parameters.isEmpty) {
+      return 'Eq(${node.name}, $body)';
+    }
+    return 'Eq(${node.name}($params), $body)';
   }
 }
 

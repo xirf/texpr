@@ -58,6 +58,12 @@ Texpr({
 | `clearAllCaches`             | `void clearAllCaches()`                      | Clear all caches   |
 | `warmUpCache`                | `void warmUpCache(List<String> expressions)` | Pre-populate cache |
 
+#### Environment Methods
+
+| Method             | Signature                 | Description                       |
+| ------------------ | ------------------------- | --------------------------------- |
+| `clearEnvironment` | `void clearEnvironment()` | Clear persistent global variables |
+
 #### Properties
 
 | Property          | Type                        | Description                 |

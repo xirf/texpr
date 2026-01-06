@@ -26,7 +26,7 @@ These are the architectural boundaries of the library.
 
 **Consequence:** Full LaTeX compatibility, including document formatting, is outside the scope of this project.
 
-**Current Coverage:** See documentation for the complete list of [supported commands](./latex_commands.md).
+**Current Coverage:** See documentation for the complete list of [supported commands](./latex.md).
 
 **Future Work:** See [ROADMAP.md](../ROADMAP.md) for details on planned LaTeX command support.
 

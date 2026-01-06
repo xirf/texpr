@@ -15,6 +15,7 @@ This document provides a reference of all LaTeX commands supported by the `texpr
 | **Logic**      | `\forall`, `\exists`, `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow`              |
 | **Sets**       | `\subset`, `\subseteq`, `\cup`, `\cap`, `\setminus`                               |
 | **Decoration** | `\dot`, `\ddot`, `\bar`, `\overline`                                              |
+| **Variables**  | `let`, `f(x) = ...`                                                               |
 
 ---
 
@@ -264,6 +265,17 @@ For more details, see standard Greek letter symbols below.
 | `\vartheta`   | Variant theta (θ)   |
 | `\varpi`      | Variant pi (ϖ)      |
 | `\varsigma`   | Final sigma (ς)     |
+
+---
+
+## Variables & Functions
+
+For more details, see [Count Environments](../guide/environments.md).
+
+| Command       | Description         | Example      |
+| ------------- | ------------------- | ------------ |
+| `let x = ...` | Variable assignment | `let x = 5`  |
+| `f(x) = ...`  | Function definition | `f(x) = x^2` |
 
 ---
 

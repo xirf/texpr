@@ -269,6 +269,12 @@ class Tokenizer {
       default:
         if (_isLetter(char)) {
           if (_allowImplicitMultiplication) {
+            // Check for keywords (let)
+            final keywordMatch = _tryMatchKeyword(startPos);
+            if (keywordMatch != null) {
+              return keywordMatch;
+            }
+
             // Look ahead to check if this starts a known function name like sin(x)
             final funcMatch = _tryMatchUnprefixedFunction(startPos);
             if (funcMatch != null) {
@@ -284,6 +290,11 @@ class Tokenizer {
               _position++;
             }
             final word = buffer.toString();
+            // Check for keywords
+            if (word == 'let') {
+              return Token(
+                  type: TokenType.letKeyword, value: 'let', position: startPos);
+            }
             // Check if this is a known function name without backslash
             if (_knownFunctions.contains(word.toLowerCase())) {
               return Token(
@@ -448,6 +459,29 @@ class Tokenizer {
     }
 
     // Not a function call, restore position (only consumed first char)
+    _position = savedPos;
+    return null;
+  }
+
+  /// Tries to match a keyword.
+  Token? _tryMatchKeyword(int startPos) {
+    // Save position
+    final savedPos = _position;
+    _position = startPos;
+
+    final buffer = StringBuffer();
+    while (!_isAtEnd && _isLetter(_current)) {
+      buffer.write(_current);
+      _position++;
+    }
+
+    final word = buffer.toString();
+    if (word == 'let') {
+      return Token(
+          type: TokenType.letKeyword, value: 'let', position: startPos);
+    }
+
+    // Restore if not a keyword
     _position = savedPos;
     return null;
   }

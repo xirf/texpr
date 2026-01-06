@@ -40,13 +40,15 @@ try {
 
 ## Common Errors
 
-| Error         | Exception          | Suggestion              |
-| ------------- | ------------------ | ----------------------- |
-| `\sin{`       | ParserException    | Missing closing brace   |
-| `\sinn{x}`    | EvaluatorException | Did you mean 'sin'?     |
-| `\log{0}`     | EvaluatorException | Domain error            |
-| `x / 0`       | EvaluatorException | Division by zero        |
-| Undefined `x` | EvaluatorException | Provide a value for 'x' |
+| Error         | Exception          | Suggestion                    |
+| ------------- | ------------------ | ----------------------------- |
+| `\sin{`       | ParserException    | Missing closing brace         |
+| `\sinn{x}`    | EvaluatorException | Did you mean 'sin'?           |
+| `\log{0}`     | EvaluatorException | Domain error                  |
+| `x / 0`       | EvaluatorException | Division by zero              |
+| Undefined `x` | EvaluatorException | Provide a value for 'x'       |
+| `\nabla{f}`   | EvaluatorException | Cannot evaluate symbolic grad |
+| `A + B`       | EvaluatorException | Matrix dimensions must match  |
 
 ---
 

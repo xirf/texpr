@@ -125,8 +125,8 @@ double handleGcd(FunctionCall func, Map<String, double> vars,
   if (func.args.length != 2) {
     throw EvaluatorException('gcd requires two arguments');
   }
-  final a = (evaluate(func.args[0]) as double).round();
-  final b = (evaluate(func.args[1]) as double).round();
+  final a = (evaluate(func.args[0]) as num).round();
+  final b = (evaluate(func.args[1]) as num).round();
   return _gcd(a, b).toDouble();
 }
 
@@ -140,8 +140,8 @@ double handleLcm(FunctionCall func, Map<String, double> vars,
   if (func.args.length != 2) {
     throw EvaluatorException('lcm requires two arguments');
   }
-  final a = (evaluate(func.args[0]) as double).round();
-  final b = (evaluate(func.args[1]) as double).round();
+  final a = (evaluate(func.args[0]) as num).round();
+  final b = (evaluate(func.args[1]) as num).round();
   if (a == 0 || b == 0) return 0;
   return ((a * b).abs() / _gcd(a, b)).toDouble();
 }
@@ -152,8 +152,8 @@ double handleBinom(FunctionCall func, Map<String, double> vars,
   if (func.args.length != 2) {
     throw EvaluatorException('binom requires two arguments');
   }
-  final n = (evaluate(func.args[0]) as double).round();
-  final k = (evaluate(func.args[1]) as double).round();
+  final n = (evaluate(func.args[0]) as num).round();
+  final k = (evaluate(func.args[1]) as num).round();
 
   if (k < 0 || k > n) return 0;
   if (k == 0 || k == n) return 1;
