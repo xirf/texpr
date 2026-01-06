@@ -1,0 +1,14 @@
+{
+  "name": "texpr-docs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "markdown-it-mathjax3": "^5.2.0",
+    "vitepress": "^1.6.4"
+  }
+}

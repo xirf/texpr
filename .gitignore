@@ -49,6 +49,10 @@ node_modules/
 package-lock.json
 .venv/
 
+# VitePress
+.vitepress/cache/
+.vitepress/dist/
+
 # Benchmark
 benchmark/wasm/
 !benchmark/wasm/wasm_benchmark.dart

@@ -1,4 +1,12 @@
-doc/
+# Documentation
+.vitepress/
+
+# Node/Bun
+package.json
+bun.lock
+node_modules/
+
+# Files/Folders
 test/
 .github/
 tool/
