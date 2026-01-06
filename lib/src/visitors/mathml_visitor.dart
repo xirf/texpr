@@ -5,6 +5,7 @@ import '../ast/functions.dart';
 import '../ast/calculus.dart';
 import '../ast/logic.dart';
 import '../ast/matrix.dart';
+import '../ast/environment.dart';
 import '../ast/visitor.dart';
 
 /// Visitor that converts an AST to MathML presentation markup.
@@ -373,6 +374,21 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
       return '<mover>${_mrow(components)}${_mo("^")}</mover>';
     }
     return '<mover>${_mrow(components)}${_mo("to")}</mover>';
+  }
+
+  @override
+  String visitAssignmentExpr(AssignmentExpr node, void context) {
+    final value = node.value.accept(this, context);
+    return _mrow('${_mi(node.variable)}${_mo("=")}$value');
+  }
+
+  @override
+  String visitFunctionDefinitionExpr(
+      FunctionDefinitionExpr node, void context) {
+    final body = node.body.accept(this, context);
+    final params = node.parameters.map((p) => _mi(p)).join(_mo(','));
+    return _mrow(
+        '${_mi(node.name)}${_mo("(")}$params${_mo(")")}${_mo("=")}$body');
   }
 }
 

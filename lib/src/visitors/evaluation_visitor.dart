@@ -25,7 +25,7 @@ import '../features/calculus/integration_evaluator.dart';
 /// - Logical operations and conditionals
 /// - Custom extensions
 class EvaluationVisitor
-    implements ExpressionVisitor<dynamic, Map<String, double>> {
+    implements ExpressionVisitor<dynamic, Map<String, dynamic>> {
   final ExtensionRegistry? _extensions;
   late final BinaryEvaluator _binaryEvaluator;
   late final UnaryEvaluator _unaryEvaluator;
@@ -73,7 +73,7 @@ class EvaluationVisitor
   IntegrationEvaluator get integrationEvaluator => _integrationEvaluator;
 
   /// Helper to evaluate an expression and get a raw result.
-  dynamic _evaluateRaw(Expression expr, Map<String, double> variables) {
+  dynamic _evaluateRaw(Expression expr, Map<String, dynamic> variables) {
     _enterRecursion();
     try {
       return expr.accept(this, variables);
@@ -83,9 +83,11 @@ class EvaluationVisitor
   }
 
   /// Helper to evaluate an expression as a double.
-  double _evaluateAsDouble(Expression expr, Map<String, double> variables) {
+  double _evaluateAsDouble(Expression expr, Map<String, dynamic> variables) {
+    // We might need to handle casting here if sub-evaluators call back with String-double map
+    // efficiently. But for now, we cast.
     final val = _evaluateRaw(expr, variables);
-    if (val is double) return val;
+    if (val is num) return val.toDouble();
     if (val is Complex && val.isReal) return val.real;
     throw EvaluatorException(
       'Expression must evaluate to a real number',
@@ -94,13 +96,31 @@ class EvaluationVisitor
     );
   }
 
+  /// Helper to cast/convert dynamic map to double map for legacy evaluators.
+  /// Warning: This might fail if values are not doubles.
+  Map<String, double> _asDoubleMap(Map<String, dynamic> variables) {
+    // If it's already the right type, return it.
+    if (variables is Map<String, double>) return variables;
+
+    // Filter only doubles? or try cast?
+    // Sub-evaluators usually only need numbers.
+    final result = <String, double>{};
+    for (final entry in variables.entries) {
+      if (entry.value is num) {
+        result[entry.key] = (entry.value as num).toDouble();
+      }
+    }
+    return result;
+  }
+
   @override
-  dynamic visitNumberLiteral(NumberLiteral node, Map<String, double>? context) {
+  dynamic visitNumberLiteral(
+      NumberLiteral node, Map<String, dynamic>? context) {
     return node.value;
   }
 
   @override
-  dynamic visitVariable(Variable node, Map<String, double>? context) {
+  dynamic visitVariable(Variable node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
 
     // First check user-provided variables
@@ -123,7 +143,7 @@ class EvaluationVisitor
     if (_extensions != null) {
       final result = _extensions!.tryEvaluate(
         node,
-        variables,
+        _asDoubleMap(variables),
         (e) => _evaluateRaw(e, variables),
       );
       if (result != null) {
@@ -138,7 +158,7 @@ class EvaluationVisitor
   }
 
   @override
-  dynamic visitBinaryOp(BinaryOp node, Map<String, double>? context) {
+  dynamic visitBinaryOp(BinaryOp node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     final leftValue = _evaluateRaw(node.left, variables);
 
@@ -157,14 +177,14 @@ class EvaluationVisitor
   }
 
   @override
-  dynamic visitUnaryOp(UnaryOp node, Map<String, double>? context) {
+  dynamic visitUnaryOp(UnaryOp node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     final operandValue = _evaluateRaw(node.operand, variables);
     return _unaryEvaluator.evaluate(node.operator, operandValue);
   }
 
   @override
-  dynamic visitFunctionCall(FunctionCall node, Map<String, double>? context) {
+  dynamic visitFunctionCall(FunctionCall node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
 
     // Special handling for abs() with vector argument
@@ -179,7 +199,7 @@ class EvaluationVisitor
     if (_extensions != null) {
       final result = _extensions!.tryEvaluate(
         node,
-        variables,
+        _asDoubleMap(variables),
         (e) => _evaluateRaw(e, variables),
       );
       if (result != null) {
@@ -189,13 +209,14 @@ class EvaluationVisitor
 
     return FunctionRegistry.instance.evaluate(
       node,
-      variables,
+      _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
     );
   }
 
   @override
-  dynamic visitAbsoluteValue(AbsoluteValue node, Map<String, double>? context) {
+  dynamic visitAbsoluteValue(
+      AbsoluteValue node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     final argValue = _evaluateRaw(node.argument, variables);
 
@@ -206,38 +227,38 @@ class EvaluationVisitor
 
     return FunctionRegistry.instance.evaluate(
       FunctionCall('abs', node.argument),
-      variables,
+      _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
     );
   }
 
   @override
-  dynamic visitLimitExpr(LimitExpr node, Map<String, double>? context) {
+  dynamic visitLimitExpr(LimitExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _calculusEvaluator.evaluateLimit(node, variables);
+    return _calculusEvaluator.evaluateLimit(node, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitSumExpr(SumExpr node, Map<String, double>? context) {
+  dynamic visitSumExpr(SumExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _calculusEvaluator.evaluateSum(node, variables);
+    return _calculusEvaluator.evaluateSum(node, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitProductExpr(ProductExpr node, Map<String, double>? context) {
+  dynamic visitProductExpr(ProductExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _calculusEvaluator.evaluateProduct(node, variables);
+    return _calculusEvaluator.evaluateProduct(node, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitIntegralExpr(IntegralExpr node, Map<String, double>? context) {
+  dynamic visitIntegralExpr(IntegralExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _calculusEvaluator.evaluateIntegral(node, variables);
+    return _calculusEvaluator.evaluateIntegral(node, _asDoubleMap(variables));
   }
 
   @override
   dynamic visitMultiIntegralExpr(
-      MultiIntegralExpr node, Map<String, double>? context) {
+      MultiIntegralExpr node, Map<String, dynamic>? context) {
     throw EvaluatorException(
       'Evaluation of multiple integrals is not yet supported',
       suggestion: 'Use multiple single integrals instead',
@@ -246,34 +267,36 @@ class EvaluationVisitor
 
   @override
   dynamic visitDerivativeExpr(
-      DerivativeExpr node, Map<String, double>? context) {
+      DerivativeExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _differentiationEvaluator.evaluateDerivative(node, variables);
+    return _differentiationEvaluator.evaluateDerivative(
+        node, _asDoubleMap(variables));
   }
 
   @override
   dynamic visitPartialDerivativeExpr(
-      PartialDerivativeExpr node, Map<String, double>? context) {
+      PartialDerivativeExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     // Treat partial derivative as regular derivative for evaluation
     final derivative =
         DerivativeExpr(node.body, node.variable, order: node.order);
-    return _differentiationEvaluator.evaluateDerivative(derivative, variables);
+    return _differentiationEvaluator.evaluateDerivative(
+        derivative, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitBinomExpr(BinomExpr node, Map<String, double>? context) {
+  dynamic visitBinomExpr(BinomExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     final funcCall = FunctionCall.multivar('binom', [node.n, node.k]);
     return FunctionRegistry.instance.evaluate(
       funcCall,
-      variables,
+      _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
     );
   }
 
   @override
-  dynamic visitGradientExpr(GradientExpr node, Map<String, double>? context) {
+  dynamic visitGradientExpr(GradientExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
 
     // Get the list of variables to differentiate with respect to
@@ -357,33 +380,36 @@ class EvaluationVisitor
   }
 
   @override
-  dynamic visitComparison(Comparison node, Map<String, double>? context) {
+  dynamic visitComparison(Comparison node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _comparisonEvaluator.evaluateComparison(node, variables);
+    return _comparisonEvaluator.evaluateComparison(
+        node, _asDoubleMap(variables));
   }
 
   @override
   dynamic visitChainedComparison(
-      ChainedComparison node, Map<String, double>? context) {
+      ChainedComparison node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _comparisonEvaluator.evaluateChainedComparison(node, variables);
+    return _comparisonEvaluator.evaluateChainedComparison(
+        node, _asDoubleMap(variables));
   }
 
   @override
   dynamic visitConditionalExpr(
-      ConditionalExpr node, Map<String, double>? context) {
+      ConditionalExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _comparisonEvaluator.evaluateConditional(node, variables);
+    return _comparisonEvaluator.evaluateConditional(
+        node, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitMatrixExpr(MatrixExpr node, Map<String, double>? context) {
+  dynamic visitMatrixExpr(MatrixExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _matrixEvaluator.evaluate(node, variables);
+    return _matrixEvaluator.evaluate(node, _asDoubleMap(variables));
   }
 
   @override
-  dynamic visitVectorExpr(VectorExpr node, Map<String, double>? context) {
+  dynamic visitVectorExpr(VectorExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     // Evaluate all components
     final evalComponents =
@@ -394,8 +420,51 @@ class EvaluationVisitor
   }
 
   @override
-  dynamic visitPiecewise(PiecewiseExpr node, Map<String, double>? context) {
+  dynamic visitPiecewise(PiecewiseExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
-    return _comparisonEvaluator.evaluatePiecewise(node, variables);
+    // ComparisonEvaluator needs double map for piecewise conditions usually (using evaluateAsDouble)
+    return _comparisonEvaluator.evaluatePiecewise(
+        node, _asDoubleMap(variables));
+  }
+
+  @override
+  dynamic visitAssignmentExpr(
+      AssignmentExpr node, Map<String, dynamic>? context) {
+    if (context == null) {
+      throw EvaluatorException(
+          'Cannot evaluate assignment without an evaluation context');
+    }
+
+    // Evaluate value in current scope
+    final value = node.value.accept(this, context);
+    context[node.variable] = value;
+    return value;
+  }
+
+  @override
+  dynamic visitFunctionDefinitionExpr(
+      FunctionDefinitionExpr node, Map<String, dynamic>? context) {
+    if (context == null) {
+      throw EvaluatorException(
+          'Cannot evaluate function definition without an evaluation context');
+    }
+
+    // Store function definition.
+    // We store it as a special UserDefinedFunction object that FunctionRegistry or evaluateRaw can handle.
+    // For now, let's just store the AST node or a closure.
+    // Ideally we wrap it.
+    context[node.name] =
+        node; // Storing the AST node itself as a function definition
+
+    // Check if we should evaluate the function immediately.
+    // This supports the use case where a user defines a function with all parameters
+    // already present in the context, effectively using it as an equation.
+    final allParamsPresent =
+        node.parameters.every((param) => context.containsKey(param));
+    if (allParamsPresent && node.parameters.isNotEmpty) {
+      return _evaluateRaw(node.body, context);
+    }
+
+    return node;
   }
 }

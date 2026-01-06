@@ -139,6 +139,9 @@ enum TokenType {
   /// Font command (e.g., `\mathbf`, `\mathcal`, `\mathrm`).
   fontCommand,
 
+  /// The `let` keyword for variable assignment.
+  letKeyword,
+
   /// End of input.
   eof,
 }
@@ -242,6 +245,8 @@ extension TokenTypeReadable on TokenType {
         return 'modifier';
       case TokenType.fontCommand:
         return 'font command';
+      case TokenType.letKeyword:
+        return "'let'";
       case TokenType.eof:
         return 'end of expression';
     }

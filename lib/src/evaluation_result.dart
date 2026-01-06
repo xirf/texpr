@@ -42,6 +42,8 @@ sealed class EvaluationResult {
           : throw StateError('Result is a complex number, not a real number'),
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
+      FunctionResult() =>
+        throw StateError('Result is a function, not a number'),
     };
   }
 
@@ -54,6 +56,8 @@ sealed class EvaluationResult {
       ComplexResult(:final value) => value,
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
+      FunctionResult() =>
+        throw StateError('Result is a function, not a number'),
     };
   }
 
@@ -66,6 +70,8 @@ sealed class EvaluationResult {
       ComplexResult() => throw StateError('Result is a number, not a matrix'),
       MatrixResult(:final matrix) => matrix,
       VectorResult() => throw StateError('Result is a vector, not a matrix'),
+      FunctionResult() =>
+        throw StateError('Result is a function, not a matrix'),
     };
   }
 
@@ -78,6 +84,8 @@ sealed class EvaluationResult {
       ComplexResult() => throw StateError('Result is a number, not a vector'),
       MatrixResult() => throw StateError('Result is a matrix, not a vector'),
       VectorResult(:final vector) => vector,
+      FunctionResult() =>
+        throw StateError('Result is a function, not a vector'),
     };
   }
 
@@ -196,6 +204,31 @@ final class VectorResult extends EvaluationResult {
 
   @override
   String toString() => 'VectorResult($vector)';
+
+  @override
+  bool get isNaN => false;
+}
+
+/// Represents a function definition result.
+final class FunctionResult extends EvaluationResult {
+  /// The function definition (e.g., AST node).
+  final dynamic function;
+
+  /// Creates a function result with the given [function].
+  const FunctionResult(this.function);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FunctionResult &&
+          runtimeType == other.runtimeType &&
+          function == other.function;
+
+  @override
+  int get hashCode => function.hashCode;
+
+  @override
+  String toString() => 'FunctionResult($function)';
 
   @override
   bool get isNaN => false;

@@ -153,10 +153,9 @@ The following are explicitly **not** goals for this library:
 | Task                    | Status | Description                                      |
 | ----------------------- | ------ | ------------------------------------------------ |
 | Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)       |
-| WebAssembly (Wasm)      | ✅      | Investigate compiling to Wasm for web apps       |
-| Interactive Playground  | 📋      | Embed live calculator in docs using WASM         |
-| Fuzz Testing            | 📋      | Property-based testing to prevent parser crashes |
-| Custom Environments     | 📋      | Support `let x=...` and user-defined functions   |
+| AOT Compilation Profile | 📋      | Verify performance in release builds             |
+| WebAssembly (Wasm)      | 📋      | Investigate compiling to Wasm for web apps       |
+| Parallel Evaluation     | 📋      | Evaluate independent sub-expressions in isolates |
 
 ---
 

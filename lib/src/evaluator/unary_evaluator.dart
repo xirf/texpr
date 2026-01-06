@@ -40,10 +40,10 @@ class UnaryEvaluator {
       }
     }
 
-    if (operandValue is double) {
+    if (operandValue is num) {
       switch (operator) {
         case UnaryOperator.negate:
-          return -operandValue;
+          return (-operandValue).toDouble();
       }
     }
 

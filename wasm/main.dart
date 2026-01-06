@@ -16,7 +16,10 @@ void main() {
     'evaluate'.toJS,
     (String expression) {
       try {
-        return evaluator.evaluateNumeric(expression).toJS;
+        final result = evaluator.evaluate(expression);
+        // Convert any result (numeric, complex, matrix, vector, function) to string
+        // We could return a structured JS object if we wanted to be fancy, but string is fine for playground.
+        return result.toString().toJS;
       } catch (e) {
         // Return error as string or handle it
         return 'Error: $e'.toJS;
@@ -40,7 +43,9 @@ void main() {
         // Using js_interop.unsafe to iterate keys
         // (Not implementing complex object conversion for calmness in this demo step,
         // sticking to simple evaluate first to prove point).
-        return evaluator.evaluateNumeric(expression).toJS;
+        final result =
+            evaluator.evaluate(expression); // ignore vars for now in this fix
+        return result.toString().toJS;
       } catch (e) {
         return 'Error: $e'.toJS;
       }
