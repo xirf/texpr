@@ -183,7 +183,7 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
     final body = node.body.accept(this, context);
 
     return _mrow('<munder>${_mo("lim")}'
-        '${_mrow("${_mi(node.variable)}${_mo("→")}$target")}'
+        '${_mrow("${_mi(node.variable)}${_mo("to")}$target")}'
         '</munder>$body');
   }
 
@@ -291,6 +291,13 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
   }
 
   @override
+  String visitGradientExpr(GradientExpr node, void context) {
+    final body = node.body.accept(this, context);
+    // Use nabla symbol (∇) for gradient
+    return _mrow('${_mo("∇")}$body');
+  }
+
+  @override
   String visitComparison(Comparison node, void context) {
     final left = node.left.accept(this, context);
     final right = node.right.accept(this, context);
@@ -365,7 +372,7 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
     if (node.isUnitVector) {
       return '<mover>${_mrow(components)}${_mo("^")}</mover>';
     }
-    return '<mover>${_mrow(components)}${_mo("→")}</mover>';
+    return '<mover>${_mrow(components)}${_mo("to")}</mover>';
   }
 }
 

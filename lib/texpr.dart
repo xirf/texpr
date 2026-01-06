@@ -91,9 +91,9 @@ import 'src/cache/cache_statistics.dart';
 /// A convenience class that combines tokenizing, parsing, and evaluation.
 ///
 /// Supports multi-layer caching for optimal performance:
-/// - L1: Parsed expression cache (String → AST)
-/// - L2: Evaluation result cache (AST + Variables → Result)
-/// - L3: Differentiation result cache (AST + Variable → Derivative)
+/// - L1: Parsed expression cache (String to AST)
+/// - L2: Evaluation result cache (AST + Variables to Result)
+/// - L3: Differentiation result cache (AST + Variable to Derivative)
 ///
 /// Example with advanced caching:
 /// ```dart
@@ -228,8 +228,16 @@ class Texpr {
   Expression parse(String expression) {
     final cached = _cacheManager.getParsedExpression(expression);
     if (cached != null) return cached;
+
     final ast = _parseInternal(expression);
-    _cacheManager.putParsedExpression(expression, ast);
+
+    // Skip L1 cache for oversized expressions to prevent memory exhaustion.
+    // This is a soft limit: large expressions parse normally, just aren't cached.
+    final maxLen = cacheConfig.maxCacheInputLength;
+    if (maxLen == 0 || expression.length <= maxLen) {
+      _cacheManager.putParsedExpression(expression, ast);
+    }
+
     return ast;
   }
 
@@ -445,7 +453,7 @@ class Texpr {
       }
 
       return const ValidationResult.valid();
-    } on LatexMathException catch (e) {
+    } on TexprException catch (e) {
       return ValidationResult.fromException(e);
     } catch (e) {
       // Handle unexpected errors

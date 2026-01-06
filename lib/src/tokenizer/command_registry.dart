@@ -98,6 +98,11 @@ class LatexCommandRegistry {
     // Vector notation
     _commands['vec'] = TokenType.function;
     _commands['hat'] = TokenType.function;
+
+    // Decoration functions (mean, time derivatives)
+    _commands['bar'] = TokenType.function;
+    _commands['dot'] = TokenType.function;
+    _commands['ddot'] = TokenType.function;
   }
 
   void _registerGreekLetters() {
@@ -198,6 +203,27 @@ class LatexCommandRegistry {
     _commands['geq'] = TokenType.greaterEqual;
     _commands['neq'] = TokenType.notEqual;
     _commands['in'] = TokenType.member;
+
+    // Quantifiers (parsed as variables for symbolic use)
+    _commands['forall'] = TokenType.variable;
+    _commands['exists'] = TokenType.variable;
+
+    // Relation/arrow symbols (ignored during evaluation)
+    _commands['approx'] = TokenType.ignored;
+    _commands['propto'] = TokenType.ignored;
+    _commands['mapsto'] = TokenType.ignored;
+    _commands['Rightarrow'] = TokenType.ignored;
+    _commands['Leftarrow'] = TokenType.ignored;
+    _commands['Leftrightarrow'] = TokenType.ignored;
+
+    // Set notation (ignored during evaluation)
+    _commands['subset'] = TokenType.ignored;
+    _commands['subseteq'] = TokenType.ignored;
+    _commands['supset'] = TokenType.ignored;
+    _commands['supseteq'] = TokenType.ignored;
+    _commands['cup'] = TokenType.ignored;
+    _commands['cap'] = TokenType.ignored;
+    _commands['setminus'] = TokenType.ignored;
   }
 
   /// Registers special commands (delimiters, spacing, etc.).

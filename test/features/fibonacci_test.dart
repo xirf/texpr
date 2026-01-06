@@ -16,7 +16,7 @@ void main() {
     test('negative input throws', () {
       final evaluator = Texpr();
       expect(() => evaluator.evaluateNumeric(r'\fibonacci{-1}'),
-          throwsA(isA<LatexMathException>()));
+          throwsA(isA<TexprException>()));
     });
   });
 }

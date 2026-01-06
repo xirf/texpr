@@ -35,7 +35,7 @@ String _expr(math.Random r, int depth) {
 }
 
 bool _isExpectedException(Object e) {
-  return e is LatexMathException || e is StateError;
+  return e is TexprException || e is StateError;
 }
 
 void main() {

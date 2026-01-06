@@ -8,9 +8,9 @@ import 'lru_cache.dart';
 /// Manages all cache layers and provides a unified API for caching.
 ///
 /// The cache manager handles four layers:
-/// - L1: Parsed expressions (String → Expression)
-/// - L2: Evaluation results (Expression + Variables → Result)
-/// - L3: Differentiation results (Expression + Variable + Order → Expression)
+/// - L1: Parsed expressions (String to Expression)
+/// - L2: Evaluation results (Expression + Variables to Result)
+/// - L3: Differentiation results (Expression + Variable + Order to Expression)
 /// - L4: Sub-expression results (for hierarchical caching)
 ///
 /// Example:

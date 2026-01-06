@@ -9,7 +9,7 @@ abstract class Expression {
 
   /// Converts this expression to LaTeX notation.
   ///
-  /// This enables round-trip support: LaTeX → AST → LaTeX.
+  /// This enables round-trip support: LaTeX to AST to LaTeX.
   /// The generated LaTeX should be parseable back into an equivalent AST.
   ///
   /// Example:

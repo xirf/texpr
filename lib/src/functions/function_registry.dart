@@ -117,6 +117,14 @@ class FunctionRegistry {
     register('Re', complex.handleRe);
     register('Im', complex.handleIm);
     register('conjugate', complex.handleConjugate);
+
+    // Decoration functions (pass-through - display only)
+    // These are for notation like \dot{x}, \ddot{x}, \bar{x}
+    // and simply return the evaluated argument
+    register('dot', (f, v, e) => e(f.argument));
+    register('ddot', (f, v, e) => e(f.argument));
+    register('bar', (f, v, e) => e(f.argument));
+    register('overline', (f, v, e) => e(f.argument));
   }
 
   /// Registers a function handler.

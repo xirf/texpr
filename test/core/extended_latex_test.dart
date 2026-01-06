@@ -50,12 +50,13 @@ void main() {
         expect((op.left as Variable).name, 'partial');
       });
 
-      test('parses nabla as variable', () {
+      test('parses nabla as gradient', () {
         final result = parse(r'\nabla f');
-        expect(result, isA<BinaryOp>()); // nabla * f
-        final op = result as BinaryOp;
-        expect(op.left, isA<Variable>());
-        expect((op.left as Variable).name, 'nabla');
+        expect(result,
+            isA<GradientExpr>()); // \nabla f is now parsed as GradientExpr
+        final grad = result as GradientExpr;
+        expect(grad.body, isA<Variable>());
+        expect((grad.body as Variable).name, 'f');
       });
     });
 

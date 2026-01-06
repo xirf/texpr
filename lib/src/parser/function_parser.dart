@@ -48,6 +48,21 @@ mixin FunctionParserMixin on BaseParser {
         return result;
       }
 
+      // Special handling for decoration functions \dot{}, \ddot{}, \bar{}
+      // These are display-only decorations; evaluate to just the inner expression
+      if (name == 'dot' || name == 'ddot' || name == 'bar') {
+        consume(TokenType.lparen, "Expected '{' after \\$name");
+        final arg = parseExpression();
+        consume(TokenType.rparen, "Expected '}' after $name argument");
+        registerNode();
+        // Return as a function call that will evaluate to the argument value
+        Expression result = FunctionCall(name, arg);
+        if (functionPower != null) {
+          result = BinaryOp(result, BinaryOperator.power, functionPower);
+        }
+        return result;
+      }
+
       if (match1(TokenType.underscore)) {
         consume(TokenType.lparen, "Expected '{' after '_'");
         base = parseExpression();

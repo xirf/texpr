@@ -134,7 +134,7 @@ void main() {
 
   group('Limit at Infinity (Known Limitation)', () {
     test('limit at infinity evaluates at large numbers', () {
-      // Documents that lim_{x→∞} uses large finite values (1e2, 1e4, 1e6, 1e8)
+      // Documents that lim_{xto∞} uses large finite values (1e2, 1e4, 1e6, 1e8)
       // See KNOWN_ISSUES.md: "Infinity Approximation in Calculus Operations"
       final expression = r'\lim_{x \to \infty} \frac{1}{x}';
 
@@ -148,7 +148,7 @@ void main() {
     });
 
     test('limit at infinity works for polynomial ratios', () {
-      // lim_{x→∞} (2x+1)/(x+3) = 2 (degrees equal, ratio of leading coefficients)
+      // lim_{xto∞} (2x+1)/(x+3) = 2 (degrees equal, ratio of leading coefficients)
       final expression = r'\lim_{x \to \infty} \frac{2x+1}{x+3}';
 
       final ast = Parser(Tokenizer(expression).tokenize()).parse();

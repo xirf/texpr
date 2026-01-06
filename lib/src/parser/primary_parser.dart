@@ -4,7 +4,6 @@ import '../exceptions.dart';
 import 'base_parser.dart';
 
 const _partial = 'partial';
-const _nabla = 'nabla';
 const _d = 'd';
 
 mixin PrimaryParserMixin on BaseParser {
@@ -165,7 +164,38 @@ mixin PrimaryParserMixin on BaseParser {
 
     if (match1(TokenType.nabla)) {
       registerNode();
-      return Variable(_nabla);
+
+      // Check for nabla^2 (Laplacian operator) - treat as special symbol for now
+      // since Laplacian is not the same as gradient squared
+      if (check(TokenType.power)) {
+        advance(); // consume ^
+        // Parse the exponent - handle both braced {2} and bare 2
+        if (check(TokenType.lparen) && current.value == '{') {
+          parseLatexArgumentExpr(); // consume braced exponent
+        } else {
+          parsePrimary(); // consume bare exponent like 2
+        }
+        // Laplacian: nabla^2 - for now treat as variable for backwards compatibility
+        // When followed by an expression, it becomes nabla^2 f
+        // Return as Variable so implicit multiplication handles the rest
+        return Variable('laplacian');
+      }
+
+      // Parse the following expression as the body of the gradient
+      // Handle braced arguments: \nabla{f} or \nabla(f)
+      Expression body;
+      if (check(TokenType.lparen) && current.value == '{') {
+        body = parseLatexArgumentExpr();
+      } else {
+        // Parse a primary expression (handles \nabla f, \nabla x^2, etc.)
+        body = parsePrimary();
+        // Handle powers: \nabla f^2 means \nabla(f^2), not (\nabla f)^2
+        if (match1(TokenType.power)) {
+          final exponent = parseLatexArgumentExpr();
+          body = BinaryOp(body, BinaryOperator.power, exponent);
+        }
+      }
+      return GradientExpr(body);
     }
 
     if (match1(TokenType.text)) {
@@ -240,7 +270,7 @@ mixin PrimaryParserMixin on BaseParser {
     }
 
     final exception = ParserException(
-      'Expected expression, got: ${isAtEnd ? "EOF" : current.type.name}',
+      'Expected expression, got: ${isAtEnd ? "EOF" : current.type.readableName}',
       position: isAtEnd ? null : current.position,
       expression: sourceExpression,
       suggestion: 'Check for missing operands or invalid syntax',
@@ -257,6 +287,9 @@ mixin PrimaryParserMixin on BaseParser {
   }
 
   /// Parses a fraction \frac{numerator}{denominator}.
+  ///
+  /// Also supports braceless fractions like `\frac12` (exactly 2 single-char tokens).
+  /// Throws an error for ambiguous cases like `\frac123`.
   Expression parseFraction() {
     // Check if this looks like derivative notation: \frac{d}{dx} or \frac{d^n}{dx^n}
     // We need to check the raw tokens before parsing
@@ -264,11 +297,87 @@ mixin PrimaryParserMixin on BaseParser {
       return _parseDerivative();
     }
 
-    // Otherwise, parse as a regular fraction
-    final numerator = parseLatexArgumentExpr();
-    final denominator = parseLatexArgumentExpr();
+    // Detect ambiguous braceless fractions: \frac123 is ambiguous
+    if (_hasAmbiguousBracelessFraction()) {
+      throw ParserException(
+        'Ambiguous braceless fraction: unable to determine numerator/denominator split',
+        position: current.position,
+        expression: sourceExpression,
+        suggestion: r'Use braces to clarify: \frac{1}{23} or \frac{12}{3}',
+      );
+    }
+
+    // Support braceless fractions: \frac12 to \frac{1}{2} (exactly 2 single-char tokens)
+    final numerator = _parseFracArgument();
+    final denominator = _parseFracArgument();
     registerNode();
     return BinaryOp(numerator, BinaryOperator.divide, denominator);
+  }
+
+  /// Checks if we have 3+ consecutive single-digit/variable chars after \frac (ambiguous case).
+  ///
+  /// Handles multi-digit number tokens by counting their digit count.
+  bool _hasAmbiguousBracelessFraction() {
+    if (check(TokenType.lparen)) return false; // Braced, not ambiguous
+
+    // Count total digits/variables in consecutive tokens
+    int count = 0;
+    int scanPos = position;
+    while (scanPos < tokens.length) {
+      final tok = tokens[scanPos];
+      if (tok.type == TokenType.number) {
+        // Count each digit in the number
+        count += tok.value.length;
+      } else if (tok.type == TokenType.variable && tok.value.length == 1) {
+        count++;
+      } else {
+        break;
+      }
+      scanPos++;
+    }
+    return count > 2; // 3+ is ambiguous
+  }
+
+  /// Parses a single fraction argument (braced or braceless single-char).
+  ///
+  /// For braceless: takes exactly one digit or one variable.
+  /// Multi-digit numbers like "12" are split: first call takes "1", second takes "2".
+  Expression _parseFracArgument() {
+    // Standard braced argument
+    if (check(TokenType.lparen) && current.value == '{') {
+      return parseLatexArgumentExpr();
+    }
+    // Braceless: number token (may be multi-digit, take first digit only)
+    if (check(TokenType.number)) {
+      final token = current;
+      if (token.value.length == 1) {
+        // Single digit, consume entire token
+        advance();
+        registerNode();
+        return NumberLiteral(token.numberValue!);
+      } else {
+        // Multi-digit: take first digit, modify token in-place for rest
+        final firstDigit = double.parse(token.value[0]);
+        final remaining = token.value.substring(1);
+        // Update the token to contain only the remaining digits
+        tokens[position] = Token(
+          type: TokenType.number,
+          value: remaining,
+          position: token.position + 1,
+          numberValue: double.parse(remaining),
+        );
+        registerNode();
+        return NumberLiteral(firstDigit);
+      }
+    }
+    // Braceless: single variable (exactly 1 char)
+    if (check(TokenType.variable) && current.value.length == 1) {
+      final token = advance();
+      registerNode();
+      return Variable(token.value);
+    }
+    // Fallback to regular parsing (will error with helpful message)
+    return parseLatexArgumentExpr();
   }
 
   /// Checks if the current fraction represents derivative notation by examining tokens.

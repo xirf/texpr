@@ -93,7 +93,7 @@ void main() {
       test('validation of unclosed brace provides suggestion', () {
         try {
           evaluator.evaluate(r'\sin{x');
-        } on LatexMathException catch (e) {
+        } on TexprException catch (e) {
           final vr = ValidationResult.fromException(e);
           expect(vr.suggestion, isNotNull);
           // Just verify a suggestion exists, don't require specific text
@@ -115,7 +115,7 @@ void main() {
       test('ParserException includes position in toString', () {
         try {
           evaluator.evaluate(r'\sin{');
-        } on LatexMathException catch (e) {
+        } on TexprException catch (e) {
           final str = e.toString();
           expect(str, contains('at position'));
         }
@@ -127,6 +127,46 @@ void main() {
           suggestion: 'Try fixing this',
         );
         expect(e.toString(), contains('Suggestion: Try fixing this'));
+      });
+    });
+
+    group('Gradient and Symbolic Error Messages', () {
+      test('gradient error provides contextual suggestion', () {
+        try {
+          // Try to evaluate gradient of a single symbol (no variables)
+          evaluator.evaluate(r'\nabla{f}');
+        } on EvaluatorException catch (e) {
+          expect(e.message.toLowerCase(), contains('gradient'));
+          expect(e.suggestion, isNotNull);
+          expect(e.suggestion!.toLowerCase(), contains('expression'));
+        }
+      });
+
+      test('ValidationResult provides gradient suggestion', () {
+        final exception = EvaluatorException(
+          'Cannot compute gradient: no variables found',
+        );
+        final vr = ValidationResult.fromException(exception);
+        expect(vr.suggestion, isNotNull);
+        expect(vr.suggestion!.toLowerCase(), contains('gradient'));
+      });
+
+      test('ValidationResult provides symbolic suggestion', () {
+        final exception = EvaluatorException(
+          'This expression cannot be evaluated numerically',
+        );
+        final vr = ValidationResult.fromException(exception);
+        expect(vr.suggestion, isNotNull);
+        expect(vr.suggestion!.toLowerCase(), contains('symbolic'));
+      });
+
+      test('ValidationResult provides matrix dimension suggestion', () {
+        final exception = EvaluatorException(
+          'Matrix dimension mismatch',
+        );
+        final vr = ValidationResult.fromException(exception);
+        expect(vr.suggestion, isNotNull);
+        expect(vr.suggestion!.toLowerCase(), contains('dimension'));
       });
     });
   });

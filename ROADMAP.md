@@ -43,7 +43,7 @@
 - Einstein Field Equations
 - Normal distribution PDF
 
-**Test Coverage:** 1,725 tests passing
+**Test Coverage:** 1,874 tests passing
 
 ---
 
@@ -53,36 +53,41 @@ The following are known limitations discovered through testing:
 
 ### 1. Evaluation Limitations (Not Parsing)
 
-| Expression                        | Can Parse | Can Evaluate | Notes                                    |
-| --------------------------------- | --------- | ------------ | ---------------------------------------- |
-| `\nabla f`                        | ✅         | ❌            | Gradient requires vector calculus engine |
-| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only |
-| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable           |
-| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint   |
+| Expression                        | Can Parse | Can Evaluate | Notes                                        |
+| --------------------------------- | --------- | ------------ | -------------------------------------------- |
+| `\nabla{x^2 + y^2}`               | ✅         | ✅            | Concrete expressions with explicit vars      |
+| `\nabla f` (bare symbol)          | ✅         | ❌            | Symbolic only; no structure to differentiate |
+| `\oint E \cdot dA`                | ✅         | ❌            | Line/surface integrals are symbolic only     |
+| Tensor notation (`R_{\mu\nu}`)    | ✅         | ❌            | Parsed as subscripted variable               |
+| Set notation (`x \in \mathbb{R}`) | ✅         | ❌            | Parsed but not evaluated as constraint       |
 
-### 2. Missing LaTeX Commands (Will Fail to Parse)
 
-| Command                | Description            | Priority |
-| ---------------------- | ---------------------- | -------- |
-| `\mapsto` (↦)          | Maps to arrow          | Low      |
-| `\Rightarrow` (⇒)      | Double arrow           | Low      |
-| `\approx` (≈)          | Approximately equal    | Medium   |
-| `\propto` (∝)          | Proportional to        | Low      |
-| `\subset`, `\subseteq` | Subset notation        | Low      |
-| `\cup`, `\cap`         | Set union/intersection | Low      |
-| `\forall`, `\exists`   | Quantifiers            | Low      |
-| `\dot{x}`, `\ddot{x}`  | Time derivatives       | Medium   |
-| `\bar{x}`              | Mean notation          | Medium   |
 
-### 3. Syntax Variations
+### 2. Previously Missing LaTeX Commands ✅ Fixed
 
-Some valid LaTeX may require minor adjustments:
+All commands below now parse successfully:
 
-| Academic LaTeX          | Library Equivalent | Issue                            |
-| ----------------------- | ------------------ | -------------------------------- |
-| `\frac12` (braceless)   | `\frac{1}{2}`      | Parser suggests fix              |
-| `sin(x)` (no backslash) | `\sin{x}`          | Parser suggests fix              |
-| `e^{ix}`                | `e^{i*x}`          | May need explicit multiplication |
+| Command                | Description            | Status |
+| ---------------------- | ---------------------- | ------ |
+| `\mapsto` (↦)          | Maps to arrow          | ✅      |
+| `\Rightarrow` (⇒)      | Double arrow           | ✅      |
+| `\approx` (≈)          | Approximately equal    | ✅      |
+| `\propto` (∝)          | Proportional to        | ✅      |
+| `\subset`, `\subseteq` | Subset notation        | ✅      |
+| `\cup`, `\cap`         | Set union/intersection | ✅      |
+| `\forall`, `\exists`   | Quantifiers            | ✅      |
+| `\dot{x}`, `\ddot{x}`  | Time derivatives       | ✅      |
+| `\bar{x}`              | Mean notation          | ✅      |
+
+### 3. Syntax Variations ✅ Fixed
+
+The following syntax variations are now automatically handled:
+
+| Academic LaTeX          | Library Support | Notes                                                                             |
+| ----------------------- | --------------- | --------------------------------------------------------------------------------- |
+| `\frac12` (braceless)   | ✅ Works         | Parses as `\frac{1}{2}`. Ambiguous cases like `\frac123` error with clear message |
+| `sin(x)` (no backslash) | ✅ Works         | Recognized when followed by `(`. Without `(`, remains as implicit mult            |
+| `e^{ix}`                | ✅ Works         | Implicit multiplication inside exponents is handled                               |
 
 ---
 
@@ -94,34 +99,33 @@ Some valid LaTeX may require minor adjustments:
 
 | Task                                               | Status | Description                    |
 | -------------------------------------------------- | ------ | ------------------------------ |
-| Add `\approx`, `\bar`, `\dot`, `\ddot`             | 📋      | Common in physics papers       |
-| Add `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow` | 📋      | Logic notation                 |
-| Add `\forall`, `\exists`                           | 📋      | Quantifiers (parse as symbols) |
-| Add `\subset`, `\subseteq`, `\supset`              | 📋      | Set notation                   |
-| Add `\cup`, `\cap`, `\setminus`                    | 📋      | Set operations                 |
-| Add `\propto`, `\mapsto`                           | 📋      | Relation symbols               |
-| Test with 50+ real academic paper excerpts         | 📋      | Validate "just works" claim    |
+| Add `\approx`, `\bar`, `\dot`, `\ddot`             | ✅      | Common in physics papers       |
+| Add `\Rightarrow`, `\Leftarrow`, `\Leftrightarrow` | ✅      | Logic notation                 |
+| Add `\forall`, `\exists`                           | ✅      | Quantifiers (parse as symbols) |
+| Add `\subset`, `\subseteq`, `\supset`              | ✅      | Set notation                   |
+| Add `\cup`, `\cap`, `\setminus`                    | ✅      | Set operations                 |
+| Add `\propto`, `\mapsto`                           | ✅      | Relation symbols               |
+| Test with 50+ real academic paper excerpts         | ✅      | Validate "just works" claim    |
 
 ### Phase 2: Common Use Case Evaluation
 
 **Goal:** Expressions that can be numerically evaluated, are.
 
-| Task                                          | Status | Description                             |
-| --------------------------------------------- | ------ | --------------------------------------- |
-| Unicode input support                         | 📋      | Accept `√`, `∑`, `∫`, `π` directly      |
-| Improved implicit multiplication heuristics   | 📋      | `e^ix` → `e^{i*x}`                      |
-| Better error messages for evaluation failures | 📋      | "Cannot evaluate gradient symbolically" |
+| Task                                          | Status | Description                                              |
+| --------------------------------------------- | ------ | -------------------------------------------------------- |
+| Unicode input support                         | ✅      | Accept `√`, `∑`, `∫`, `π` directly                       |
+| Improved implicit multiplication heuristics   | ✅      | `e^{ix}` works, braces required for multi-char exponents |
+| Better error messages for evaluation failures | ✅      | "Cannot evaluate gradient symbolically"                  |
 
 ### Phase 3: Developer Experience
 
 **Goal:** Easy integration and debugging.
 
-| Task            | Status | Description                  |
-| --------------- | ------ | ---------------------------- |
-| JSON AST export | ✅      | For debugging and tooling    |
-| MathML export   | ✅      | For web display              |
-| SymPy export    | ✅      | For Python interoperability  |
-| CLI tool        | 📋      | `latexmath eval "x^2" --x=3` |
+| Task            | Status | Description                 |
+| --------------- | ------ | --------------------------- |
+| JSON AST export | ✅      | For debugging and tooling   |
+| MathML export   | ✅      | For web display             |
+| SymPy export    | ✅      | For Python interoperability |
 
 ---
 
@@ -148,11 +152,12 @@ The following are explicitly **not** goals for this library:
 
 | Task                    | Status | Description                                      |
 | ----------------------- | ------ | ------------------------------------------------ |
-| Standardized Benchmark  | ✅      | Cross-language benchmark (Dart/JS/Python)        |
+| Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)       |
 | AOT Compilation Profile | 📋      | Verify performance in release builds             |
 | WebAssembly (Wasm)      | 📋      | Investigate compiling to Wasm for web apps       |
 | Parallel Evaluation     | 📋      | Evaluate independent sub-expressions in isolates |
 
 ---
 
-**Last Updated:** 2025-12-30
+**Last Updated:** 2026-01-04
+

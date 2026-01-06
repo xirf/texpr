@@ -143,6 +143,111 @@ enum TokenType {
   eof,
 }
 
+/// Extension to provide user-friendly names for tokens.
+extension TokenTypeReadable on TokenType {
+  /// Returns a human-readable name for the token type.
+  String get readableName {
+    switch (this) {
+      case TokenType.number:
+        return 'number';
+      case TokenType.variable:
+        return 'variable';
+      case TokenType.plus:
+        return "'+'";
+      case TokenType.minus:
+        return "'-'";
+      case TokenType.multiply:
+        return "'*'";
+      case TokenType.divide:
+        return "'/'";
+      case TokenType.power:
+        return "'^'";
+      case TokenType.lparen:
+        return "'(' or '{'";
+      case TokenType.rparen:
+        return "')' or '}'";
+      case TokenType.lbracket:
+        return "'['";
+      case TokenType.rbracket:
+        return "']'";
+      case TokenType.langle:
+        return "'\\langle'";
+      case TokenType.rangle:
+        return "'\\rangle'";
+      case TokenType.underscore:
+        return "'_'";
+      case TokenType.function:
+        return 'function';
+      case TokenType.frac:
+        return "'\\frac'";
+      case TokenType.binom:
+        return "'\\binom'";
+      case TokenType.lim:
+        return "'\\lim'";
+      case TokenType.sum:
+        return "'\\sum'";
+      case TokenType.prod:
+        return "'\\prod'";
+      case TokenType.int:
+        return "'\\int'";
+      case TokenType.iint:
+        return "'\\iint'";
+      case TokenType.iiint:
+        return "'\\iiint'";
+      case TokenType.oint:
+        return "'\\oint'";
+      case TokenType.sqrt:
+        return "'\\sqrt'";
+      case TokenType.partial:
+        return "'\\partial'";
+      case TokenType.nabla:
+        return "'\\nabla'";
+      case TokenType.to:
+        return "'\\to'";
+      case TokenType.equals:
+        return "'='";
+      case TokenType.infty:
+        return "'\\infty'";
+      case TokenType.constant:
+        return 'constant';
+      case TokenType.less:
+        return "'<'";
+      case TokenType.greater:
+        return "'>'";
+      case TokenType.lessEqual:
+        return "'<='";
+      case TokenType.greaterEqual:
+        return "'>='";
+      case TokenType.comma:
+        return "','";
+      case TokenType.pipe:
+        return "'|'";
+      case TokenType.ampersand:
+        return "'&'";
+      case TokenType.backslash:
+        return "'\\\\'";
+      case TokenType.begin:
+        return "'\\begin'";
+      case TokenType.end:
+        return "'\\end'";
+      case TokenType.text:
+        return "'\\text'";
+      case TokenType.notEqual:
+        return "'\\neq'";
+      case TokenType.member:
+        return "'\\in'";
+      case TokenType.spacing:
+        return 'spacing';
+      case TokenType.ignored:
+        return 'modifier';
+      case TokenType.fontCommand:
+        return 'font command';
+      case TokenType.eof:
+        return 'end of expression';
+    }
+  }
+}
+
 /// Represents a single lexical token.
 class Token {
   /// The type of this token.

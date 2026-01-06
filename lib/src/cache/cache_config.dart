@@ -33,6 +33,12 @@ class CacheConfig {
   /// Set to 0 to disable.
   final int subExpressionCacheSize;
 
+  /// Maximum input string length eligible for L1 caching.
+  /// Expressions longer than this are parsed normally but not cached.
+  /// This prevents memory exhaustion from caching large ASTs.
+  /// Set to 0 to disable length-based filtering.
+  final int maxCacheInputLength;
+
   /// Eviction policy for all caches.
   final EvictionPolicy evictionPolicy;
 
@@ -53,6 +59,7 @@ class CacheConfig {
     this.evaluationResultCacheSize = 256,
     this.differentiationCacheSize = 64,
     this.subExpressionCacheSize = 512,
+    this.maxCacheInputLength = 5120, // 5KB default
     this.evictionPolicy = EvictionPolicy.lru,
     this.timeToLive,
     this.collectStatistics = false,
@@ -64,6 +71,7 @@ class CacheConfig {
     evaluationResultCacheSize: 0,
     differentiationCacheSize: 0,
     subExpressionCacheSize: 0,
+    maxCacheInputLength: 0,
     collectStatistics: false,
   );
 
@@ -91,6 +99,7 @@ class CacheConfig {
     int? evaluationResultCacheSize,
     int? differentiationCacheSize,
     int? subExpressionCacheSize,
+    int? maxCacheInputLength,
     EvictionPolicy? evictionPolicy,
     Duration? timeToLive,
     bool? collectStatistics,
@@ -104,6 +113,7 @@ class CacheConfig {
           differentiationCacheSize ?? this.differentiationCacheSize,
       subExpressionCacheSize:
           subExpressionCacheSize ?? this.subExpressionCacheSize,
+      maxCacheInputLength: maxCacheInputLength ?? this.maxCacheInputLength,
       evictionPolicy: evictionPolicy ?? this.evictionPolicy,
       timeToLive: timeToLive ?? this.timeToLive,
       collectStatistics: collectStatistics ?? this.collectStatistics,

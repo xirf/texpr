@@ -36,11 +36,11 @@ final simplified = engine.simplify(expr);
 The engine can expand polynomial expressions using the binomial theorem:
 
 ```dart
-// (x+1)² → x² + 2x + 1
+// (x+1)² to x² + 2x + 1
 final expr = evaluator.parse('(x+1)^{2}');
 final expanded = engine.expand(expr);
 
-// (x+2)³ → x³ + 6x² + 12x + 8
+// (x+2)³ to x³ + 6x² + 12x + 8
 final expr2 = evaluator.parse('(x+2)^{3}');
 final expanded2 = engine.expand(expr2);
 ```
@@ -55,17 +55,17 @@ final expanded2 = engine.expand(expr2);
 Factor polynomial expressions into products:
 
 ```dart
-// x² - 4 → (x-2)(x+2)
+// x² - 4 to (x-2)(x+2)
 final expr = evaluator.parse('x^{2} - 4');
 final factored = engine.factor(expr);
 
-// x² - 1 → (x-1)(x+1)
+// x² - 1 to (x-1)(x+1)
 final expr2 = evaluator.parse('x^{2} - 1');
 final factored2 = engine.factor(expr2);
 ```
 
 **Supported patterns:**
-- Difference of squares: `a² - b²` → `(a-b)(a+b)`
+- Difference of squares: `a² - b²` to `(a-b)(a+b)`
 - Simple quadratics: `x² + bx + c` (when factorable with integer roots)
 
 ### Trigonometric Identities
@@ -101,7 +101,7 @@ final simplified = engine.simplify(pythagorean);
 Apply logarithm rules to simplify expressions:
 
 ```dart
-// log(x²) → 2*log(x)
+// log(x²) to 2*log(x)
 final x2 = BinaryOp(Variable('x'), BinaryOperator.power, const NumberLiteral(2));
 final logX2 = FunctionCall('log', x2);
 final simplified = engine.simplify(logX2);
@@ -121,11 +121,11 @@ Works with `log`, `ln`, `log10`, and `log2` functions.
 Simplify fractions and rational expressions:
 
 ```dart
-// x/x → 1
+// x/x to 1
 final expr = BinaryOp(Variable('x'), BinaryOperator.divide, Variable('x'));
 final simplified = engine.simplify(expr);
 
-// (2x)/x → 2
+// (2x)/x to 2
 final twoX = BinaryOp(const NumberLiteral(2), BinaryOperator.multiply, Variable('x'));
 final expr2 = BinaryOp(twoX, BinaryOperator.divide, Variable('x'));
 final simplified2 = engine.simplify(expr2);

@@ -1,6 +1,23 @@
 # Symbolic Differentiation
 
-The library supports symbolic differentiation using the standard LaTeX notation `\frac{d}{dx}` for first derivatives and `\frac{d^n}{dx^n}` for higher-order derivatives.
+The library supports symbolic differentiation using the standard LaTeX notation for derivatives:
+
+| Notation                             | Description               |
+| ------------------------------------ | ------------------------- |
+| `\frac{d}{dx}(f)`                    | First derivative          |
+| `\frac{d^n}{dx^n}(f)`                | Higher-order derivative   |
+| `\frac{\partial}{\partial x}(f)`     | Partial derivative        |
+| `\frac{\partial^2}{\partial x^2}(f)` | Second partial derivative |
+
+### Gradient
+
+The gradient operator `\nabla` computes a vector of partial derivatives for all variables in an expression.
+
+```latex
+\nabla(expression)
+```
+
+Example: `\nabla(x^2 + y^2)` evaluates to `Vector([2x, 2y])`.
 
 ## Basic Syntax
 
@@ -245,15 +262,15 @@ print(evaluator.evaluateParsed(secondDeriv, {'x': 2}).asNumeric());
 
 The differentiation engine performs basic algebraic simplifications:
 
-- `0 + x` → `x`
-- `x + 0` → `x`
-- `0 · x` → `0`
-- `1 · x` → `x`
-- `x · 1` → `x`
-- `x / 1` → `x`
-- `x ^ 0` → `1`
-- `x ^ 1` → `x`
-- `-(-x)` → `x`
+- `0 + x` to `x`
+- `x + 0` to `x`
+- `0 · x` to `0`
+- `1 · x` to `x`
+- `x · 1` to `x`
+- `x / 1` to `x`
+- `x ^ 0` to `1`
+- `x ^ 1` to `x`
+- `-(-x)` to `x`
 
 This makes the derivative results more readable.
 
