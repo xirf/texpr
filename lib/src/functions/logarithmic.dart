@@ -36,8 +36,9 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
     // Evaluate ln(base)
     dynamic logBase;
     if (base is num) {
-      if (base <= 0 || base == 1)
+      if (base <= 0 || base == 1) {
         throw EvaluatorException('Invalid logarithm base');
+      }
       logBase = math.log(base.toDouble());
     } else if (base is Interval) {
       // Base interval should probably not contain 1 or <= 0
@@ -65,9 +66,10 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
       // ComplexStrategy handles Complex op num/Complex.
       // Complex / Interval is undefined.
       // We should try to cast Interval to something or throw.
-      if (logBase is Interval)
+      if (logBase is Interval) {
         throw EvaluatorException(
             'Complex log with Interval base not supported');
+      }
 
       return arg.log() / logBase; // Complex / num or Complex / Complex
     }
@@ -78,9 +80,10 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
       // Interval / Interval -> ok
       // Interval / num -> ok
       // Interval / Complex -> throw
-      if (logBase is Complex)
+      if (logBase is Complex) {
         throw EvaluatorException(
             'Interval log with Complex base not supported');
+      }
 
       if (logBase is num) return lnArg / logBase;
       if (logBase is Interval) return lnArg / logBase;

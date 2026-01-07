@@ -413,22 +413,22 @@ class EvaluationVisitor
     double lowerVal = 0;
     double upperVal = 0;
 
-    if (lower is num)
+    if (lower is num) {
       lowerVal = lower.toDouble();
-    else if (lower is NumericResult)
+    } else if (lower is NumericResult) {
       lowerVal = lower.value; // Just in case
-    else
+    } else {
       throw EvaluatorException(
           "Interval lower bound must be a number, got ${lower.runtimeType}");
-
-    if (upper is num)
+    }
+    if (upper is num) {
       upperVal = upper.toDouble();
-    else if (upper is NumericResult)
+    } else if (upper is NumericResult) {
       upperVal = upper.value; // Just in case
-    else
+    } else {
       throw EvaluatorException(
           "Interval upper bound must be a number, got ${upper.runtimeType}");
-
+    }
     return Interval(lowerVal, upperVal);
   }
 

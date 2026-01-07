@@ -4,7 +4,6 @@ library;
 import 'ast.dart';
 import 'cache/cache_manager.dart';
 import 'complex.dart';
-import 'evaluation_result.dart';
 import 'interval.dart';
 import 'features/calculus/differentiation_evaluator.dart';
 import 'features/calculus/integration_evaluator.dart';

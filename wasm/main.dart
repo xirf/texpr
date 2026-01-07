@@ -32,19 +32,29 @@ void main() {
     'evaluateWithVars'.toJS,
     (String expression, JSObject varsJs) {
       try {
-        // Convert JS object to connection
-        // final vars = <String, double>{};
-        // Simple iteration over keys - simplistic approach for demo
-        // A more robust way would be to use Object.entries or similar if needed,
-        // but for now let's assume the user passes a simple object.
-        // Actually, converting JSObject to Map in dart:js_interop can be tricky without dart:js_util (which is legacy).
-        // Let's stick to evaluate for now or use a basic interop pattern.
+        final vars = <String, double>{};
 
-        // Using js_interop.unsafe to iterate keys
-        // (Not implementing complex object conversion for calmness in this demo step,
-        // sticking to simple evaluate first to prove point).
-        final result =
-            evaluator.evaluate(expression); // ignore vars for now in this fix
+        // Access Object.keys via global scope (window)
+        final objectConstructor =
+            web.window.getProperty('Object'.toJS) as JSObject;
+        final keysArray = objectConstructor.callMethod('keys'.toJS, varsJs)
+            as JSArray<JSString>;
+        final keys = keysArray.toDart;
+
+        for (final keyJs in keys) {
+          final key = keyJs.toDart;
+          final valueJs = varsJs.getProperty(keyJs);
+
+          // Simple conversion to double
+          // If value is a number, we can treat it as such.
+          // Using unsafe cast or toDartInt/Double
+          if (valueJs.typeofEquals('number')) {
+            final num val = (valueJs as JSNumber).toDartDouble;
+            vars[key] = val.toDouble();
+          }
+        }
+
+        final result = evaluator.evaluate(expression, vars);
         return result.toString().toJS;
       } catch (e) {
         return 'Error: $e'.toJS;

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a5b4fc"/>
+      <stop offset="100%" style="stop-color:#c4b5fd"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="104" height="104" rx="24" fill="url(#bg-gradient)"/>
+  
+  <!-- Stylized "T" for TeX with mathematical styling -->
+  <path d="M32 36h32v6h-12v42h-8V42H32v-6z" fill="white"/>
+  
+  <!-- Stylized "x" representing expression/variable -->
+  <path d="M68 50l12 14-12 14h10l7-9 7 9h10l-12-14 12-14h-10l-7 9-7-9H68z" fill="url(#accent-gradient)"/>
+  
+  <!-- Mathematical integral symbol accent -->
+  <path d="M26 82c0-4 2-7 6-7s6 3 6 7" stroke="url(#accent-gradient)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="32" cy="88" r="2" fill="url(#accent-gradient)"/>
+</svg>

@@ -68,9 +68,10 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
       }
       // arg is num, n is Interval
       // a^(1/N) = exp(ln(a)/N)
-      if (arg <= 0)
+      if (arg <= 0) {
         throw EvaluatorException(
             'Root base must be positive for interval index');
+      }
       return (Interval.point(arg.toDouble()).log() / n).exp();
     }
     throw EvaluatorException(

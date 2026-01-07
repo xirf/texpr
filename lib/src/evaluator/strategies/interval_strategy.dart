@@ -2,7 +2,6 @@ import '../../ast.dart';
 import '../../exceptions.dart';
 import '../../interval.dart';
 import 'binary_operation_strategy.dart';
-import 'dart:math' as math;
 
 /// Strategy for binary operations involving intervals.
 class IntervalStrategy implements BinaryOperationStrategy {
@@ -26,9 +25,6 @@ class IntervalStrategy implements BinaryOperationStrategy {
           return left / right;
         case BinaryOperator.power:
           return _evaluatePower(left, right);
-        default:
-          throw EvaluatorException(
-              'Operator $operator not supported for Interval');
       }
     }
 
@@ -51,9 +47,6 @@ class IntervalStrategy implements BinaryOperationStrategy {
                 'Base must be positive for interval exponent');
           }
           return (right * l.log()).exp();
-        default:
-          throw EvaluatorException(
-              'Operator $operator not supported for Interval');
       }
     }
 

@@ -84,7 +84,7 @@ export default defineConfig({
         activeMatch: "^/advanced/",
       },
       {
-        text: "v0.1.0",
+        text: 'v0.1.1',
         items: [
           {
             text: "Changelog",

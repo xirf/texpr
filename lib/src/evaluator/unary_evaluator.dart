@@ -52,9 +52,6 @@ class UnaryEvaluator {
       switch (operator) {
         case UnaryOperator.negate:
           return -operandValue;
-        default:
-          throw EvaluatorException(
-              'Operator $operator not supported for Interval');
       }
     }
 

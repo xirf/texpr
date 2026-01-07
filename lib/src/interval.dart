@@ -442,8 +442,9 @@ class Interval {
   /// Returns a string with fixed precision.
   String toStringAsFixed(int fractionDigits) {
     if (isEmpty) return 'Interval.empty';
-    if (isPoint)
+    if (isPoint) {
       return 'Interval.point(${lower.toStringAsFixed(fractionDigits)})';
+    }
     return '[${lower.toStringAsFixed(fractionDigits)}, ${upper.toStringAsFixed(fractionDigits)}]';
   }
 
