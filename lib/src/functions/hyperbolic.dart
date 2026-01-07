@@ -6,79 +6,104 @@ import 'dart:math' as math;
 import '../ast.dart';
 import '../complex.dart';
 import '../exceptions.dart';
+import '../interval.dart';
 
-/// Hyperbolic sine: \sinh{x} - supports complex arguments
+/// Hyperbolic sine: \sinh{x} - supports complex and interval arguments
 dynamic handleSinh(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) return arg.sinh();
+  if (arg is Interval) return arg.sinh();
   if (arg is num) {
     final x = arg.toDouble();
     return (math.exp(x) - math.exp(-x)) / 2;
   }
-  throw EvaluatorException('sinh requires a numeric or complex argument');
+  throw EvaluatorException(
+      'sinh requires a numeric, complex or interval argument');
 }
 
-/// Hyperbolic cosine: \cosh{x} - supports complex arguments
+/// Hyperbolic cosine: \cosh{x} - supports complex and interval arguments
 dynamic handleCosh(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) return arg.cosh();
+  if (arg is Interval) return arg.cosh();
   if (arg is num) {
     final x = arg.toDouble();
     return (math.exp(x) + math.exp(-x)) / 2;
   }
-  throw EvaluatorException('cosh requires a numeric or complex argument');
+  throw EvaluatorException(
+      'cosh requires a numeric, complex or interval argument');
 }
 
-/// Hyperbolic tangent: \tanh{x} - supports complex arguments
+/// Hyperbolic tangent: \tanh{x} - supports complex and interval arguments
 dynamic handleTanh(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) return arg.tanh();
+  if (arg is Interval) return arg.tanh();
   if (arg is num) {
     final x = arg.toDouble();
     final expX = math.exp(x);
     final expNegX = math.exp(-x);
     return (expX - expNegX) / (expX + expNegX);
   }
-  throw EvaluatorException('tanh requires a numeric or complex argument');
+  throw EvaluatorException(
+      'tanh requires a numeric, complex or interval argument');
 }
 
 /// Inverse Hyperbolic sine: \asinh{x}
-double handleAsinh(FunctionCall func, Map<String, double> vars,
-    double Function(Expression) evaluate) {
+dynamic handleAsinh(FunctionCall func, Map<String, double> vars,
+    dynamic Function(Expression) evaluate) {
   final x = evaluate(func.argument);
-  return math.log(x + math.sqrt(x * x + 1));
+  if (x is Interval) return x.asinh();
+  if (x is num) {
+    final val = x.toDouble();
+    return math.log(val + math.sqrt(val * val + 1));
+  }
+  throw EvaluatorException('asinh requires a numeric or interval argument');
 }
 
 /// Inverse Hyperbolic cosine: \acosh{x}
-double handleAcosh(FunctionCall func, Map<String, double> vars,
-    double Function(Expression) evaluate) {
+dynamic handleAcosh(FunctionCall func, Map<String, double> vars,
+    dynamic Function(Expression) evaluate) {
   final x = evaluate(func.argument);
-  if (x < 1) {
-    throw EvaluatorException('acosh argument must be >= 1');
+  if (x is Interval) return x.acosh();
+  if (x is num) {
+    if (x < 1) {
+      throw EvaluatorException('acosh argument must be >= 1');
+    }
+    final val = x.toDouble();
+    return math.log(val + math.sqrt(val * val - 1));
   }
-  return math.log(x + math.sqrt(x * x - 1));
+  throw EvaluatorException('acosh requires a numeric or interval argument');
 }
 
 /// Inverse Hyperbolic tangent: \atanh{x}
-double handleAtanh(FunctionCall func, Map<String, double> vars,
-    double Function(Expression) evaluate) {
+dynamic handleAtanh(FunctionCall func, Map<String, double> vars,
+    dynamic Function(Expression) evaluate) {
   final x = evaluate(func.argument);
-  if (x <= -1 || x >= 1) {
-    throw EvaluatorException('atanh argument must be between -1 and 1');
+  if (x is Interval) return x.atanh();
+  if (x is num) {
+    if (x <= -1 || x >= 1) {
+      throw EvaluatorException('atanh argument must be between -1 and 1');
+    }
+    final val = x.toDouble();
+    return 0.5 * math.log((1 + val) / (1 - val));
   }
-  return 0.5 * math.log((1 + x) / (1 - x));
+  throw EvaluatorException('atanh requires a numeric or interval argument');
 }
 
-/// Hyperbolic secant: \sech{x} = 1/cosh(x) - supports complex arguments
+/// Hyperbolic secant: \sech{x} = 1/cosh(x) - supports complex and interval arguments
 dynamic handleSech(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) {
     final coshVal = arg.cosh();
     return coshVal.reciprocal;
+  }
+  if (arg is Interval) {
+    return arg.cosh().reciprocal;
   }
   if (arg is num) {
     final x = arg.toDouble();
@@ -88,16 +113,20 @@ dynamic handleSech(FunctionCall func, Map<String, double> vars,
     }
     return 1.0 / coshVal;
   }
-  throw EvaluatorException('sech requires a numeric or complex argument');
+  throw EvaluatorException(
+      'sech requires a numeric, complex or interval argument');
 }
 
-/// Hyperbolic cosecant: \csch{x} = 1/sinh(x) - supports complex arguments
+/// Hyperbolic cosecant: \csch{x} = 1/sinh(x) - supports complex and interval arguments
 dynamic handleCsch(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) {
     final sinhVal = arg.sinh();
     return sinhVal.reciprocal;
+  }
+  if (arg is Interval) {
+    return arg.sinh().reciprocal;
   }
   if (arg is num) {
     final x = arg.toDouble();
@@ -107,16 +136,20 @@ dynamic handleCsch(FunctionCall func, Map<String, double> vars,
     }
     return 1.0 / sinhVal;
   }
-  throw EvaluatorException('csch requires a numeric or complex argument');
+  throw EvaluatorException(
+      'csch requires a numeric, complex or interval argument');
 }
 
-/// Hyperbolic cotangent: \coth{x} = cosh(x)/sinh(x) - supports complex arguments
+/// Hyperbolic cotangent: \coth{x} = cosh(x)/sinh(x) - supports complex and interval arguments
 dynamic handleCoth(FunctionCall func, Map<String, double> vars,
     dynamic Function(Expression) evaluate) {
   final arg = evaluate(func.argument);
   if (arg is Complex) {
     final tanhVal = arg.tanh();
     return tanhVal.reciprocal;
+  }
+  if (arg is Interval) {
+    return arg.tanh().reciprocal;
   }
   if (arg is num) {
     final x = arg.toDouble();
@@ -127,5 +160,6 @@ dynamic handleCoth(FunctionCall func, Map<String, double> vars,
     final coshVal = (math.exp(x) + math.exp(-x)) / 2;
     return coshVal / sinhVal;
   }
-  throw EvaluatorException('coth requires a numeric or complex argument');
+  throw EvaluatorException(
+      'coth requires a numeric, complex or interval argument');
 }

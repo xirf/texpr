@@ -16,10 +16,16 @@ mixin PrimaryParserMixin on BaseParser {
     }
 
     if (match1(TokenType.lbracket)) {
-      final expr = parseExpression();
+      final first = parseExpression();
+      if (match1(TokenType.comma)) {
+        final second = parseExpression();
+        consume(TokenType.rbracket, "Expected ']'");
+        registerNode();
+        return IntervalExpr(first, second);
+      }
       consume(TokenType.rbracket, "Expected ']'");
       registerNode();
-      return expr;
+      return first;
     }
 
     if (match1(TokenType.langle)) {

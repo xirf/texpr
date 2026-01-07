@@ -70,9 +70,9 @@ class FunctionRegistry {
     register('sec', trig.handleSec);
     register('csc', trig.handleCsc);
     register('cot', trig.handleCot);
-    reg('asin', trig.handleAsin);
-    reg('acos', trig.handleAcos);
-    reg('atan', trig.handleAtan);
+    register('asin', trig.handleAsin);
+    register('acos', trig.handleAcos);
+    register('atan', trig.handleAtan);
 
     // Hyperbolic (dynamic - sinh/cosh/tanh support complex)
     register('sinh', hyper.handleSinh);
@@ -81,9 +81,9 @@ class FunctionRegistry {
     register('sech', hyper.handleSech);
     register('csch', hyper.handleCsch);
     register('coth', hyper.handleCoth);
-    reg('asinh', hyper.handleAsinh);
-    reg('acosh', hyper.handleAcosh);
-    reg('atanh', hyper.handleAtanh);
+    register('asinh', hyper.handleAsinh);
+    register('acosh', hyper.handleAcosh);
+    register('atanh', hyper.handleAtanh);
 
     // Power / Root (dynamic - support complex)
     register('sqrt', pow.handleSqrt);
@@ -95,7 +95,7 @@ class FunctionRegistry {
     reg('round', round.handleRound);
 
     // Other
-    reg('abs', other.handleAbs);
+    register('abs', other.handleAbs);
     reg('sgn', other.handleSgn);
     reg('sign', other.handleSgn);
     reg('factorial', other.handleFactorial);

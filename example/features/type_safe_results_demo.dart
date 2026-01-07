@@ -50,6 +50,9 @@ void main() {
         print('  -> Vector data: $vector');
       case FunctionResult(:final function):
         print('  -> Got a function definition: $function');
+      case IntervalResult(:final interval):
+        print('  -> Got an interval: $interval');
+        print('  -> Bounds: [${interval.lower}, ${interval.upper}]');
     }
     print('');
   }

@@ -2,6 +2,7 @@
 library;
 
 import 'complex.dart';
+import 'interval.dart';
 import 'matrix.dart';
 import 'vector.dart';
 
@@ -40,6 +41,7 @@ sealed class EvaluationResult {
       ComplexResult(:final value) => value.isReal
           ? value.real
           : throw StateError('Result is a complex number, not a real number'),
+      IntervalResult(:final interval) => interval.midpoint,
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
       FunctionResult() =>
@@ -54,6 +56,8 @@ sealed class EvaluationResult {
     return switch (this) {
       NumericResult(:final value) => Complex(value),
       ComplexResult(:final value) => value,
+      IntervalResult() =>
+        throw StateError('Result is an interval, not a complex number'),
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
       FunctionResult() =>
@@ -68,6 +72,8 @@ sealed class EvaluationResult {
     return switch (this) {
       NumericResult() => throw StateError('Result is a number, not a matrix'),
       ComplexResult() => throw StateError('Result is a number, not a matrix'),
+      IntervalResult() =>
+        throw StateError('Result is an interval, not a matrix'),
       MatrixResult(:final matrix) => matrix,
       VectorResult() => throw StateError('Result is a vector, not a matrix'),
       FunctionResult() =>
@@ -82,10 +88,28 @@ sealed class EvaluationResult {
     return switch (this) {
       NumericResult() => throw StateError('Result is a number, not a vector'),
       ComplexResult() => throw StateError('Result is a number, not a vector'),
+      IntervalResult() =>
+        throw StateError('Result is an interval, not a vector'),
       MatrixResult() => throw StateError('Result is a matrix, not a vector'),
       VectorResult(:final vector) => vector,
       FunctionResult() =>
         throw StateError('Result is a function, not a vector'),
+    };
+  }
+
+  /// Converts the result to an interval.
+  ///
+  /// For [NumericResult], creates a point interval.
+  /// Throws [StateError] for non-numeric types.
+  Interval asInterval() {
+    return switch (this) {
+      NumericResult(:final value) => Interval.point(value),
+      ComplexResult() => throw StateError('Result is complex, not an interval'),
+      IntervalResult(:final interval) => interval,
+      MatrixResult() => throw StateError('Result is a matrix, not an interval'),
+      VectorResult() => throw StateError('Result is a vector, not an interval'),
+      FunctionResult() =>
+        throw StateError('Result is a function, not an interval'),
     };
   }
 
@@ -100,6 +124,9 @@ sealed class EvaluationResult {
 
   /// Returns true if this is a vector result.
   bool get isVector => this is VectorResult;
+
+  /// Returns true if this is an interval result.
+  bool get isInterval => this is IntervalResult;
 
   /// Returns true if the result is Not-a-Number (NaN).
   ///
@@ -232,4 +259,32 @@ final class FunctionResult extends EvaluationResult {
 
   @override
   bool get isNaN => false;
+}
+
+/// Represents an interval evaluation result for verified computing.
+///
+/// Intervals provide guaranteed bounds on numeric values, useful for
+/// error propagation and verified computations.
+final class IntervalResult extends EvaluationResult {
+  /// The interval value of the result.
+  final Interval interval;
+
+  /// Creates an interval result with the given [interval].
+  const IntervalResult(this.interval);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IntervalResult &&
+          runtimeType == other.runtimeType &&
+          interval == other.interval;
+
+  @override
+  int get hashCode => interval.hashCode;
+
+  @override
+  String toString() => 'IntervalResult($interval)';
+
+  @override
+  bool get isNaN => interval.lower.isNaN || interval.upper.isNaN;
 }

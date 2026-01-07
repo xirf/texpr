@@ -199,13 +199,21 @@ mixin FunctionParserMixin on BaseParser {
     // Handle bounds (optional, loop to allow _ then ^ or ^ then _)
     while (check(TokenType.underscore) || check(TokenType.power)) {
       if (match1(TokenType.underscore)) {
-        consume(TokenType.lparen, "Expected '{' after '_'");
-        lower = parseExpression();
-        consume(TokenType.rparen, "Expected '}' after lower bound");
+        if (check(TokenType.lparen) && current.value == '{') {
+          advance();
+          lower = parseExpression();
+          consume(TokenType.rparen, "Expected '}' after lower bound");
+        } else {
+          lower = parsePrimary();
+        }
       } else if (match1(TokenType.power)) {
-        consume(TokenType.lparen, "Expected '{' after '^'");
-        upper = parseExpression();
-        consume(TokenType.rparen, "Expected '}' after upper bound");
+        if (check(TokenType.lparen) && current.value == '{') {
+          advance();
+          upper = parseExpression();
+          consume(TokenType.rparen, "Expected '}' after upper bound");
+        } else {
+          upper = parsePrimary();
+        }
       }
     }
 

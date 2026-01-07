@@ -66,3 +66,25 @@ class Variable extends Expression {
   @override
   int get hashCode => name.hashCode;
 }
+
+/// Represents a closed interval [a, b].
+class IntervalExpr extends Expression {
+  final Expression lower;
+  final Expression upper;
+
+  const IntervalExpr(this.lower, this.upper);
+
+  @override
+  R accept<R, C>(ExpressionVisitor<R, C> visitor, [C? context]) =>
+      visitor.visitIntervalExpr(this, context);
+
+  @override
+  bool operator ==(Object other) =>
+      other is IntervalExpr && lower == other.lower && upper == other.upper;
+
+  @override
+  int get hashCode => Object.hash(lower, upper);
+
+  @override
+  String toLatex() => '[${lower.toLatex()}, ${upper.toLatex()}]';
+}

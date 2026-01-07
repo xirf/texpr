@@ -231,4 +231,20 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 
 ---
 
+### Phase 5: Interval Arithmetic
+
+**Goal:** Support verified computing with error bounds, matching `math_expressions` parity.
+
+| Task                  | Status | Description                                           |
+| --------------------- | ------ | ----------------------------------------------------- |
+| Interval type         | 📋      | `Interval(lower, upper)` with proper bounds handling  |
+| Arithmetic operations | 📋      | `+`, `-`, `*`, `/` with interval propagation          |
+| Function evaluation   | 📋      | Monotonic functions (sin, cos, exp, log) on intervals |
+| Parser integration    | 📋      | Support `[a, b]` interval notation in LaTeX           |
+| Interval result type  | 📋      | `IntervalResult` alongside Numeric/Complex/Matrix     |
+
+**Why this matters:** Interval arithmetic provides guaranteed error bounds for numerical computations, useful for scientific computing and verified results.
+
+---
+
 **Last Updated:** 2026-01-07

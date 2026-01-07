@@ -7,15 +7,21 @@ import '../ast.dart';
 import '../exceptions.dart';
 
 import '../matrix.dart';
+import '../interval.dart';
+import '../complex.dart';
 
 final List<double?> _factorialCache = List<double?>.filled(171, null);
 
 final List<double> _fibonacciCache = <double>[0.0, 1.0];
 
 /// Absolute value: \abs{x}
-double handleAbs(FunctionCall func, Map<String, double> vars,
-    double Function(Expression) evaluate) {
-  return evaluate(func.argument).abs();
+dynamic handleAbs(FunctionCall func, Map<String, double> vars,
+    dynamic Function(Expression) evaluate) {
+  final arg = evaluate(func.argument);
+  if (arg is num) return arg.abs().toDouble();
+  if (arg is Complex) return arg.abs;
+  if (arg is Interval) return arg.abs();
+  throw EvaluatorException('abs requires a number, complex, or interval');
 }
 
 /// Sign function: \sgn{x}

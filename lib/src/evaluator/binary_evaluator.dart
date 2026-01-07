@@ -6,6 +6,7 @@ import 'strategies/number_number_strategy.dart';
 import 'strategies/complex_strategy.dart';
 import 'strategies/matrix_strategy.dart';
 import 'strategies/vector_strategy.dart';
+import 'strategies/interval_strategy.dart';
 
 /// Handles evaluation of binary operations using the strategy pattern.
 ///
@@ -17,6 +18,7 @@ class BinaryEvaluator {
     MatrixStrategy(),
     VectorStrategy(),
     ComplexStrategy(),
+    IntervalStrategy(),
     NumberNumberStrategy(),
   ];
 
