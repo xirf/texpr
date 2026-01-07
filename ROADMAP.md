@@ -150,14 +150,27 @@ The following are explicitly **not** goals for this library:
 
 **Goal:** Ensure 60fps performance on mobile devices.
 
-| Task                    | Status | Description                                      |
-| ----------------------- | ------ | ------------------------------------------------ |
-| Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)       |
-| AOT Compilation Profile | 📋      | Verify performance in release builds             |
-| WebAssembly (Wasm)      | 📋      | Investigate compiling to Wasm for web apps       |
-| Parallel Evaluation     | 📋      | Evaluate independent sub-expressions in isolates |
+| Task                    | Status | Description                                     |
+| ----------------------- | ------ | ----------------------------------------------- |
+| Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)      |
+| AOT Compilation Profile | 📋      | Verify performance in release builds            |
+| Fuzz Testing            | 📋      | Randomized input generation to catch edge cases |
+| User-Defined Functions  | 📋      | Support `f(x) = x^2` style function definitions |
+
+### Phase 5: Interval Arithmetic
+
+**Goal:** Support verified computing with error bounds, matching `math_expressions` parity.
+
+| Task                  | Status | Description                                           |
+| --------------------- | ------ | ----------------------------------------------------- |
+| Interval type         | 📋      | `Interval(lower, upper)` with proper bounds handling  |
+| Arithmetic operations | 📋      | `+`, `-`, `*`, `/` with interval propagation          |
+| Function evaluation   | 📋      | Monotonic functions (sin, cos, exp, log) on intervals |
+| Parser integration    | 📋      | Support `[a, b]` interval notation in LaTeX           |
+| Interval result type  | 📋      | `IntervalResult` alongside Numeric/Complex/Matrix     |
+
+**Why this matters:** Interval arithmetic provides guaranteed error bounds for numerical computations, useful for scientific computing and verified results.
 
 ---
 
-**Last Updated:** 2026-01-04
-
+**Last Updated:** 2026-01-07
