@@ -133,10 +133,80 @@ The following syntax variations are now automatically handled:
 
 The following are explicitly **not** goals for this library:
 
-1. **Full Computer Algebra System (CAS)** - We do pattern-based simplification, not canonical forms
-2. **Symbolic tensor calculus** - Parsing tensor notation is supported; evaluation is not
-3. **Proof verification** - Logic symbols are parsed but not reasoned about
-4. **Typesetting** - Community already had it, we fill the gap with evaluation
+1. **Full Computer Algebra System (CAS)** — We do pattern-based simplification, not canonical forms
+2. **Symbolic tensor calculus** — Parsing tensor notation is supported; evaluation is not
+3. **Proof verification** — Logic symbols are parsed but not reasoned about
+4. **Typesetting** — Community already has it; we fill the gap with evaluation
+
+### What TeXpr Will *Never* Support
+
+These are permanent architectural boundaries, not future work:
+
+| Feature                                                    | Reason                                           |
+| ---------------------------------------------------------- | ------------------------------------------------ |
+| **Document-level LaTeX** (`\documentclass`, `\usepackage`) | Out of scope — we parse math, not documents      |
+| **Macro expansion** (`\newcommand`, `\def`)                | Would require full LaTeX interpreter             |
+| **Full symbolic integration**                              | Requires CAS-level algorithms (use SymPy export) |
+| **General polynomial solving** (degree > 2)                | Requires Galois theory / numerical methods       |
+| **Theorem proving**                                        | Fundamentally different problem domain           |
+| **Arbitrary precision arithmetic**                         | Dart's `double` is the only numeric type         |
+| **Procedural programming**                                 | `if`/`for`/`while` constructs won't be added     |
+| **Units and dimensions**                                   | Physical units are parsed as variables           |
+| **Equation rendering**                                     | Use KaTeX/MathJax; we export LaTeX for this      |
+
+### Scope Philosophy
+
+TeXpr occupies a specific niche:
+
+```
+LaTeX Parser (KaTeX, MathJax)     ←  Document rendering
+       ↓
+    TeXpr                         ←  Mathematical evaluation
+       ↓
+Full CAS (SymPy, Mathematica)     ←  Symbolic computation
+```
+
+We aim to be the **best Dart library for evaluating mathematical expressions written in LaTeX notation**, not a replacement for either end of this spectrum.
+
+---
+
+## Quality Assurance
+
+### Test Coverage
+
+| Category             | Test Count    | Purpose                                  |
+| -------------------- | ------------- | ---------------------------------------- |
+| Unit tests           | 1,500+        | Individual parser/evaluator functions    |
+| Integration tests    | 200+          | End-to-end expression evaluation         |
+| Security tests       | 800+ lines    | DoS, overflow, resource exhaustion       |
+| Fuzz tests           | 2,000+ inputs | Random ASCII and structure-aware fuzzing |
+| Academic paper tests | 50+           | Real-world LaTeX compatibility           |
+
+### Testing Methodology
+
+**Property-Based Testing:**
+- Fuzz testing with random ASCII garbage (1,000 iterations)
+- Structure-aware fuzzing with LaTeX token combinations (1,000 iterations)
+- Known crasher regression tests
+
+**Security Testing:**
+- Stack overflow via deep recursion
+- Resource exhaustion via large iterations
+- Integer overflow edge cases
+- Input validation attacks
+
+**Cross-Validation:**
+- Manual verification against Wolfram Alpha/SymPy for complex expressions
+- Round-trip testing (parse → toLatex → parse)
+- Export format validation (JSON, MathML, SymPy)
+
+### Known Testing Gaps
+
+> These are acknowledged limitations in our test suite:
+
+- **No automated cross-CAS validation** — Results are manually verified, not programmatically compared to SymPy/Mathematica
+- **Limited property-based testing** — We use basic fuzzing, not full QuickCheck-style property testing
+- **No mutation testing** — Code coverage is measured, but mutation coverage is not
 
 ---
 
@@ -153,23 +223,11 @@ The following are explicitly **not** goals for this library:
 | Task                    | Status | Description                                     |
 | ----------------------- | ------ | ----------------------------------------------- |
 | Standardized Comparison | ✅      | Cross-language comparison (Dart/JS/Python)      |
-| AOT Compilation Profile | 📋      | Verify performance in release builds            |
+| WebAssembly (Wasm)      | ✅      | Compile to WASM for web apps                    |
+| Interactive Playground  | ✅      | Live calculator embedded in docs using WASM     |
+| Variable Assignment     | ✅      | Support `let x = ...` with context variables    |
 | Fuzz Testing            | 📋      | Randomized input generation to catch edge cases |
 | User-Defined Functions  | 📋      | Support `f(x) = x^2` style function definitions |
-
-### Phase 5: Interval Arithmetic
-
-**Goal:** Support verified computing with error bounds, matching `math_expressions` parity.
-
-| Task                  | Status | Description                                           |
-| --------------------- | ------ | ----------------------------------------------------- |
-| Interval type         | 📋      | `Interval(lower, upper)` with proper bounds handling  |
-| Arithmetic operations | 📋      | `+`, `-`, `*`, `/` with interval propagation          |
-| Function evaluation   | 📋      | Monotonic functions (sin, cos, exp, log) on intervals |
-| Parser integration    | 📋      | Support `[a, b]` interval notation in LaTeX           |
-| Interval result type  | 📋      | `IntervalResult` alongside Numeric/Complex/Matrix     |
-
-**Why this matters:** Interval arithmetic provides guaranteed error bounds for numerical computations, useful for scientific computing and verified results.
 
 ---
 

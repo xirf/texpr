@@ -2,8 +2,6 @@
 library;
 
 import 'ast.dart';
-import 'ast/environment.dart';
-import 'evaluation_result.dart';
 import 'cache/cache_manager.dart';
 import 'complex.dart';
 import 'features/calculus/differentiation_evaluator.dart';
