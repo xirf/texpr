@@ -48,6 +48,8 @@ void main() {
       case VectorResult(:final vector):
         print('  -> Got a vector: ${vector.dimension}');
         print('  -> Vector data: $vector');
+      case FunctionResult(:final function):
+        print('  -> Got a function definition: $function');
     }
     print('');
   }

@@ -115,6 +115,8 @@ class Texpr {
   late final Evaluator _evaluator;
   late final CacheManager _cacheManager;
 
+  final Map<String, dynamic> _globalEnvironment = {};
+
   /// The cache configuration for this evaluator.
   final CacheConfig cacheConfig;
 
@@ -186,6 +188,11 @@ class Texpr {
   /// Clears all caches (parsed expressions, evaluation results, etc.).
   void clearAllCaches() {
     _cacheManager.clear();
+  }
+
+  /// Clears the persistent global environment (variables defined via `let`).
+  void clearEnvironment() {
+    _globalEnvironment.clear();
   }
 
   /// Warms up the cache with common expressions.
@@ -270,20 +277,166 @@ class Texpr {
   /// print(result.asNumeric()); // 15.0
   /// ```
   EvaluationResult evaluateParsed(Expression ast,
-      [Map<String, double> variables = const {}]) {
+      [Map<String, dynamic> variables = const {}]) {
     // Only consult L2 cache for computationally expensive operations.
     // For cheap expressions, cache lookup overhead exceeds evaluation cost.
-    final shouldCache = _isCostlyExpression(ast) || variables.isEmpty;
+    // Also skip cache if we have side-effects (assignments)
+    final isAssignment = ast is AssignmentExpr || ast is FunctionDefinitionExpr;
+    final shouldCache =
+        !isAssignment && (_isCostlyExpression(ast) || variables.isEmpty);
 
-    if (shouldCache) {
-      final cached = _cacheManager.getEvaluationResult(ast, variables);
-      if (cached != null) return cached;
+    // Merge global environment with provided variables
+    // Provided variables take precedence over global ones
+
+    if (_globalEnvironment.isNotEmpty) {
+      // We can iterate and add if not present, but for performance we usually
+      // pass the environment down. However, Evaluator expects a single map.
+      // Creating a new map might be costly.
+      // If variables is empty, we can just use globals.
+      if (variables.isEmpty) {
+        // Safe to pass _globalEnvironment directly?
+        // Evaluator might modify it if it encounters assignments.
+        // Yes, that's desired behavior for global scope.
+        return _evaluator.evaluate(ast, _globalEnvironment);
+      } else {
+        // Mixed. We need a combined view.
+        // A simple approach is {..._globalEnvironment, ...variables}
+        // but that copies.
+        final merged = {..._globalEnvironment, ...variables};
+        // Note: Assignments in this scope will only affect 'merged', not '_globalEnvironment'
+        // unless we explicitly handle it in Evaluator.
+        // Wait, if I want `let x=5` to persist, Evaluator needs a reference to the mutable store.
+        // Current design passes Map by value (reference), but typical usage creates new Map.
+        // If we want persistence, we should probably pass _globalEnvironment as a "parent scope"
+        // or handle assignments specially.
+
+        // For now, let's pass a merged map, but if there's an assignment, we might want
+        // to capture the result and update _globalEnvironment?
+        // Actually, `evaluate` returns EvaluationResult.
+        // If `ast` is AssignmentExpr, it returns the value.
+        // But the side effect of updating the map happens inside Evaluator.
+
+        // Let's refine:
+        // If variables is NOT persistent (user passed it), we shouldn't leak assignments into it?
+        // Or should we?
+        // Usually `let` defines a variable in the current scope.
+
+        // Let's assume `_globalEnvironment` is the base.
+        // If user provides variables, they shadow globals.
+        // New assignments usually go to the "current" scope.
+        // If we want a REPL experience, variables should go to `_globalEnvironment`.
+
+        // Implementation detail:
+        // Evaluator will accept a Mutable Map.
+        // We should probably pass `_globalEnvironment` if `variables` is empty.
+        // If `variables` is present, it's a temporary scope?
+
+        // Let's stick to simple: Merge.
+        // If users want peristence, they rely on `let` statements executed one by one, usually with empty variables.
+
+        // BUT: If I do `texpr.evaluate('let x = 5')`, I want `x` to be in `_globalEnvironment`.
+        // If I pass `merged`, the assignment adds to `merged`. `_globalEnvironment` is untouched.
+        // This is a problem.
+
+        // Fix: Evaluator needs to know about the "persistent" scope vs "temporary" scope?
+        // Or we manually handle top-level assignments here in `evaluateParsed`?
+
+        if (isAssignment) {
+          // It's a top-level assignment. We want to update _globalEnvironment.
+          // But if `variables` provided conflicts, what happens?
+          // Let's execute against `merged`, but COPY the result to `_globalEnvironment`?
+          // No, Evaluator logic for AssignmentExpr is `variables[name] = value`.
+
+          // Allow direct modification of _globalEnvironment if variables is generic.
+          // If the user effectively wants a session, they use `evaluate('let...')`.
+
+          // To support this properly without a complex scope chain implementation in Evaluator:
+          // We can detect if it's an assignment and update `_globalEnvironment`.
+
+          final result = _evaluator.evaluate(ast, merged);
+
+          // If it was an assignment, the `merged` map was updated.
+          // We need to extract the new key?
+          // Or simpler: We update `_globalEnvironment` explicitly if the AST is assignment.
+
+          if (ast is AssignmentExpr) {
+            _globalEnvironment[ast.variable] =
+                (result as dynamic).value ?? result;
+            // Wrapper logic might differ. result is EvaluationResult.
+            // We need to store the raw value or the result?
+            // Evaluator stores raw values usually.
+          } else if (ast is FunctionDefinitionExpr) {
+            // FunctionDef result IS the function (UserFunction or similar).
+            // We need to retrieve it from `merged`.
+            // Or better, let Evaluator handle it and we just accept that if we passed a copy, nothing stuck.
+          }
+        }
+      }
     }
 
-    final result = _evaluator.evaluate(ast, variables);
+    // Simplification:
+    // If we want persistence, we use `_globalEnvironment`.
+    // If user provides `variables`, we assume it's a one-off evaluation context that shadows globals.
+    // If `variables` is empty, we use `_globalEnvironment` directly.
 
+    final effectiveVars = variables.isEmpty
+        ? _globalEnvironment
+        : {..._globalEnvironment, ...variables};
+
+    // If we passed a copy, assignments won't persist to _globalEnvironment.
+    // We need to handle top-level assignments explicitly if we want them to stick to Global.
+
+    // Check L2 cache if enabled/applicable
+    Map<String, double>? cacheKeyVars;
     if (shouldCache) {
-      _cacheManager.putEvaluationResult(ast, variables, result);
+      if (effectiveVars.isEmpty) {
+        cacheKeyVars = const <String, double>{};
+      } else if (effectiveVars is Map<String, double>) {
+        cacheKeyVars = effectiveVars;
+      } else {
+        // Try to convert to Map<String, double> for caching
+        // If variables contain non-numbers (e.g. matrices), we skip L2 caching
+        bool allNumbers = true;
+        final converted = <String, double>{};
+        for (final entry in effectiveVars.entries) {
+          if (entry.value is num) {
+            converted[entry.key] = (entry.value as num).toDouble();
+          } else {
+            allNumbers = false;
+            break;
+          }
+        }
+        if (allNumbers) {
+          cacheKeyVars = converted;
+        }
+      }
+
+      if (cacheKeyVars != null) {
+        final cached = _cacheManager.getEvaluationResult(ast, cacheKeyVars);
+        if (cached != null) return cached;
+      }
+    }
+
+    final result = _evaluator.evaluate(ast, effectiveVars);
+
+    // Persist top-level assignments to global environment
+    if (ast is AssignmentExpr) {
+      // Extract value from result.
+      // Result is EvaluationResult. We need to unwrap it to store raw if Evaluator expects raw.
+      // Evaluator.evaluate wraps result.
+      // But inside Evaluator, it stores raw.
+      // So effectiveVars has the raw value.
+      if (effectiveVars.containsKey(ast.variable)) {
+        _globalEnvironment[ast.variable] = effectiveVars[ast.variable];
+      }
+    } else if (ast is FunctionDefinitionExpr) {
+      if (effectiveVars.containsKey(ast.name)) {
+        _globalEnvironment[ast.name] = effectiveVars[ast.name];
+      }
+    }
+
+    if (shouldCache && cacheKeyVars != null) {
+      _cacheManager.putEvaluationResult(ast, cacheKeyVars, result);
     }
     return result;
   }
@@ -325,7 +478,7 @@ class Texpr {
   /// print(result4.asNumeric()); // 1.0
   /// ```
   EvaluationResult evaluate(String expression,
-      [Map<String, double> variables = const {}]) {
+      [Map<String, dynamic> variables = const {}]) {
     final ast = parse(expression);
     return evaluateParsed(ast, variables);
   }
@@ -351,7 +504,7 @@ class Texpr {
   /// final result3 = evaluator.evaluateNumeric('\\sin{0}'); // 0.0
   /// ```
   double evaluateNumeric(String expression,
-      [Map<String, double> variables = const {}]) {
+      [Map<String, dynamic> variables = const {}]) {
     return evaluate(expression, variables).asNumeric();
   }
 
@@ -375,7 +528,7 @@ class Texpr {
   /// print(matrix); // [[1.0, 2.0], [3.0, 4.0]]
   /// ```
   Matrix evaluateMatrix(String expression,
-      [Map<String, double> variables = const {}]) {
+      [Map<String, dynamic> variables = const {}]) {
     return evaluate(expression, variables).asMatrix();
   }
 

@@ -54,7 +54,7 @@ class FunctionRegistry {
           name,
           (f, v, e) => handler(f, v, (x) {
                 final val = e(x);
-                if (val is double) return val;
+                if (val is num) return val.toDouble();
                 throw EvaluatorException('Expected number argument for $name');
               }));
     }

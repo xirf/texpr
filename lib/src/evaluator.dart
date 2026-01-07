@@ -2,6 +2,8 @@
 library;
 
 import 'ast.dart';
+import 'ast/environment.dart';
+import 'evaluation_result.dart';
 import 'cache/cache_manager.dart';
 import 'complex.dart';
 import 'features/calculus/differentiation_evaluator.dart';
@@ -71,21 +73,23 @@ class Evaluator {
   /// - An unknown expression type is encountered
   /// - Type mismatch (e.g. adding a number to a matrix)
   EvaluationResult evaluate(Expression expr,
-      [Map<String, double> variables = const {}]) {
+      [Map<String, dynamic> variables = const {}]) {
     final rawResult = expr.accept(_visitor, variables);
     return _wrapResult(rawResult);
   }
 
   /// Wraps a raw dynamic result into an EvaluationResult.
   EvaluationResult _wrapResult(dynamic result) {
-    if (result is double) {
-      return NumericResult(result);
+    if (result is num) {
+      return NumericResult(result.toDouble());
     } else if (result is Complex) {
       return ComplexResult(result);
     } else if (result is Matrix) {
       return MatrixResult(result);
     } else if (result is Vector) {
       return VectorResult(result);
+    } else if (result is FunctionDefinitionExpr) {
+      return FunctionResult(result);
     } else {
       throw EvaluatorException(
         'Invalid result type: ${result.runtimeType}',

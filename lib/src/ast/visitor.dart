@@ -5,6 +5,7 @@ import 'functions.dart';
 import 'calculus.dart';
 import 'logic.dart';
 import 'matrix.dart';
+import 'environment.dart';
 
 /// Visitor pattern interface for traversing and operating on AST nodes.
 ///
@@ -70,4 +71,8 @@ abstract class ExpressionVisitor<R, C> {
   // Matrix and Vector
   R visitMatrixExpr(MatrixExpr node, C? context);
   R visitVectorExpr(VectorExpr node, C? context);
+
+  // Custom Environments
+  R visitAssignmentExpr(AssignmentExpr node, C? context);
+  R visitFunctionDefinitionExpr(FunctionDefinitionExpr node, C? context);
 }

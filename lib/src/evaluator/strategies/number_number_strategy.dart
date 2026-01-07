@@ -10,21 +10,21 @@ import 'binary_operation_strategy.dart';
 class NumberNumberStrategy implements BinaryOperationStrategy {
   @override
   bool canHandle(dynamic left, dynamic right) {
-    return left is double && right is double;
+    return left is num && right is num;
   }
 
   @override
   double evaluate(dynamic left, BinaryOperator operator, dynamic right) {
-    final l = left as double;
-    final r = right as double;
+    final l = left as num;
+    final r = right as num;
 
     switch (operator) {
       case BinaryOperator.add:
-        return l + r;
+        return (l + r).toDouble();
       case BinaryOperator.subtract:
-        return l - r;
+        return (l - r).toDouble();
       case BinaryOperator.multiply:
-        return l * r;
+        return (l * r).toDouble();
       case BinaryOperator.divide:
         if (r == 0) {
           throw EvaluatorException(
@@ -32,7 +32,7 @@ class NumberNumberStrategy implements BinaryOperationStrategy {
             suggestion: 'Ensure the denominator is not zero',
           );
         }
-        return l / r;
+        return (l / r).toDouble();
       case BinaryOperator.power:
         return math.pow(l, r).toDouble();
     }

@@ -5,6 +5,7 @@ import '../ast/functions.dart';
 import '../ast/calculus.dart';
 import '../ast/logic.dart';
 import '../ast/matrix.dart';
+import '../ast/environment.dart';
 import '../ast/visitor.dart';
 
 /// Visitor that converts an AST to a JSON-serializable Map.
@@ -260,6 +261,26 @@ class JsonAstVisitor implements ExpressionVisitor<Map<String, dynamic>, void> {
       'components':
           node.components.map((c) => c.accept(this, context)).toList(),
       'isUnitVector': node.isUnitVector,
+    };
+  }
+
+  @override
+  Map<String, dynamic> visitAssignmentExpr(AssignmentExpr node, void context) {
+    return {
+      'type': 'AssignmentExpr',
+      'variable': node.variable,
+      'value': node.value.accept(this, context),
+    };
+  }
+
+  @override
+  Map<String, dynamic> visitFunctionDefinitionExpr(
+      FunctionDefinitionExpr node, void context) {
+    return {
+      'type': 'FunctionDefinitionExpr',
+      'name': node.name,
+      'parameters': node.parameters,
+      'body': node.body.accept(this, context),
     };
   }
 }
