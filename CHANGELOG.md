@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.1.1 - 2026-01-07
+
+**Bug Fixes & UX Improvements**
+
+- **Parsing:** Fixed strict syntax parsing for integral bounds (e.g., `\int_0^1` is now supported).
+- **Evaluation:** Fixed `evaluateNumeric` behavior for complex numbers; results are now handled correctly when using `evaluate()`.
+- **JSON Export:** Fixed `VectorExpr` JSON schema to use `components` key, matching the AST definition.
+
 ### Added
 
 - **LaTeX Commands:** Implemented support for common academic symbols:
