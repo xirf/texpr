@@ -37,6 +37,63 @@ void main() {
           returnsNormally);
     });
 
+    group('calling user-defined functions', () {
+      test('simple function call', () {
+        // Define f(x) = x^2
+        texpr.evaluate(r'f(x) = x^2');
+
+        // Call f(3) should return 9
+        final result = texpr.evaluate('f(3)');
+        expect(result.asNumeric(), 9.0);
+      });
+
+      test('multi-parameter function', () {
+        // Define g(a, b) = a * b
+        texpr.evaluate(r'g(a, b) = a * b');
+        // Call g(4, 5) should return 20
+        final result = texpr.evaluate('g(4, 5)');
+        expect(result.asNumeric(), 20.0);
+      });
+
+      test('function with expression argument', () {
+        texpr.evaluate(r'h(x) = x + 1');
+        // Call h(2 + 3) should return 6
+        final result = texpr.evaluate('h(2 + 3)');
+        expect(result.asNumeric(), 6.0);
+      });
+
+      test('nested function calls', () {
+        texpr.evaluate(r'f(x) = x^2');
+        texpr.evaluate(r'g(x) = x + 1');
+        // Call f(g(2)) = f(3) = 9
+        final result = texpr.evaluate('f(g(2))');
+        expect(result.asNumeric(), 9.0);
+      });
+
+      test('function using global variable', () {
+        texpr.evaluate(r'let k = 10');
+        texpr.evaluate(r'f(x) = x + k');
+        // Call f(5) should return 15 (5 + 10)
+        final result = texpr.evaluate('f(5)');
+        expect(result.asNumeric(), 15.0);
+      });
+
+      test('wrong argument count throws', () {
+        texpr.evaluate(r'f(x, y) = x + y');
+        // Calling with wrong number of arguments should throw
+        expect(
+          () => texpr.evaluate('f(1)'),
+          throwsA(isA<EvaluatorException>()),
+        );
+      });
+
+      test('function with LaTeX syntax', () {
+        texpr.evaluate(r'f(x) = \sin{x}');
+        final result = texpr.evaluate('f(0)');
+        expect(result.asNumeric(), closeTo(0.0, 1e-10));
+      });
+    });
+
     test('shadowing global variables', () {
       texpr.evaluateParsed(texpr.parse(r'let a = 100'));
       // Pass local variable that shadows global 'a'

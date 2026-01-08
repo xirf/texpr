@@ -84,6 +84,23 @@ for (var x = 0.0; x < 10; x += 0.1) {
 }
 ```
 
+## User-Defined Functions
+
+Define and call your own functions:
+
+```dart
+final texpr = Texpr();
+
+// Define a function
+texpr.evaluate(r'f(x) = x^2');
+
+// Use it
+print(texpr.evaluate('f(3)').asNumeric());  // 9.0
+print(texpr.evaluate('f(5)').asNumeric());  // 25.0
+```
+
+See [Custom Environments](/guide/environments) for variables, multi-parameter functions, and more.
+
 ## How It Works
 
 The evaluator processes expressions in 3 stages:
@@ -96,6 +113,8 @@ Results are type-safe sealed classes: `NumericResult`, `ComplexResult`, `MatrixR
 
 ## What's Next
 
+- [Custom Environments](/guide/environments) — Variables and user-defined functions
 - [LaTeX Reference](/reference/latex) — All supported commands
 - [Functions](/reference/functions) — Mathematical functions
 - [Advanced Topics](/advanced/) — Symbolic algebra, calculus, extensions
+

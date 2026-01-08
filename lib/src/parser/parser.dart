@@ -31,14 +31,22 @@ class Parser extends BaseParser
     }
 
     // 2. Check for function definition: f(x, y) = ...
-    // Lookahead: variable + lparen
-    if (tokens.length > 2 &&
-        tokens[position].type == TokenType.variable &&
-        tokens[position + 1].type == TokenType.lparen) {
-      // We need deeper lookahead or speculative parsing to distinguish 'f(x) = ...' from 'f(x) + 1'
+    // The tokenizer may produce either:
+    // - variable + lparen (for multi-char names without implicit mult)
+    // - function + lparen (when implicit mult sees identifier followed by '(')
+    // Lookahead to detect = after the closing paren with valid params
+
+    final firstToken = tokens[position];
+    final isFunctionDefStart = (firstToken.type == TokenType.variable ||
+            firstToken.type == TokenType.function) &&
+        position + 1 < tokens.length &&
+        tokens[position + 1].type == TokenType.lparen;
+
+    if (tokens.length > 2 && isFunctionDefStart) {
+      // We need deeper lookahead to distinguish 'f(x) = ...' from 'f(x) + 1'
       // Simple heuristic: Scan ahead for '=' at the top level (not nested in parens)
 
-      int scanPos = position + 2; // after var + (
+      int scanPos = position + 2; // after func/var + (
       int parenBalance = 1;
       bool validParams = true;
 
@@ -61,8 +69,9 @@ class Parser extends BaseParser
           validParams &&
           scanPos < tokens.length &&
           tokens[scanPos].type == TokenType.equals) {
-        final name =
-            consume(TokenType.variable, 'Expected function name').value;
+        // Consume the function/variable name
+        final nameToken = advance();
+        final name = nameToken.value;
         consume(TokenType.lparen, 'Expected (');
 
         final params = <String>[];

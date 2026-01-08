@@ -227,7 +227,7 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 | Interactive Playground  | ✅      | Live calculator embedded in docs using WASM     |
 | Variable Assignment     | ✅      | Support `let x = ...` with context variables    |
 | Fuzz Testing            | ✅      | Randomized input generation to catch edge cases |
-| User-Defined Functions  | 📋      | Support `f(x) = x^2` style function definitions |
+| User-Defined Functions  | ✅      | Support `f(x) = x^2` style function definitions |
 
 ---
 
