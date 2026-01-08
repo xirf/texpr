@@ -179,7 +179,88 @@ abstract class Expression {
 }
 ```
 
+### Evaluability Extension
+
+Check if an expression can be evaluated before attempting evaluation:
+
+```dart
+final expr = evaluator.parse(r'\nabla f');
+final evaluability = expr.getEvaluability();
+
+// Returns one of:
+// - Evaluability.numeric     (can compute a number)
+// - Evaluability.symbolic    (symbolic-only, e.g. ∇f)
+// - Evaluability.unevaluable (missing variables)
+```
+
+Pass known variables to check evaluability with context:
+
+```dart
+final expr = evaluator.parse(r'x^2 + 1');
+expr.getEvaluability();       // unevaluable (x undefined)
+expr.getEvaluability({'x'});  // numeric (x provided)
+```
+
 ---
+
+## Evaluability
+
+Enum describing whether an expression can be numerically evaluated.
+
+```dart
+enum Evaluability {
+  /// Can be fully evaluated to numeric/complex/matrix result.
+  /// Examples: 2 + 3, \sin{\pi}, \sum_{i=1}^{10} i
+  numeric,
+
+  /// Symbolic-only, cannot produce a numeric result.
+  /// Examples: \nabla f, tensor indices, \frac{\partial}{\partial x} f
+  symbolic,
+
+  /// Cannot be evaluated due to missing context.
+  /// Examples: x + 1 without x defined
+  unevaluable,
+}
+```
+
+### Usage
+
+```dart
+import 'package:texpr/texpr.dart';
+
+final texpr = Texpr();
+
+// Numeric expression
+final expr1 = texpr.parse(r'2 + 3');
+expr1.getEvaluability();  // Evaluability.numeric
+
+// Expression with undefined variable
+final expr2 = texpr.parse(r'x^2 + 1');
+expr2.getEvaluability();       // Evaluability.unevaluable
+expr2.getEvaluability({'x'});  // Evaluability.numeric
+
+// Symbolic expression
+final expr3 = texpr.parse(r'\nabla f');
+expr3.getEvaluability();  // Evaluability.symbolic
+```
+
+### Evaluability Rules
+
+| Expression Type                  | Evaluability        | Notes                  |
+| -------------------------------- | ------------------- | ---------------------- |
+| `NumberLiteral`                  | `numeric`           | Always                 |
+| `Variable` (defined)             | `numeric`           | When in context        |
+| `Variable` (undefined)           | `unevaluable`       | When not in context    |
+| Known constants (`pi`, `e`, `i`) | `numeric`           | Built-in               |
+| `BinaryOp`, `UnaryOp`            | Depends on children | Worst-case propagates  |
+| Definite integral                | `numeric`           | Has bounds             |
+| Indefinite integral              | `symbolic`          | No bounds              |
+| `∇f` (gradient of symbol)        | `symbolic`          | Bare symbol            |
+| `∂f/∂x` (of symbol)              | `symbolic`          | Bare symbol            |
+| Multi-integrals                  | `symbolic`          | Line/surface integrals |
+
+**Combination rule**: When combining children, the "worst" evaluability wins:
+- `symbolic` > `unevaluable` > `numeric`
 
 ## ValidationResult
 

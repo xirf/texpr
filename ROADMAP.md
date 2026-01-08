@@ -174,13 +174,14 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 
 ### Test Coverage
 
-| Category             | Test Count    | Purpose                                  |
-| -------------------- | ------------- | ---------------------------------------- |
-| Unit tests           | 1,500+        | Individual parser/evaluator functions    |
-| Integration tests    | 200+          | End-to-end expression evaluation         |
-| Security tests       | 800+ lines    | DoS, overflow, resource exhaustion       |
-| Fuzz tests           | 2,000+ inputs | Random ASCII and structure-aware fuzzing |
-| Academic paper tests | 50+           | Real-world LaTeX compatibility           |
+| Category                 | Test Count    | Purpose                                      |
+| ------------------------ | ------------- | -------------------------------------------- |
+| Unit tests               | 1,500+        | Individual parser/evaluator functions        |
+| Integration tests        | 200+          | End-to-end expression evaluation             |
+| Security tests           | 800+ lines    | DoS, overflow, resource exhaustion           |
+| Fuzz tests               | 2,000+ inputs | Random ASCII and structure-aware fuzzing     |
+| Semantic invariant tests | 40+           | Derivative correctness, algebraic identities |
+| Academic paper tests     | 50+           | Real-world LaTeX compatibility               |
 
 ### Testing Methodology
 
@@ -205,7 +206,6 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 > These are acknowledged limitations in our test suite:
 
 - **No automated cross-CAS validation** — Results are manually verified, not programmatically compared to SymPy/Mathematica
-- **Limited property-based testing** — We use basic fuzzing, not full QuickCheck-style property testing
 - **No mutation testing** — Code coverage is measured, but mutation coverage is not
 
 ---
@@ -226,7 +226,7 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 | WebAssembly (Wasm)      | ✅      | Compile to WASM for web apps                    |
 | Interactive Playground  | ✅      | Live calculator embedded in docs using WASM     |
 | Variable Assignment     | ✅      | Support `let x = ...` with context variables    |
-| Fuzz Testing            | 📋      | Randomized input generation to catch edge cases |
+| Fuzz Testing            | ✅      | Randomized input generation to catch edge cases |
 | User-Defined Functions  | 📋      | Support `f(x) = x^2` style function definitions |
 
 ---
@@ -237,14 +237,51 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 
 | Task                  | Status | Description                                           |
 | --------------------- | ------ | ----------------------------------------------------- |
-| Interval type         | 📋      | `Interval(lower, upper)` with proper bounds handling  |
-| Arithmetic operations | 📋      | `+`, `-`, `*`, `/` with interval propagation          |
-| Function evaluation   | 📋      | Monotonic functions (sin, cos, exp, log) on intervals |
-| Parser integration    | 📋      | Support `[a, b]` interval notation in LaTeX           |
-| Interval result type  | 📋      | `IntervalResult` alongside Numeric/Complex/Matrix     |
+| Interval type         | ✅      | `Interval(lower, upper)` with proper bounds handling  |
+| Arithmetic operations | ✅      | `+`, `-`, `*`, `/` with interval propagation          |
+| Function evaluation   | ✅      | Monotonic functions (sin, cos, exp, log) on intervals |
+| Parser integration    | ✅      | Support `[a, b]` interval notation in LaTeX           |
+| Interval result type  | ✅      | `IntervalResult` alongside Numeric/Complex/Matrix     |
 
 **Why this matters:** Interval arithmetic provides guaranteed error bounds for numerical computations, useful for scientific computing and verified results.
 
 ---
 
-**Last Updated:** 2026-01-07
+### Phase 6: Semantic Boundaries (Future Architecture)
+
+**Goal:** Make the distinction between "can parse" and "can evaluate" explicit in the type system.
+
+| Task                       | Status | Description                                                       |
+| -------------------------- | ------ | ----------------------------------------------------------------- |
+| Evaluability enum          | ✅      | Add `Evaluability.numeric`, `.symbolic`, `.unevaluable` to nodes  |
+| Compile-time evaluability  | 📋      | Parser annotates AST with evaluability at parse time              |
+| Graceful degradation       | 📋      | Return partial results when sub-expressions are unevaluable       |
+| Cost model                 | 📋      | Complexity estimates for nested intervals/integrals/sums          |
+| Semantic invariant testing | ✅      | Property-based tests for derivative correctness, round-trip, etc. |
+
+**Why this matters:** As the parsed surface area grows (tensors, quantifiers, set notation), the gap between "parses successfully" and "has computable meaning" becomes a usability hazard. Explicit evaluability prevents false expectations.
+
+#### Architectural Notes
+
+**Evaluability Enum Concept:**
+```dart
+enum Evaluability {
+  /// Expression can be fully evaluated to a numeric/complex/matrix result
+  numeric,
+  /// Expression is symbolic-only (e.g., \nabla f, tensor indices)
+  symbolic,
+  /// Expression cannot be evaluated (missing context or undefined)
+  unevaluable,
+}
+```
+
+**Cost Model Considerations:**
+- Simpson's Rule integration: O(n) where n = subdivisions
+- Interval arithmetic: O(4) per operation (4 endpoint combinations)
+- Nested structures multiply: `\sum_{i=1}^{100} \int_0^1 [a,b] \cdot x^i dx` → O(100 × n × 4)
+- Without explicit budgets, "60fps on mobile" is empirical, not guaranteed
+
+---
+
+**Last Updated:** 2026-01-08
+
