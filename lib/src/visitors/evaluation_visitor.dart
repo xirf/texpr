@@ -403,6 +403,36 @@ class EvaluationVisitor
   }
 
   @override
+  dynamic visitIntervalExpr(IntervalExpr node,
+      [Map<String, dynamic>? context]) {
+    final variables = context ?? const {};
+    final lower = _evaluateRaw(node.lower, variables);
+    final upper = _evaluateRaw(node.upper, variables);
+
+    // Convert to double (assuming numeric bounds for now)
+    double lowerVal = 0;
+    double upperVal = 0;
+
+    if (lower is num) {
+      lowerVal = lower.toDouble();
+    } else if (lower is NumericResult) {
+      lowerVal = lower.value; // Just in case
+    } else {
+      throw EvaluatorException(
+          "Interval lower bound must be a number, got ${lower.runtimeType}");
+    }
+    if (upper is num) {
+      upperVal = upper.toDouble();
+    } else if (upper is NumericResult) {
+      upperVal = upper.value; // Just in case
+    } else {
+      throw EvaluatorException(
+          "Interval upper bound must be a number, got ${upper.runtimeType}");
+    }
+    return Interval(lowerVal, upperVal);
+  }
+
+  @override
   dynamic visitMatrixExpr(MatrixExpr node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
     return _matrixEvaluator.evaluate(node, _asDoubleMap(variables));

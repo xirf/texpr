@@ -377,6 +377,16 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
   }
 
   @override
+  String visitIntervalExpr(IntervalExpr node, void context) {
+    final lower = node.lower.accept(this, context);
+    final upper = node.upper.accept(this, context);
+    final open = '[';
+    final close = ']';
+
+    return '<mfenced open="$open" close="$close"><mrow>$lower</mrow><mo>,</mo><mrow>$upper</mrow></mfenced>';
+  }
+
+  @override
   String visitAssignmentExpr(AssignmentExpr node, void context) {
     final value = node.value.accept(this, context);
     return _mrow('${_mi(node.variable)}${_mo("=")}$value');

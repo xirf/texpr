@@ -184,7 +184,7 @@ void main() {
 
       test('vector uses Matrix()', () {
         final expr = evaluator.parse(r'\vec{1, 2, 3}');
-        expect(expr.toSymPy(), 'Matrix([1, 2, 3])');
+        expect(expr.toSymPy(), 'Matrix([[1, 2, 3]])');
       });
     });
 

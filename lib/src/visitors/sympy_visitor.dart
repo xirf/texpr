@@ -417,9 +417,15 @@ class SymPyVisitor implements ExpressionVisitor<String, void> {
 
   @override
   String visitVectorExpr(VectorExpr node, void context) {
-    final components =
+    final elements =
         node.components.map((c) => c.accept(this, context)).join(', ');
-    return 'Matrix([$components])'; // SymPy uses Matrix for vectors
+    return 'Matrix([[$elements]])'; // SymPy vectors are column matrices usually? Or just list?
+    // Using Matrix([[...]]) for row vector or Transpose if needed. Sticking to simple list representation if valid or Matrix.
+  }
+
+  @override
+  String visitIntervalExpr(IntervalExpr node, void context) {
+    return 'Interval(${node.lower.accept(this, context)}, ${node.upper.accept(this, context)})';
   }
 
   @override

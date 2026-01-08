@@ -21,7 +21,9 @@ void main() {
     for (final code in examples) {
       test('evaluateNumeric("$code")', () {
         try {
-          final result = texpr.evaluateNumeric(code);
+          // Use evaluate() instead of evaluateNumeric() for generic mixed examples
+          // because (1+2i)*(3-4i) returns a ComplexResult, and asNumeric() throws.
+          final result = texpr.evaluate(code);
           print('Success: "$code" -> $result');
         } catch (e) {
           print('Failed: "$code" -> $e');

@@ -3,6 +3,7 @@ library;
 
 import '../ast.dart';
 import 'dart:math' as math;
+import 'step_trace.dart';
 
 /// Handles polynomial expansion, factorization, and equation solving.
 ///
@@ -18,21 +19,37 @@ class PolynomialOperations {
   /// - (a+b)^n for small integer n
   /// - (a+b)(c+d) to a*c + a*d + b*c + b*d
   Expression expand(Expression expr) {
-    return _expandRecursive(expr);
+    return _expandRecursive(expr, null);
   }
 
-  Expression _expandRecursive(Expression expr) {
+  /// Expands polynomial expressions with step-by-step trace.
+  ///
+  /// Example:
+  /// ```dart
+  /// final ops = PolynomialOperations();
+  /// final result = ops.expandWithSteps(parse('(x + 1)^2'));
+  /// print(result.formatSteps());
+  /// // Step 1 [Expansion] Binomial theorem: (a + b)^n = Σ C(n,k) · a^(n-k) · b^k
+  /// //   (x+1)^{2} → 1 \cdot x^{2}+2 \cdot x \cdot 1+1 \cdot 1^{2}
+  /// ```
+  TracedResult<Expression> expandWithSteps(Expression expr) {
+    final tracer = StepTracer();
+    final result = _expandRecursive(expr, tracer);
+    return tracer.complete(result);
+  }
+
+  Expression _expandRecursive(Expression expr, StepTracer? tracer) {
     if (expr is BinaryOp) {
       if (expr.operator == BinaryOperator.power) {
-        return _expandPower(expr);
+        return _expandPower(expr, tracer);
       } else if (expr.operator == BinaryOperator.multiply) {
-        return _expandMultiply(expr);
+        return _expandMultiply(expr, tracer);
       }
     }
     return expr;
   }
 
-  Expression _expandPower(BinaryOp powerExpr) {
+  Expression _expandPower(BinaryOp powerExpr, StepTracer? tracer) {
     final base = powerExpr.left;
     final exponent = powerExpr.right;
 
@@ -43,13 +60,29 @@ class PolynomialOperations {
 
     // Handle (a+b)^n expansion
     if (base is BinaryOp && base.operator == BinaryOperator.add) {
-      return _expandBinomialPower(base.left, base.right, exp);
+      final result = _expandBinomialPower(base.left, base.right, exp);
+      tracer?.record(
+        StepType.expansion,
+        'Binomial theorem: (a + b)^$exp = Σ C($exp,k) · a^($exp-k) · b^k',
+        powerExpr,
+        result,
+        ruleName: 'binomial_theorem',
+      );
+      return result;
     }
 
     // Handle (a-b)^n expansion
     if (base is BinaryOp && base.operator == BinaryOperator.subtract) {
       final negRight = UnaryOp(UnaryOperator.negate, base.right);
-      return _expandBinomialPower(base.left, negRight, exp);
+      final result = _expandBinomialPower(base.left, negRight, exp);
+      tracer?.record(
+        StepType.expansion,
+        'Binomial theorem: (a - b)^$exp = Σ C($exp,k) · a^($exp-k) · (-b)^k',
+        powerExpr,
+        result,
+        ruleName: 'binomial_theorem',
+      );
+      return result;
     }
 
     return powerExpr;
@@ -101,7 +134,7 @@ class PolynomialOperations {
     return result;
   }
 
-  Expression _expandMultiply(BinaryOp multiplyExpr) {
+  Expression _expandMultiply(BinaryOp multiplyExpr, StepTracer? tracer) {
     final left = multiplyExpr.left;
     final right = multiplyExpr.right;
 
@@ -120,11 +153,21 @@ class PolynomialOperations {
       final bc = BinaryOp(b, BinaryOperator.multiply, c);
       final bd = BinaryOp(b, BinaryOperator.multiply, d);
 
-      return BinaryOp(
+      final result = BinaryOp(
         BinaryOp(ac, BinaryOperator.add, ad),
         BinaryOperator.add,
         BinaryOp(bc, BinaryOperator.add, bd),
       );
+
+      tracer?.record(
+        StepType.expansion,
+        'FOIL: (a + b)(c + d) = ac + ad + bc + bd',
+        multiplyExpr,
+        result,
+        ruleName: 'foil_expansion',
+      );
+
+      return result;
     }
 
     return multiplyExpr;
@@ -136,20 +179,40 @@ class PolynomialOperations {
   /// - Difference of squares: x^2 - a^2 to (x-a)(x+a)
   /// - Simple quadratics: x^2 + bx + c to (x+p)(x+q) when factorizable
   Expression factor(Expression expr) {
+    return _factorInternal(expr, null);
+  }
+
+  /// Factors polynomial expressions with step-by-step trace.
+  ///
+  /// Example:
+  /// ```dart
+  /// final ops = PolynomialOperations();
+  /// final result = ops.factorWithSteps(parse('x^2 - 1'));
+  /// print(result.formatSteps());
+  /// // Step 1 [Factorization] Difference of squares: a² - b² = (a - b)(a + b)
+  /// //   x^{2}-1 → (x-1)(x+1)
+  /// ```
+  TracedResult<Expression> factorWithSteps(Expression expr) {
+    final tracer = StepTracer();
+    final result = _factorInternal(expr, tracer);
+    return tracer.complete(result);
+  }
+
+  Expression _factorInternal(Expression expr, StepTracer? tracer) {
     // Try factoring difference of squares
     if (expr is BinaryOp && expr.operator == BinaryOperator.subtract) {
-      final factored = _factorDifferenceOfSquares(expr);
+      final factored = _factorDifferenceOfSquares(expr, tracer);
       if (factored != null) return factored;
     }
 
     // Try factoring quadratics
-    final factored = _factorQuadratic(expr);
+    final factored = _factorQuadratic(expr, tracer);
     if (factored != null) return factored;
 
     return expr;
   }
 
-  Expression? _factorDifferenceOfSquares(BinaryOp expr) {
+  Expression? _factorDifferenceOfSquares(BinaryOp expr, StepTracer? tracer) {
     // Check for a^2 - b^2 pattern
     final left = expr.left;
     final right = expr.right;
@@ -168,14 +231,24 @@ class PolynomialOperations {
         // Return (a-b)(a+b)
         final aminusb = BinaryOp(a, BinaryOperator.subtract, b);
         final aplusb = BinaryOp(a, BinaryOperator.add, b);
-        return BinaryOp(aminusb, BinaryOperator.multiply, aplusb);
+        final result = BinaryOp(aminusb, BinaryOperator.multiply, aplusb);
+
+        tracer?.record(
+          StepType.factorization,
+          'Difference of squares: a² - b² = (a - b)(a + b)',
+          expr,
+          result,
+          ruleName: 'difference_of_squares',
+        );
+
+        return result;
       }
     }
 
     return null;
   }
 
-  Expression? _factorQuadratic(Expression expr) {
+  Expression? _factorQuadratic(Expression expr, StepTracer? tracer) {
     // Try to match pattern: ax^2 + bx + c
     final terms = _extractQuadraticTerms(expr);
     if (terms == null) return null;
@@ -205,7 +278,17 @@ class PolynomialOperations {
           BinaryOperator.add,
           NumberLiteral(q.toDouble()),
         );
-        return BinaryOp(xPlusP, BinaryOperator.multiply, xPlusQ);
+        final result = BinaryOp(xPlusP, BinaryOperator.multiply, xPlusQ);
+
+        tracer?.record(
+          StepType.factorization,
+          'Quadratic factorization: find p, q where p · q = $c and p + q = $b',
+          expr,
+          result,
+          ruleName: 'quadratic_factorization',
+        );
+
+        return result;
       }
     }
 
@@ -244,12 +327,42 @@ class PolynomialOperations {
   /// Returns 0, 1, or 2 solutions using the quadratic formula.
   /// Returns symbolic solutions when possible.
   List<Expression> solveQuadratic(Expression equation, String variable) {
+    return _solveQuadraticInternal(equation, variable, null);
+  }
+
+  /// Solves a quadratic equation with step-by-step trace.
+  ///
+  /// Shows the application of the quadratic formula:
+  /// x = (-b ± √(b² - 4ac)) / 2a
+  ///
+  /// Example:
+  /// ```dart
+  /// final ops = PolynomialOperations();
+  /// final result = ops.solveQuadraticWithSteps(parse('x^2 - 5x + 6'), 'x');
+  /// print(result.formatSteps());
+  /// ```
+  TracedResult<List<Expression>> solveQuadraticWithSteps(
+      Expression equation, String variable) {
+    final tracer = StepTracer();
+    final result = _solveQuadraticInternal(equation, variable, tracer);
+    return tracer.complete(result);
+  }
+
+  List<Expression> _solveQuadraticInternal(
+      Expression equation, String variable, StepTracer? tracer) {
     final coeffs = _extractQuadraticCoefficients(equation, variable);
     if (coeffs == null) return [];
 
     final a = coeffs['a']!;
     final b = coeffs['b']!;
     final c = coeffs['c']!;
+
+    tracer?.record(
+      StepType.simplification,
+      'Identify coefficients: a = ${a.toLatex()}, b = ${b.toLatex()}, c = ${c.toLatex()}',
+      equation,
+      equation,
+    );
 
     // Check if this is actually linear (a = 0)
     if (_isZero(a)) {
@@ -266,18 +379,40 @@ class PolynomialOperations {
     );
     final discriminant = BinaryOp(bSquared, BinaryOperator.subtract, fourAC);
 
+    tracer?.record(
+      StepType.simplification,
+      'Compute discriminant: Δ = b² - 4ac',
+      discriminant,
+      discriminant,
+    );
+
     // Try to evaluate discriminant numerically if possible
     final discValue = _tryEvaluate(discriminant);
 
     if (discValue != null) {
       if (discValue < 0) {
+        tracer?.record(
+          StepType.simplification,
+          'Discriminant Δ = $discValue < 0: No real solutions',
+          discriminant,
+          const NumberLiteral(0),
+        );
         return []; // No real solutions
       } else if (discValue == 0) {
         // One solution: x = -b / (2a)
         final negB = _negate(b);
         final twoA =
             BinaryOp(const NumberLiteral(2), BinaryOperator.multiply, a);
-        return [_simplifyDivision(negB, twoA)];
+        final solution = _simplifyDivision(negB, twoA);
+
+        tracer?.record(
+          StepType.simplification,
+          'Discriminant Δ = 0: One repeated root x = -b/(2a)',
+          discriminant,
+          solution,
+        );
+
+        return [solution];
       }
     }
 
@@ -289,10 +424,17 @@ class PolynomialOperations {
     final numerator1 = BinaryOp(negB, BinaryOperator.add, sqrtDisc);
     final numerator2 = BinaryOp(negB, BinaryOperator.subtract, sqrtDisc);
 
-    return [
-      _simplifyDivision(numerator1, twoA),
-      _simplifyDivision(numerator2, twoA),
-    ];
+    final solution1 = _simplifyDivision(numerator1, twoA);
+    final solution2 = _simplifyDivision(numerator2, twoA);
+
+    tracer?.record(
+      StepType.simplification,
+      'Apply quadratic formula: x = (-b ± √Δ) / 2a',
+      equation,
+      solution1,
+    );
+
+    return [solution1, solution2];
   }
 
   /// Extract linear coefficients from equation of form ax + b = 0

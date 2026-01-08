@@ -71,6 +71,7 @@ abstract class ExpressionVisitor<R, C> {
   // Matrix and Vector
   R visitMatrixExpr(MatrixExpr node, C? context);
   R visitVectorExpr(VectorExpr node, C? context);
+  R visitIntervalExpr(IntervalExpr node, C? context);
 
   // Custom Environments
   R visitAssignmentExpr(AssignmentExpr node, C? context);

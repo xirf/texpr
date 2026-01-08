@@ -506,6 +506,7 @@ void main() {
       // CVE: Gradient computes partial derivatives for each variable
       // Many variables could cause excessive computation
       final manyVars = List.generate(50, (i) => 'x$i').join('+');
+      // ignore: prefer_interpolation_to_compose_strings
       final expr = r'\nabla{' + manyVars + '}';
 
       expect(
@@ -527,6 +528,7 @@ void main() {
       }
 
       expect(
+        // ignore: prefer_interpolation_to_compose_strings
         () => evaluator.evaluate(r'\nabla{' + expr + '}', {'x': 1.0}),
         anyOf(returnsNormally, throwsA(isA<Exception>())),
         reason: 'Nested gradient should be handled safely',

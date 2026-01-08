@@ -259,8 +259,17 @@ class JsonAstVisitor implements ExpressionVisitor<Map<String, dynamic>, void> {
     return {
       'type': 'VectorExpr',
       'components':
-          node.components.map((c) => c.accept(this, context)).toList(),
+          node.components.map((e) => e.accept(this, context)).toList(),
       'isUnitVector': node.isUnitVector,
+    };
+  }
+
+  @override
+  Map<String, dynamic> visitIntervalExpr(IntervalExpr node, void context) {
+    return {
+      'type': 'IntervalExpr',
+      'lower': node.lower.accept(this, context),
+      'upper': node.upper.accept(this, context),
     };
   }
 

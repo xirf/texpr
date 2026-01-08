@@ -27,6 +27,7 @@ export default defineConfig({
             text: "Usage",
             items: [
               { text: "Custom Environments", link: "/guide/environments" },
+              { text: "Interval Arithmetic", link: "/guide/intervals" },
               { text: "Interactive Playground", link: "/guide/playground" },
             ],
           },
@@ -83,7 +84,7 @@ export default defineConfig({
         activeMatch: "^/advanced/",
       },
       {
-        text: "v0.1.0",
+        text: 'v0.1.1',
         items: [
           {
             text: "Changelog",
@@ -117,8 +118,9 @@ export default defineConfig({
             { text: "Installation", link: "/guide/installation" },
             { text: "Quick Start", link: "/guide/quick-start" },
             { text: "Core Concepts", link: "/guide/concepts" },
-            { text: "Custom Environments", link: "/guide/environments" },
-            { text: "Interactive Playground", link: "/guide/playground" },
+              { text: "Custom Environments", link: "/guide/environments" },
+              { text: "Interval Arithmetic", link: "/guide/intervals" },
+              { text: "Interactive Playground", link: "/guide/playground" },
           ],
         },
       ],

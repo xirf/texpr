@@ -4,6 +4,7 @@ library;
 import 'ast.dart';
 import 'cache/cache_manager.dart';
 import 'complex.dart';
+import 'interval.dart';
 import 'features/calculus/differentiation_evaluator.dart';
 import 'features/calculus/integration_evaluator.dart';
 import 'exceptions.dart';
@@ -88,11 +89,13 @@ class Evaluator {
       return VectorResult(result);
     } else if (result is FunctionDefinitionExpr) {
       return FunctionResult(result);
+    } else if (result is Interval) {
+      return IntervalResult(result);
     } else {
       throw EvaluatorException(
         'Invalid result type: ${result.runtimeType}',
         suggestion:
-            'Results must be either a number, complex number, matrix, or vector',
+            'Results must be either a number, complex number, matrix, vector, or interval',
       );
     }
   }

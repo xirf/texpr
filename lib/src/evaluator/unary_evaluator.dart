@@ -1,6 +1,7 @@
 import '../ast.dart';
 import '../complex.dart';
 import '../exceptions.dart';
+import '../interval.dart';
 import '../matrix.dart';
 import '../vector.dart';
 
@@ -44,6 +45,13 @@ class UnaryEvaluator {
       switch (operator) {
         case UnaryOperator.negate:
           return (-operandValue).toDouble();
+      }
+    }
+
+    if (operandValue is Interval) {
+      switch (operator) {
+        case UnaryOperator.negate:
+          return -operandValue;
       }
     }
 
