@@ -186,6 +186,38 @@ evaluator.evaluate(r'\int_{0}^{1} x^2 dx');  // 0.333...
 
 ---
 
+## Evaluability
+
+Not all parsed expressions can be evaluated numerically. TeXpr makes this explicit:
+
+```dart
+final expr = evaluator.parse(r'\nabla f');
+print(expr.getEvaluability());  // Evaluability.symbolic
+```
+
+| Evaluability  | Meaning                       | Example               |
+| ------------- | ----------------------------- | --------------------- |
+| `numeric`     | Can compute a result          | `2 + 3`, `\sin{\pi}`  |
+| `symbolic`    | Parse-only, no numeric result | `\nabla f`, `\iint`   |
+| `unevaluable` | Missing variable definitions  | `x + 1` (x undefined) |
+
+**Check before evaluation** to provide better user feedback:
+
+```dart
+final expr = evaluator.parse(userInput);
+final eval = expr.getEvaluability(definedVariables);
+
+if (eval == Evaluability.numeric) {
+  final result = evaluator.evaluateParsed(expr, variables);
+} else if (eval == Evaluability.symbolic) {
+  showMessage('This expression is symbolic and cannot be computed');
+} else {
+  showMessage('Define all variables first');
+}
+```
+
+---
+
 ## What's Next
 
 - [How It Works](/how-it-works/) — Deep dive into the processing pipeline

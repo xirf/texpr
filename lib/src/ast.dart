@@ -11,5 +11,6 @@ export 'ast/matrix.dart';
 export 'ast/environment.dart';
 export 'ast/builder.dart';
 export 'ast/visitor.dart';
+export 'ast/evaluability.dart';
 export 'evaluation_result.dart';
 export 'visitors/evaluation_visitor.dart';
