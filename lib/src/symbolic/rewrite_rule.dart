@@ -1,5 +1,6 @@
 import '../ast.dart';
 import 'assumptions.dart';
+import 'step_trace.dart';
 
 /// Categories for rewrite rules to control application strategy.
 enum RuleCategory {
@@ -19,6 +20,24 @@ abstract class RewriteRule {
 
   /// Priority of application (higher means earlier).
   int get priority => 0;
+
+  /// Human-readable description for step trace output.
+  ///
+  /// Override this to provide a meaningful explanation of what the rule does.
+  /// Default implementation uses the rule name.
+  String get description => name;
+
+  /// The step type for step tracing.
+  ///
+  /// Override this to categorize the rule appropriately.
+  StepType get stepType {
+    return switch (category) {
+      RuleCategory.identity => StepType.identity,
+      RuleCategory.simplification => StepType.simplification,
+      RuleCategory.expansion => StepType.expansion,
+      RuleCategory.normalization => StepType.normalization,
+    };
+  }
 
   /// Checks if the rule applies to the given expression.
   /// [assumptions] can be used to check domain constraints.

@@ -7,3 +7,4 @@ export 'symbolic/polynomial_operations.dart';
 export 'symbolic/trig_identities.dart';
 export 'symbolic/logarithm_laws.dart';
 export 'symbolic/rational_simplifier.dart';
+export 'symbolic/step_trace.dart';

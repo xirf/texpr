@@ -3,6 +3,7 @@ library;
 
 import '../../ast.dart';
 import '../../exceptions.dart';
+import '../../symbolic/step_trace.dart';
 
 /// Handles symbolic differentiation of expressions.
 ///
@@ -65,6 +66,236 @@ class DifferentiationEvaluator {
       result = _differentiateOnce(result, variable);
     }
     return _simplify(result);
+  }
+
+  /// Differentiates an expression with step-by-step trace.
+  ///
+  /// Returns a [TracedResult] containing both the derivative and
+  /// a list of transformation steps showing the work.
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = evaluator.differentiateWithSteps(parse('x^3 + 2x'), 'x');
+  /// print(result.formatSteps());
+  /// // Step 1 [Differentiation] Power rule: d/dx(x^n) = n·x^(n-1)
+  /// //   x^{3} → 3 · x^{2}
+  /// // Step 2 [Differentiation] Constant multiple rule
+  /// //   2 · x → 2 · 1
+  /// ```
+  TracedResult<Expression> differentiateWithSteps(
+    Expression expr,
+    String variable, {
+    int order = 1,
+  }) {
+    if (order < 1) {
+      throw EvaluatorException(
+        'Derivative order must be positive',
+        suggestion: 'Use order >= 1',
+      );
+    }
+
+    if (order > 10) {
+      throw EvaluatorException(
+        'Derivative order too high',
+        suggestion: 'Maximum supported order is 10',
+      );
+    }
+
+    final tracer = StepTracer();
+    Expression result = expr;
+
+    for (int i = 0; i < order; i++) {
+      final before = result;
+      result = _differentiateOnceWithSteps(result, variable, tracer);
+
+      if (order > 1 && before != result) {
+        final ordinal = i == 0
+            ? 'first'
+            : i == 1
+                ? 'second'
+                : '${i + 1}th';
+        tracer.record(
+          StepType.differentiation,
+          'Complete $ordinal derivative',
+          before,
+          result,
+        );
+      }
+    }
+
+    final simplified = _simplify(result);
+    if (simplified != result) {
+      tracer.record(
+        StepType.simplification,
+        'Simplify result',
+        result,
+        simplified,
+      );
+    }
+
+    return tracer.complete(simplified);
+  }
+
+  /// Performs differentiation with step recording.
+  Expression _differentiateOnceWithSteps(
+      Expression expr, String variable, StepTracer tracer) {
+    final result = _tracedDifferentiation(expr, variable, tracer);
+    return result;
+  }
+
+  /// Differentiate with step tracing for the main expression types.
+  Expression _tracedDifferentiation(
+      Expression expr, String variable, StepTracer tracer) {
+    switch (expr) {
+      case NumberLiteral():
+        tracer.record(
+          StepType.differentiation,
+          'Constant rule: d/dx(c) = 0',
+          expr,
+          const NumberLiteral(0),
+          ruleName: 'constant_rule',
+        );
+        return const NumberLiteral(0);
+
+      case Variable(:final name):
+        final result =
+            name == variable ? const NumberLiteral(1) : const NumberLiteral(0);
+        if (name == variable) {
+          tracer.record(
+            StepType.differentiation,
+            'Variable rule: d/dx(x) = 1',
+            expr,
+            result,
+            ruleName: 'variable_rule',
+          );
+        }
+        return result;
+
+      case BinaryOp(:final left, :final right, :final operator)
+          when operator == BinaryOperator.add ||
+              operator == BinaryOperator.subtract:
+        final ruleName =
+            operator == BinaryOperator.add ? 'sum_rule' : 'difference_rule';
+        final ruleDesc = operator == BinaryOperator.add
+            ? "Sum rule: d/dx(f + g) = f' + g'"
+            : "Difference rule: d/dx(f - g) = f' - g'";
+
+        final leftDeriv = _differentiateOnce(left, variable);
+        final rightDeriv = _differentiateOnce(right, variable);
+        final result = BinaryOp(leftDeriv, operator, rightDeriv);
+
+        tracer.record(
+          StepType.differentiation,
+          ruleDesc,
+          expr,
+          result,
+          ruleName: ruleName,
+        );
+        return result;
+
+      case BinaryOp(:final left, :final right, :final operator)
+          when operator == BinaryOperator.multiply:
+        final result = BinaryOp(
+          BinaryOp(_differentiateOnce(left, variable), BinaryOperator.multiply,
+              right),
+          BinaryOperator.add,
+          BinaryOp(left, BinaryOperator.multiply,
+              _differentiateOnce(right, variable)),
+        );
+
+        tracer.record(
+          StepType.differentiation,
+          "Product rule: d/dx(f · g) = f' · g + f · g'",
+          expr,
+          result,
+          ruleName: 'product_rule',
+        );
+        return result;
+
+      case BinaryOp(:final left, :final right, :final operator)
+          when operator == BinaryOperator.divide:
+        final result = BinaryOp(
+          BinaryOp(
+            BinaryOp(_differentiateOnce(left, variable),
+                BinaryOperator.multiply, right),
+            BinaryOperator.subtract,
+            BinaryOp(left, BinaryOperator.multiply,
+                _differentiateOnce(right, variable)),
+          ),
+          BinaryOperator.divide,
+          BinaryOp(right, BinaryOperator.power, const NumberLiteral(2)),
+        );
+
+        tracer.record(
+          StepType.differentiation,
+          "Quotient rule: d/dx(f/g) = (f'g - fg')/g²",
+          expr,
+          result,
+          ruleName: 'quotient_rule',
+        );
+        return result;
+
+      case BinaryOp(:final left, :final right, :final operator)
+          when operator == BinaryOperator.power:
+        final baseHasVar = _containsVariable(left, variable);
+        final expHasVar = _containsVariable(right, variable);
+
+        if (!baseHasVar && !expHasVar) {
+          tracer.record(
+            StepType.differentiation,
+            'Constant rule: d/dx(c) = 0',
+            expr,
+            const NumberLiteral(0),
+            ruleName: 'constant_rule',
+          );
+          return const NumberLiteral(0);
+        } else if (baseHasVar && !expHasVar) {
+          final result = _differentiatePower(left, right, variable);
+          tracer.record(
+            StepType.differentiation,
+            'Power rule: d/dx(f^n) = n · f^(n-1) · f\'',
+            expr,
+            result,
+            ruleName: 'power_rule',
+          );
+          return result;
+        } else if (!baseHasVar && expHasVar) {
+          final result = _differentiatePower(left, right, variable);
+          tracer.record(
+            StepType.differentiation,
+            'Exponential rule: d/dx(a^g) = a^g · ln(a) · g\'',
+            expr,
+            result,
+            ruleName: 'exponential_rule',
+          );
+          return result;
+        } else {
+          final result = _differentiatePower(left, right, variable);
+          tracer.record(
+            StepType.differentiation,
+            'General power rule: d/dx(f^g) = f^g · (g\' · ln(f) + g · f\'/f)',
+            expr,
+            result,
+            ruleName: 'general_power_rule',
+          );
+          return result;
+        }
+
+      case FunctionCall(:final name, :final args):
+        final result = _differentiateFunctionCall(name, args, variable);
+        tracer.record(
+          StepType.differentiation,
+          'Chain rule with $name: d/dx($name(u)) = $name\'(u) · u\'',
+          expr,
+          result,
+          ruleName: 'chain_rule_$name',
+        );
+        return result;
+
+      default:
+        // Fall back to non-traced version for complex cases
+        return _differentiateOnce(expr, variable);
+    }
   }
 
   /// Performs a single differentiation step.

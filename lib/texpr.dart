@@ -88,6 +88,8 @@ import 'src/tokenizer.dart';
 import 'src/cache/cache_config.dart';
 import 'src/cache/cache_manager.dart';
 import 'src/cache/cache_statistics.dart';
+import 'src/symbolic/step_trace.dart';
+import 'src/symbolic/symbolic_engine.dart';
 
 /// A convenience class that combines tokenizing, parsing, and evaluation.
 ///
@@ -714,5 +716,107 @@ class Texpr {
       return _evaluator.integrationEvaluator.integrateIntegralExpr(expr);
     }
     return _evaluator.integrationEvaluator.integrate(expr, variable);
+  }
+
+  // ============================================================
+  // Step-by-Step Traced Operations
+  // ============================================================
+
+  /// Computes symbolic derivative with step-by-step trace.
+  ///
+  /// Returns a [TracedResult] containing both the derivative and
+  /// a list of transformation steps showing the work.
+  ///
+  /// Example:
+  /// ```dart
+  /// final evaluator = Texpr();
+  /// final result = evaluator.differentiateWithSteps('x^3 + 2x', 'x');
+  ///
+  /// print('Result: ${result.result.toLatex()}'); // 3x^2 + 2
+  /// print('Steps: ${result.stepCount}');
+  /// print(result.formatSteps());
+  /// // Step 1 [Differentiation] Sum rule: d/dx(f + g) = f' + g'
+  /// //   x^{3}+2x → 3x^{2}+2
+  /// ```
+  TracedResult<Expression> differentiateWithSteps(
+    dynamic expression,
+    String variable, {
+    int order = 1,
+  }) {
+    final expr =
+        expression is String ? parse(expression) : expression as Expression;
+    return _evaluator.differentiationEvaluator.differentiateWithSteps(
+      expr,
+      variable,
+      order: order,
+    );
+  }
+
+  /// Simplifies expression with step-by-step trace.
+  ///
+  /// Returns a [TracedResult] containing both the simplified expression
+  /// and a list of transformation steps.
+  ///
+  /// Example:
+  /// ```dart
+  /// final evaluator = Texpr();
+  /// final result = evaluator.simplifyWithSteps('x + 0 + x');
+  ///
+  /// print('Result: ${result.result.toLatex()}'); // 2x
+  /// print(result.formatSteps());
+  /// // Step 1 [Identity] Additive identity: x + 0 = x
+  /// //   x+0+x → x+x
+  /// // Step 2 [Simplification] Combine like terms: x + x = 2x
+  /// //   x+x → 2x
+  /// ```
+  TracedResult<Expression> simplifyWithSteps(dynamic expression) {
+    final expr =
+        expression is String ? parse(expression) : expression as Expression;
+    final engine = SymbolicEngine(maxRecursionDepth: maxRecursionDepth);
+    return engine.simplifyWithSteps(expr);
+  }
+
+  /// Expands polynomial expression with step-by-step trace.
+  ///
+  /// Returns a [TracedResult] containing both the expanded expression
+  /// and a list of transformation steps.
+  ///
+  /// Example:
+  /// ```dart
+  /// final evaluator = Texpr();
+  /// final result = evaluator.expandWithSteps('(x + 1)^2');
+  ///
+  /// print('Result: ${result.result.toLatex()}'); // x^2 + 2x + 1
+  /// print(result.formatSteps());
+  /// // Step 1 [Expansion] Binomial theorem: (a + b)^2 = Σ C(2,k) · a^(2-k) · b^k
+  /// //   (x+1)^{2} → x^{2}+2x+1
+  /// ```
+  TracedResult<Expression> expandWithSteps(dynamic expression) {
+    final expr =
+        expression is String ? parse(expression) : expression as Expression;
+    final engine = SymbolicEngine(maxRecursionDepth: maxRecursionDepth);
+    return engine.expandWithSteps(expr);
+  }
+
+  /// Factors expression with step-by-step trace.
+  ///
+  /// Returns a [TracedResult] containing both the factored expression
+  /// and a list of transformation steps.
+  ///
+  /// Example:
+  /// ```dart
+  /// final evaluator = Texpr();
+  /// final result = evaluator.factorWithSteps('x^2 - 1');
+  ///
+  /// print('Result: ${result.result.toLatex()}'); // (x-1)(x+1)
+  /// print(result.formatSteps());
+  /// // Step 1 [Factorization] Difference of squares: a² - b² = (a - b)(a + b)
+  /// //   x^{2}-1 → (x-1)(x+1)
+  /// ```
+  TracedResult<Expression> factorWithSteps(dynamic expression) {
+    final expr =
+        expression is String ? parse(expression) : expression as Expression;
+    final engine = SymbolicEngine(maxRecursionDepth: maxRecursionDepth);
+    return engine.factorWithSteps(expr);
   }
 }
