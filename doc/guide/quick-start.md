@@ -2,6 +2,12 @@
 
 Get up and running with TeXpr in minutes.
 
+## Try It on Replit
+
+<iframe frameborder="0" width="100%" height="500px" src="https://replit.com/@xirf/TeXpr-Demo?embed=true"></iframe>
+
+or try evaluate your own directly in the [playground](/guide/playground)
+
 ## Basic Evaluation
 
 ```dart
@@ -55,20 +61,17 @@ try {
 }
 ```
 
-## Validation
+## Checking Syntax
 
-Check syntax before evaluation:
+The `parse()` method throws descriptive exceptions for invalid input:
 
 ```dart
-// Quick check
-texpr.isValid(r'\sin{x}');     // true
-texpr.isValid(r'\sin{');       // false
-
-// Detailed validation
-final result = texpr.validate(r'\sinn{x}');
-if (!result.isValid) {
-  print(result.errorMessage);  // Unknown function
-  print(result.suggestion);    // "Did you mean 'sin'?"
+try {
+  texpr.parse(r'\sin{x}');  // ✅ valid
+} on ParserException catch (e) {
+  print('Error: ${e.message}');
+  print('Position: ${e.position}');
+  print('Suggestion: ${e.suggestion}');
 }
 ```
 
@@ -100,6 +103,54 @@ print(texpr.evaluate('f(5)').asNumeric());  // 25.0
 ```
 
 See [Custom Environments](/guide/environments) for variables, multi-parameter functions, and more.
+
+### Real-Only Mode
+
+By default, TeXpr evaluates expressions over the complex numbers ℂ.
+
+This means:
+
+* `sqrt(x)` for `x < 0` produces a complex result.
+* Subsequent operations continue in ℂ.
+* Certain operators (e.g. `abs`) map complex inputs to real outputs by definition.
+
+As a consequence, an expression may:
+
+* Enter the complex domain during evaluation
+* Later return a real-valued result
+* Be reported as `NumericResult`, even though intermediate values were complex
+
+Example:
+`sqrt(π·(-5))` evaluates in ℂ
+`abs(3.96i + 10)` evaluates to a real magnitude
+The final value is real, but the computation was not real-only.
+
+This behavior is mathematically correct but differs from “real-only” graphing tools, where operations like `sqrt(x)` are undefined for `x < 0` and halt evaluation.
+
+---
+
+### Real-Only Mode Semantics
+
+When Real-Only Mode is enabled:
+
+* The evaluation domain is restricted to ℝ
+* Any operation that would require extension to ℂ is treated as undefined
+* The entire expression becomes unevaluable at that point
+* No downstream recovery via real-valued operators is permitted
+
+Formally:
+If any subexpression is not real-evaluable, the full expression is rejected.
+
+This mode enforces domain safety rather than result-type inspection.
+
+
+```dart
+final texpr = Texpr(realOnly: true);
+
+texpr.evaluate(r'\sqrt{-1}');  // NaN (not i)
+texpr.evaluate(r'\ln{-1}');    // NaN (not iπ)
+texpr.evaluate(r'\sqrt{4}');   // 2.0 (works normally)
+```
 
 ## How It Works
 

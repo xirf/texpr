@@ -14,15 +14,17 @@ Texpr({
   bool allowImplicitMultiplication = true,
   CacheConfig? cacheConfig,
   int maxRecursionDepth = 500,
+  bool realOnly = false,
 })
 ```
 
-| Parameter                     | Type                 | Default       | Description                          |
-| ----------------------------- | -------------------- | ------------- | ------------------------------------ |
-| `extensions`                  | `ExtensionRegistry?` | null          | Custom commands and evaluators       |
-| `allowImplicitMultiplication` | `bool`               | true          | Treat `xy` as `x * y`                |
-| `cacheConfig`                 | `CacheConfig?`       | CacheConfig() | Cache size and eviction settings     |
-| `maxRecursionDepth`           | `int`                | 500           | Max recursion for parsing/evaluation |
+| Parameter                     | Type                 | Default       | Description                                                |
+| ----------------------------- | -------------------- | ------------- | ---------------------------------------------------------- |
+| `extensions`                  | `ExtensionRegistry?` | null          | Custom commands and evaluators                             |
+| `allowImplicitMultiplication` | `bool`               | true          | Treat `xy` as `x * y`                                      |
+| `cacheConfig`                 | `CacheConfig?`       | CacheConfig() | Cache size and eviction settings                           |
+| `maxRecursionDepth`           | `int`                | 500           | Max recursion for parsing/evaluation                       |
+| `realOnly`                    | `bool`               | false         | Only evaluate real numbers, return NaN for complex results |
 
 ### Methods
 

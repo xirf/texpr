@@ -9,14 +9,21 @@ import '../exceptions.dart';
 import '../interval.dart';
 
 /// Natural logarithm: \ln{x} - supports complex and interval arguments
+///
+/// [realOnly] when true, returns NaN for non-positive arguments instead of
+/// complex numbers. This provides Desmos-like behavior for graphing.
 dynamic handleLn(FunctionCall func, Map<String, double> vars,
-    dynamic Function(Expression) evaluate) {
+    dynamic Function(Expression) evaluate, bool realOnly) {
   final arg = evaluate(func.argument);
-  if (arg is Complex) return arg.log();
+  if (arg is Complex) {
+    if (realOnly) return double.nan;
+    return arg.log();
+  }
   if (arg is Interval) return arg.log();
   if (arg is num) {
     if (arg <= 0) {
-      // Return complex result for non-positive real numbers
+      // Return complex result for non-positive real numbers, or NaN in real-only mode
+      if (realOnly) return double.nan;
       return Complex(arg.toDouble()).log();
     }
     return math.log(arg.toDouble());
@@ -26,8 +33,11 @@ dynamic handleLn(FunctionCall func, Map<String, double> vars,
 }
 
 /// Logarithm: \log{x} or \log_{base}{x} - supports complex and interval
+///
+/// [realOnly] when true, returns NaN for non-positive arguments instead of
+/// complex numbers. This provides Desmos-like behavior for graphing.
 dynamic handleLog(FunctionCall func, Map<String, double> vars,
-    dynamic Function(Expression) evaluate) {
+    dynamic Function(Expression) evaluate, bool realOnly) {
   final arg = evaluate(func.argument);
 
   if (func.base != null) {
@@ -46,12 +56,14 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
       logBase = base.log();
       // If base contains 1, logBase contains 0, division will throw.
     } else if (base is Complex) {
+      if (realOnly) return double.nan;
       logBase = base.log();
     } else {
       throw EvaluatorException('Invalid logarithm base type');
     }
 
     if (arg is Complex) {
+      if (realOnly) return double.nan;
       // if base is Interval/num -> Complex / Interval?
       // Complex / num ok.
       // Complex / Interval -> Interval must be converted to Complex? or Error?
@@ -91,6 +103,7 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
 
     if (arg is num) {
       if (arg <= 0) {
+        if (realOnly) return double.nan;
         final lnArg = Complex(arg.toDouble()).log();
         if (logBase is Complex || logBase is num) {
           return lnArg / logBase;
@@ -114,6 +127,7 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
 
   // log base 10
   if (arg is Complex) {
+    if (realOnly) return double.nan;
     return arg.log() / math.ln10;
   }
   if (arg is Interval) {
@@ -121,6 +135,7 @@ dynamic handleLog(FunctionCall func, Map<String, double> vars,
   }
   if (arg is num) {
     if (arg <= 0) {
+      if (realOnly) return double.nan;
       return Complex(arg.toDouble()).log() / math.ln10;
     }
     return math.log(arg.toDouble()) / math.ln10;

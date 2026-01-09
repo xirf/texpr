@@ -35,9 +35,18 @@ class EvaluationVisitor
   late final DifferentiationEvaluator _differentiationEvaluator;
   late final IntegrationEvaluator _integrationEvaluator;
 
+  /// When true, functions like sqrt return NaN instead of complex numbers
+  /// for operations that would produce complex results.
+  final bool realOnly;
+
   /// Creates an evaluation visitor with optional extension registry.
+  ///
+  /// [realOnly] when true, operations that would produce complex numbers
+  /// (like sqrt of negative) return NaN instead. Defaults to false.
   EvaluationVisitor(
-      {ExtensionRegistry? extensions, this.maxRecursionDepth = 500})
+      {ExtensionRegistry? extensions,
+      this.maxRecursionDepth = 500,
+      this.realOnly = false})
       : _extensions = extensions {
     _binaryEvaluator = BinaryEvaluator();
     _unaryEvaluator = UnaryEvaluator();
@@ -279,6 +288,7 @@ class EvaluationVisitor
       node,
       _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
+      realOnly: realOnly,
     );
   }
 
@@ -297,6 +307,7 @@ class EvaluationVisitor
       FunctionCall('abs', node.argument),
       _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
+      realOnly: realOnly,
     );
   }
 

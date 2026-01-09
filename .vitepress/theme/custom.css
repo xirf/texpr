@@ -1,0 +1,114 @@
+/* TeXpr VitePress Theme */
+
+:root {
+  /* Brand colors inspired by UnoCSS gradient */
+  --vp-c-brand-1: #6155F5;
+  --vp-c-brand-2: #818cf8;
+  --vp-c-brand-3: #a5b4fc;
+  --vp-c-brand-soft: rgba(99, 102, 241, 0.14);
+}
+
+.dark {
+  --vp-c-brand-1: #6155F5;
+  --vp-c-brand-2: #a5b4fc;
+  --vp-c-brand-3: #c7d2fe;
+}
+
+/* Hero gradient background like UnoCSS */
+.VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(99, 102, 241, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 80% 50%,
+      rgba(139, 92, 246, 0.2),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 50% 30% at 20% 80%,
+      rgba(99, 102, 241, 0.15),
+      transparent
+    );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.dark .VPHero::before {
+  background: radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(99, 102, 241, 0.4),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 80% 50%,
+      rgba(139, 92, 246, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 50% 30% at 20% 80%,
+      rgba(99, 102, 241, 0.2),
+      transparent
+    );
+}
+
+/* Larger hero image */
+.VPHero .VPImage {
+  max-width: 280px !important;
+  max-height: 280px !important;
+}
+
+@media (min-width: 640px) {
+  .VPHero .VPImage {
+    max-width: 320px !important;
+    max-height: 320px !important;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .VPImage {
+    max-width: 400px !important;
+    max-height: 400px !important;
+  }
+}
+
+.VPButton.medium.brand {
+  background-color:#6155F5 !important;
+  border: none;
+}
+
+.VPButton.medium.brand:hover {
+  background-color:#5042D6 !important;
+}
+
+.VPImage.image-src{
+    width: 100%;
+    height: 100%;
+}
+
+
+/* dark/light radial transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root),
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root),
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}

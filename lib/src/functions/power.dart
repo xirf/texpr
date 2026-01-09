@@ -9,8 +9,11 @@ import '../exceptions.dart';
 import '../interval.dart';
 
 /// Square root or nth root: \sqrt{x} or \sqrt[n]{x} - supports complex and interval
+///
+/// [realOnly] when true, returns NaN for negative arguments instead of
+/// complex numbers. This provides Desmos-like behavior for graphing.
 dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
-    dynamic Function(Expression) evaluate) {
+    dynamic Function(Expression) evaluate, bool realOnly) {
   final arg = evaluate(func.argument);
 
   // Check for nth root via optional parameter
@@ -26,6 +29,7 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
     }
 
     if (arg is Complex) {
+      if (realOnly) return double.nan;
       if (n is num) return arg.pow(1 / n.toDouble());
       // Complex ^ (1/Interval)? Not supported easily.
       throw EvaluatorException(
@@ -44,6 +48,7 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
       } catch (e) {
         // log might throw if arg <= 0.
         if (arg.lower < 0) {
+          if (realOnly) return double.nan;
           // For intervals including negative numbers, even roots are problematic in Real Interval Arithmetic.
           // We typically throw or return Empty if undefined.
           // Interval.sqrt throws.
@@ -57,7 +62,8 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
     if (arg is num) {
       if (n is num) {
         if (arg < 0 && n % 2 == 0) {
-          // Even root of negative: return complex
+          // Even root of negative: return complex or NaN
+          if (realOnly) return double.nan;
           return Complex(arg.toDouble()).pow(1 / n.toDouble());
         }
         if (arg < 0 && n % 2 == 1) {
@@ -69,6 +75,7 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
       // arg is num, n is Interval
       // a^(1/N) = exp(ln(a)/N)
       if (arg <= 0) {
+        if (realOnly) return double.nan;
         throw EvaluatorException(
             'Root base must be positive for interval index');
       }
@@ -79,11 +86,15 @@ dynamic handleSqrt(FunctionCall func, Map<String, double> vars,
   }
 
   // Default: square root
-  if (arg is Complex) return arg.sqrt();
+  if (arg is Complex) {
+    if (realOnly) return double.nan;
+    return arg.sqrt();
+  }
   if (arg is Interval) return arg.sqrt();
   if (arg is num) {
     if (arg < 0) {
-      // Return complex result for negative numbers
+      // Return complex result for negative numbers, or NaN in real-only mode
+      if (realOnly) return double.nan;
       return Complex(arg.toDouble()).sqrt();
     }
     return math.sqrt(arg.toDouble());

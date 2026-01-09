@@ -5,6 +5,10 @@ hero:
   name: TeXpr
   text: LaTeX Math Parser for Dart
   tagline: Parse and evaluate mathematical expressions using LaTeX syntax
+  image: 
+    src: /logo.svg
+    alt: TeXpr Logo
+    
   actions:
     - theme: brand
       text: Get Started
@@ -12,6 +16,9 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/xirf/texpr
+    - theme: alt
+      text: Try it on Replit
+      link: https://replit.com/@xirf/TeXpr-Demo?embed=true
 
 features:
   - icon: 🎯

@@ -41,13 +41,19 @@ class Evaluator {
   ///
   /// [extensions] allows adding custom functions and variables to the evaluator.
   /// [cacheManager] enables sub-expression caching for better performance.
+  /// [realOnly] when true, operations that would produce complex numbers
+  /// (like sqrt of negative) return NaN instead. Useful for graphing where
+  /// Desmos-like behavior is expected. Defaults to false.
   Evaluator(
       {ExtensionRegistry? extensions,
       CacheManager? cacheManager,
-      int maxRecursionDepth = 500})
+      int maxRecursionDepth = 500,
+      bool realOnly = false})
       : _cacheManager = cacheManager {
     _visitor = EvaluationVisitor(
-        extensions: extensions, maxRecursionDepth: maxRecursionDepth);
+        extensions: extensions,
+        maxRecursionDepth: maxRecursionDepth,
+        realOnly: realOnly);
   }
 
   /// Gets the differentiation evaluator (for internal use by public API).

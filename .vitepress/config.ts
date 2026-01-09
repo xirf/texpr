@@ -5,7 +5,11 @@ export default defineConfig({
   description: "LaTeX Math Expression Parser & Evaluator for Dart",
   srcDir: "doc",
 
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+  head: [['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }]],
+  sitemap: {
+    hostname: 'https://texpr.dev',
+  },
+
 
   themeConfig: {
     logo: "/logo.svg",
@@ -28,7 +32,7 @@ export default defineConfig({
             items: [
               { text: "Custom Environments", link: "/guide/environments" },
               { text: "Interval Arithmetic", link: "/guide/intervals" },
-              { text: "Interactive Playground", link: "/guide/playground" },
+              { text: "Playground", link: "/guide/playground" },
             ],
           },
         ],

@@ -9,7 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+
+### Deprecated
+
+
+## 0.1.2 - 2026-01-09
+
+**Real-Only Mode for Graphing Applications**
+
+### Added
+
 - **Interval Arithmetics:** Added support for interval arithmetics.
+- **Real-Only Mode:** Added `realOnly` parameter to `Texpr`, `Evaluator`, and `EvaluationVisitor` classes. When enabled, operations that would produce complex numbers (like `sqrt(-1)` or `ln(-1)`) return `NaN` instead. This provides Desmos-like behavior for graphing applications.
+
+```dart
+// Default: complex number support
+final texpr = Texpr();
+texpr.evaluate(r'\sqrt{-1}'); // Returns ComplexResult(0 + 1i)
+
+// Real-only mode: NaN for undefined real operations
+final texprGraph = Texpr(realOnly: true);
+texprGraph.evaluate(r'\sqrt{-1}'); // Returns NumericResult(NaN)
+```
+
+### Changed
+
+- **FunctionRegistry:** Refactored to support real-only aware function handlers alongside standard handlers.
+
+- **`isValid()` and `validate()`:** Use `parse()` with try/catch instead. These methods will be removed in 1.0.0.
+
 
 ## 0.1.1 - 2026-01-07
 

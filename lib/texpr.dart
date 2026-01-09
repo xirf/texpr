@@ -123,6 +123,12 @@ class Texpr {
   /// The cache configuration for this evaluator.
   final CacheConfig cacheConfig;
 
+  /// When true, functions like sqrt return NaN instead of complex numbers.
+  ///
+  /// This provides Desmos-like behavior for graphing applications where
+  /// `sqrt(-1)` should be undefined rather than returning `i`.
+  final bool realOnly;
+
   /// Maximum number of parsed expressions kept in the LRU cache.
   ///
   /// Set to 0 to disable caching.
@@ -140,6 +146,9 @@ class Texpr {
   /// cache. Set to 0 to disable caching. Defaults to 128.
   /// [maxRecursionDepth]: Maximum recursion depth for parsing and evaluation.
   /// Defaults to 500.
+  /// [realOnly]: When true, operations that would produce complex numbers
+  /// (like sqrt of negative) return NaN instead. Useful for graphing where
+  /// Desmos-like behavior is expected. Defaults to false.
   /// @deprecated Use [cacheConfig] instead for more control.
   Texpr({
     ExtensionRegistry? extensions,
@@ -147,6 +156,7 @@ class Texpr {
     CacheConfig? cacheConfig,
     this.parsedExpressionCacheSize = 128,
     this.maxRecursionDepth = 500,
+    this.realOnly = false,
   })  : _extensions = extensions,
         cacheConfig = cacheConfig ??
             CacheConfig(parsedExpressionCacheSize: parsedExpressionCacheSize) {
@@ -155,6 +165,7 @@ class Texpr {
       extensions: _extensions,
       cacheManager: _cacheManager,
       maxRecursionDepth: maxRecursionDepth,
+      realOnly: realOnly,
     );
   }
 
@@ -546,15 +557,16 @@ class Texpr {
   /// Returns `true` if the expression can be parsed successfully,
   /// `false` otherwise.
   ///
-  /// Example:
+  /// **Migration:** Use [parse] with try/catch instead:
   /// ```dart
-  /// final evaluator = Texpr();
-  ///
-  /// evaluator.isValid(r'2 + 3');        // true
-  /// evaluator.isValid(r'\sin{x}');      // true (variables are OK)
-  /// evaluator.isValid(r'\sin{');        // false (unclosed brace)
-  /// evaluator.isValid(r'\unknown{5}');  // false (unknown command)
+  /// try {
+  ///   texpr.parse(input);
+  ///   // valid
+  /// } on TexprException catch (e) {
+  ///   print('Error: ${e.message}');
+  /// }
   /// ```
+  @Deprecated('Use parse() with try/catch instead. Will be removed in 1.0.0')
   bool isValid(String expression) {
     try {
       parse(expression);
@@ -576,23 +588,18 @@ class Texpr {
   ///
   /// Returns a [ValidationResult] with validation status and error details.
   ///
-  ///
-  /// This method attempts to recover from errors to report multiple issues
-  /// if possible. Check [ValidationResult.subErrors] for additional errors.
-  ///
-  /// Example:
+  /// **Migration:** Use [parse] with try/catch instead:
   /// ```dart
-  /// final evaluator = Texpr();
-  ///
-  /// final result = evaluator.validate(r'\sin{');
-  /// if (!result.isValid) {
-  ///   print('Error: ${result.errorMessage}');
-  ///   // Check for multiple errors
-  ///   for (final subError in result.subErrors) {
-  ///      print('Also found: ${subError.errorMessage}');
-  ///   }
+  /// try {
+  ///   texpr.parse(input);
+  ///   // valid
+  /// } on TexprException catch (e) {
+  ///   print('Error: ${e.message}');
+  ///   print('Position: ${e.position}');
+  ///   print('Suggestion: ${e.suggestion}');
   /// }
   /// ```
+  @Deprecated('Use parse() with try/catch instead. Will be removed in 1.0.0')
   ValidationResult validate(String expression) {
     try {
       final tokens = Tokenizer(expression,
