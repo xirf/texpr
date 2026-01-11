@@ -8,7 +8,16 @@
     "preview": "vitepress preview"
   },
   "devDependencies": {
+    "@shikijs/vitepress-twoslash": "^3.21.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^25.0.6",
     "markdown-it-mathjax3": "^4.0.0",
-    "vitepress": "^1.6.4"
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-llms": "^1.10.0"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "lucide-vue-next": "^0.562.0",
+    "tailwindcss": "^4.1.18"
   }
 }
