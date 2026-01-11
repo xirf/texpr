@@ -11,13 +11,13 @@
                 <p
                     class="text-xl! md:text-2xl text-gray-500 dark:text-gray-400 !leading-normal text-left w-full max-w-2xl md:text-center">
                     A type-safe Dart library that turns <code
-                        class="bg-gray-100 font-mono dark:bg-gray-800 px-2 py-1 rounded text-gray-300 dark:text-gray-200">\frac{d}{dx}</code>
+                        class="bg-gray-100! font-mono! dark:bg-gray-800! px-2! py-1! rounded! text-gray-300 dark:text-gray-200">\frac{d}{dx}</code>
                     strings into evaluated results. Symbolic calculus, linear algebra, boolean logic, and matrices
                     included.</p>
                 <section
                     class="flex flex-col sm:flex-row items-start sm:items-center w-full md:w-auto gap-4 mt-8 mb-12">
-                    <a class="text-white font-semibold text-lg bg-violet-400 dark:bg-violet-500 px-6 py-2.5 rounded-full"
-                        id="hero-get-started" href="/at-glance">
+                    <a class="text-white! font-semibold text-lg bg-violet-400 dark:bg-violet-500 px-6 py-2.5 rounded-full"
+                        id="hero-get-started" href="/guide">
                         Get Started
                     </a>
                     <div class="relative flex flex-1 gap-3 text-violet-500">

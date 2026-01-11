@@ -1,22 +1,18 @@
 <script setup lang="ts">
-// This layout is heavily inspired by https://elysiajs.com
-
 import DefaultTheme from 'vitepress/theme'
 import { useData, useRouter } from 'vitepress'
-import { File, Heart, Sparkles, Terminal } from 'lucide-vue-next'
+import { Copy, File } from 'lucide-vue-next'
 import Ray from './Ray.vue'
 import {
-  ref,
   nextTick,
   provide,
-  onMounted,
   computed,
-  defineAsyncComponent,
-  Teleport
+  ref,
 } from 'vue'
 
 const router = useRouter()
 const { isDark } = useData()
+const copied = ref(false)
 
 function enableTransitions() {
   return 'startViewTransition' in document
@@ -59,6 +55,25 @@ const prompt = computed(() =>
   )
 )
 
+const copyPage = () => {
+  // fetcth to /{page}.md
+  const url = `${window.location.origin}${router.route.path.replace(/.html$/g, '')}.md`
+  console.log(url)
+  fetch(url)
+    .then(response => response.text())
+    .then(text => {
+      navigator.clipboard.writeText(text)
+      copied.value = true
+      setTimeout(() => {
+        copied.value = false
+      }, 2000)
+    })
+    .catch(error => {
+      console.error('Error copying page:', error)
+    })
+}
+
+
 </script>
 
 <template>
@@ -71,7 +86,7 @@ const prompt = computed(() =>
 
     <template #doc-before>
       <div id="open-texpr-in"
-        class="flex gap-2.5 justify-end items-center pt-0.5 pr-2 text-gray-400 dark:text-gray-500 text-xs mb-1">
+        class="flex gap-2.5 justify-between items-center pt-0.5 pr-2 text-gray-400 dark:text-gray-500 text-xs mb-1">
         <div
           class="relative z-10 flex justify-center items-center gap-2.5 *:z-20 [&>a>svg]:size-4.5 sm:[&>a>svg]:size-5 [&>a>svg]:opacity-50 [&>a>svg]:interact:opacity-100 [&>a>svg]:transition-opacity">
           Open in
@@ -97,6 +112,12 @@ const prompt = computed(() =>
             <File stroke-width="1.5" />
           </a>
         </div>
+
+        <button class="flex items-center gap-2 rounded" @click="copyPage">
+          <Copy class="size-4" />
+          <span v-if="copied">Copied</span>
+          <span v-else>Copy Page</span>
+        </button>
       </div>
     </template>
   </DefaultTheme.Layout>
