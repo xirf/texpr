@@ -79,4 +79,6 @@ print(slope.asNumeric());  // 12.0
 - [Installation](/guide/installation) – Add TeXpr to your project
 - [Quick Start](/guide/quick-start) – Get productive in 5 minutes
 - [Core Concepts](/guide/concepts) – Understand key ideas
+- [Boolean Logic](/guide/logic) – Logic operators and comparisons
+- [Piecewise Functions](/guide/piecewise) – Conditional expressions and cases
 - [API Reference](/reference/) – Complete method documentation

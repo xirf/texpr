@@ -130,6 +130,25 @@ enum TokenType {
   /// Set membership `\in`.
   member,
 
+  // Boolean operators
+  /// Logical AND: `\land`, `\wedge`
+  boolAnd,
+
+  /// Logical OR: `\lor`, `\vee`
+  boolOr,
+
+  /// Logical NOT: `\neg`, `\lnot`
+  boolNot,
+
+  /// Logical XOR: `\oplus`
+  boolXor,
+
+  /// Logical implication: `\Rightarrow`, `\implies`
+  boolImplies,
+
+  /// Logical biconditional: `\Leftrightarrow`, `\iff`
+  boolIff,
+
   /// Spacing commands (e.g., `\,`, `\;`, `\quad`).
   spacing,
 
@@ -239,6 +258,18 @@ extension TokenTypeReadable on TokenType {
         return "'\\neq'";
       case TokenType.member:
         return "'\\in'";
+      case TokenType.boolAnd:
+        return "'\\land'";
+      case TokenType.boolOr:
+        return "'\\lor'";
+      case TokenType.boolNot:
+        return "'\\neg'";
+      case TokenType.boolXor:
+        return "'\\oplus'";
+      case TokenType.boolImplies:
+        return "'\\Rightarrow'";
+      case TokenType.boolIff:
+        return "'\\Leftrightarrow'";
       case TokenType.spacing:
         return 'spacing';
       case TokenType.ignored:

@@ -17,6 +17,7 @@ TeXpr is a Dart library that parses and evaluates mathematical expressions using
 * 🚩 **Domain Constraints** – Validates mathematical domains (e.g., $x > 0$ ) during evaluation.
 * 🧩 **Implicit Multiplication** – Supports implicit syntax such as $2 \pi r^2$ or $\sin{2x}$. (can be disabled)
 * 🎲 **Equation Solving** – Solves linear and quadratic equations symbolically.
+* 🚦 **Boolean Logic** – Boolean algebra (`\land`, `\lor`, `\neg`) and comparisons (`>`, `\ge`, `=`).
 * 🚨 **Piecewise Functions** – Evaluates and differentiates conditional expressions.
 * ✨ **Unicode Input** – Accepts mathematical symbols directly: `√`, `∑`, `∫`, `π`, Greek letters, and more.
 
@@ -199,6 +200,7 @@ Below is a selection of examples showcasing the library's capabilities.
 * **[Getting Started](doc/getting_started.md)**
 * **[LaTeX Commands Reference](doc/latex_commands.md)**
 * **[Symbolic Algebra](doc/symbolic_algebra.md)**
+* **[Boolean Logic](doc/guide/logic.md)**
 * **[Function Reference](doc/functions/README.md)**
 * **[Extending the Library](doc/extensions.md)**
 * **[Export Features](doc/features/export.md)**

@@ -42,6 +42,7 @@ sealed class EvaluationResult {
           ? value.real
           : throw StateError('Result is a complex number, not a real number'),
       IntervalResult(:final interval) => interval.midpoint,
+      BooleanResult() => throw StateError('Result is a boolean, not a number'),
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
       FunctionResult() =>
@@ -58,6 +59,8 @@ sealed class EvaluationResult {
       ComplexResult(:final value) => value,
       IntervalResult() =>
         throw StateError('Result is an interval, not a complex number'),
+      BooleanResult() =>
+        throw StateError('Result is a boolean, not a complex number'),
       MatrixResult() => throw StateError('Result is a matrix, not a number'),
       VectorResult() => throw StateError('Result is a vector, not a number'),
       FunctionResult() =>
@@ -74,6 +77,7 @@ sealed class EvaluationResult {
       ComplexResult() => throw StateError('Result is a number, not a matrix'),
       IntervalResult() =>
         throw StateError('Result is an interval, not a matrix'),
+      BooleanResult() => throw StateError('Result is a boolean, not a matrix'),
       MatrixResult(:final matrix) => matrix,
       VectorResult() => throw StateError('Result is a vector, not a matrix'),
       FunctionResult() =>
@@ -90,6 +94,7 @@ sealed class EvaluationResult {
       ComplexResult() => throw StateError('Result is a number, not a vector'),
       IntervalResult() =>
         throw StateError('Result is an interval, not a vector'),
+      BooleanResult() => throw StateError('Result is a boolean, not a vector'),
       MatrixResult() => throw StateError('Result is a matrix, not a vector'),
       VectorResult(:final vector) => vector,
       FunctionResult() =>
@@ -106,10 +111,31 @@ sealed class EvaluationResult {
       NumericResult(:final value) => Interval.point(value),
       ComplexResult() => throw StateError('Result is complex, not an interval'),
       IntervalResult(:final interval) => interval,
+      BooleanResult() =>
+        throw StateError('Result is a boolean, not an interval'),
       MatrixResult() => throw StateError('Result is a matrix, not an interval'),
       VectorResult() => throw StateError('Result is a vector, not an interval'),
       FunctionResult() =>
         throw StateError('Result is a function, not an interval'),
+    };
+  }
+
+  /// Converts the result to a boolean value.
+  ///
+  /// For [NumericResult], non-zero values are true.
+  /// For [BooleanResult], returns the value directly.
+  /// Throws [StateError] for other types.
+  bool asBoolean() {
+    return switch (this) {
+      NumericResult(:final value) => value != 0.0 && !value.isNaN,
+      BooleanResult(:final value) => value,
+      ComplexResult() => throw StateError('Result is complex, not a boolean'),
+      IntervalResult() =>
+        throw StateError('Result is an interval, not a boolean'),
+      MatrixResult() => throw StateError('Result is a matrix, not a boolean'),
+      VectorResult() => throw StateError('Result is a vector, not a boolean'),
+      FunctionResult() =>
+        throw StateError('Result is a function, not a boolean'),
     };
   }
 
@@ -127,6 +153,9 @@ sealed class EvaluationResult {
 
   /// Returns true if this is an interval result.
   bool get isInterval => this is IntervalResult;
+
+  /// Returns true if this is a boolean result.
+  bool get isBoolean => this is BooleanResult;
 
   /// Returns true if the result is Not-a-Number (NaN).
   ///
@@ -287,4 +316,31 @@ final class IntervalResult extends EvaluationResult {
 
   @override
   bool get isNaN => interval.lower.isNaN || interval.upper.isNaN;
+}
+
+/// Represents a boolean evaluation result.
+///
+/// Used for propositional logic expressions like `(x > 0) \land (y < 5)`.
+final class BooleanResult extends EvaluationResult {
+  /// The boolean value of the result.
+  final bool value;
+
+  /// Creates a boolean result with the given [value].
+  const BooleanResult(this.value);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BooleanResult &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  String toString() => 'BooleanResult($value)';
+
+  @override
+  bool get isNaN => false;
 }

@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+**Boolean Logic & Bug Fixes**
+
 ### Added
+- **Boolean Algebra:** Full support for boolean operators (`\land`, `\lor`, `\neg`, `\implies`, etc.) and comparisons (`>`, `<`, `=`, `\ge`, `\le`). Comparisons returning `BooleanResult` are strictly type-checked. Mixing booleans with numbers (e.g. `1 + (x>0)`) now throws an error instead of using implicit conversion.
+- **Documentation:** Added dedicated [Boolean Logic](doc/guide/logic.md) guide.
 
-
-### Deprecated
-
+### Fixed
+- **Caching Bug:** Fixed a critical hash collision issue in `CacheManager` where `0 > 1` would incorrectly return `true` due to colliding with `1 > 0`.
+- **Regression:** Resolved a regression causing `LateInitializationError` in `CacheManager`.
 
 ## 0.1.2 - 2026-01-09
 

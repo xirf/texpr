@@ -237,3 +237,111 @@ class PiecewiseExpr extends Expression {
   @override
   int get hashCode => cases.hashCode;
 }
+
+/// Boolean binary operator types for propositional logic.
+enum BooleanOperator {
+  /// Logical AND (∧): `\land`, `\wedge`
+  and,
+
+  /// Logical OR (∨): `\lor`, `\vee`
+  or,
+
+  /// Logical XOR (⊕): `\oplus`
+  xor,
+
+  /// Logical implication (⇒): `\Rightarrow`, `\implies`
+  implies,
+
+  /// Logical biconditional (⇔): `\Leftrightarrow`, `\iff`
+  iff,
+}
+
+/// A boolean binary expression (A ∧ B, A ∨ B, A ⊕ B, A ⇒ B, A ⇔ B).
+///
+/// Operands are typically comparison expressions or other boolean expressions.
+///
+/// Example in LaTeX:
+/// ```latex
+/// (x > 0) \land (y < 5)
+/// A \lor B
+/// P \Rightarrow Q
+/// ```
+class BooleanBinaryExpr extends Expression {
+  /// The left operand
+  final Expression left;
+
+  /// The boolean operator
+  final BooleanOperator operator;
+
+  /// The right operand
+  final Expression right;
+
+  const BooleanBinaryExpr(this.left, this.operator, this.right);
+
+  @override
+  String toString() => 'BooleanBinaryExpr($left, $operator, $right)';
+
+  @override
+  String toLatex() {
+    final op = switch (operator) {
+      BooleanOperator.and => r'\land',
+      BooleanOperator.or => r'\lor',
+      BooleanOperator.xor => r'\oplus',
+      BooleanOperator.implies => r'\Rightarrow',
+      BooleanOperator.iff => r'\Leftrightarrow',
+    };
+    return '${left.toLatex()} $op ${right.toLatex()}';
+  }
+
+  @override
+  R accept<R, C>(ExpressionVisitor<R, C> visitor, C? context) {
+    return visitor.visitBooleanBinaryExpr(this, context);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BooleanBinaryExpr &&
+          runtimeType == other.runtimeType &&
+          left == other.left &&
+          operator == other.operator &&
+          right == other.right;
+
+  @override
+  int get hashCode => left.hashCode ^ operator.hashCode ^ right.hashCode;
+}
+
+/// A boolean unary expression (¬A).
+///
+/// Example in LaTeX:
+/// ```latex
+/// \neg(x > 0)
+/// \lnot P
+/// ```
+class BooleanUnaryExpr extends Expression {
+  /// The operand to negate
+  final Expression operand;
+
+  const BooleanUnaryExpr(this.operand);
+
+  @override
+  String toString() => 'BooleanUnaryExpr($operand)';
+
+  @override
+  String toLatex() => r'\neg ' + operand.toLatex();
+
+  @override
+  R accept<R, C>(ExpressionVisitor<R, C> visitor, C? context) {
+    return visitor.visitBooleanUnaryExpr(this, context);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BooleanUnaryExpr &&
+          runtimeType == other.runtimeType &&
+          operand == other.operand;
+
+  @override
+  int get hashCode => operand.hashCode;
+}

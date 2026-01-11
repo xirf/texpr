@@ -85,7 +85,9 @@ class Evaluator {
 
   /// Wraps a raw dynamic result into an EvaluationResult.
   EvaluationResult _wrapResult(dynamic result) {
-    if (result is num) {
+    if (result is bool) {
+      return BooleanResult(result);
+    } else if (result is num) {
       return NumericResult(result.toDouble());
     } else if (result is Complex) {
       return ComplexResult(result);
@@ -101,7 +103,7 @@ class Evaluator {
       throw EvaluatorException(
         'Invalid result type: ${result.runtimeType}',
         suggestion:
-            'Results must be either a number, complex number, matrix, vector, or interval',
+            'Results must be either a number, boolean, complex number, matrix, vector, or interval',
       );
     }
   }

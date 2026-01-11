@@ -445,6 +445,33 @@ class SymPyVisitor implements ExpressionVisitor<String, void> {
     }
     return 'Eq(${node.name}($params), $body)';
   }
+
+  @override
+  String visitBooleanBinaryExpr(BooleanBinaryExpr node, void context) {
+    final left = node.left.accept(this, context);
+    final right = node.right.accept(this, context);
+
+    final op = switch (node.operator) {
+      BooleanOperator.and => '&',
+      BooleanOperator.or => '|',
+      BooleanOperator.xor => '^',
+      BooleanOperator.implies => 'Implies',
+      BooleanOperator.iff => 'Equivalent',
+    };
+
+    // Implies and Equivalent are functions in SymPy
+    if (node.operator == BooleanOperator.implies ||
+        node.operator == BooleanOperator.iff) {
+      return '$op($left, $right)';
+    }
+    return '($left) $op ($right)';
+  }
+
+  @override
+  String visitBooleanUnaryExpr(BooleanUnaryExpr node, void context) {
+    final operand = node.operand.accept(this, context);
+    return '~($operand)';
+  }
 }
 
 /// Extension to add toSymPy() method to all Expression types.

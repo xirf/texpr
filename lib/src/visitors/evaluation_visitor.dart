@@ -576,4 +576,55 @@ class EvaluationVisitor
 
     return node;
   }
+
+  @override
+  dynamic visitBooleanBinaryExpr(
+      BooleanBinaryExpr node, Map<String, dynamic>? context) {
+    final variables = context ?? const {};
+
+    // Evaluate both operands - they should evaluate to truthy values
+    // (comparisons return 1.0 for true, NaN for false)
+    final leftValue = _evaluateRaw(node.left, variables);
+    final rightValue = _evaluateRaw(node.right, variables);
+
+    // Convert to boolean
+    final left = _isTruthy(leftValue);
+    final right = _isTruthy(rightValue);
+
+    final result = switch (node.operator) {
+      BooleanOperator.and => left && right,
+      BooleanOperator.or => left || right,
+      BooleanOperator.xor => left != right,
+      BooleanOperator.implies => !left || right, // A → B ≡ ¬A ∨ B
+      BooleanOperator.iff => left == right, // A ↔ B
+    };
+
+    return result;
+  }
+
+  @override
+  dynamic visitBooleanUnaryExpr(
+      BooleanUnaryExpr node, Map<String, dynamic>? context) {
+    final variables = context ?? const {};
+    final operandValue = _evaluateRaw(node.operand, variables);
+    final operand = _isTruthy(operandValue);
+
+    // NOT operation: if operand is true, return false; if false, return true
+    return !operand;
+  }
+
+  /// Checks if a value is truthy for boolean operations.
+  ///
+  /// - Numeric 1.0 (or any non-zero, non-NaN) is true
+  /// - NaN is false
+  /// - 0.0 is false
+  bool _isTruthy(dynamic value) {
+    if (value is num) {
+      return !value.isNaN && value != 0.0;
+    }
+    if (value is bool) {
+      return value;
+    }
+    return false;
+  }
 }

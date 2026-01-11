@@ -67,8 +67,8 @@ class CacheManager {
         config.evaluationResultCacheSize,
         collectStats ? _statistics.evaluationResults : null,
       );
-      // L2a: Constant expressions use a simpler int key (expression hashCode)
-      _constantCache = _createCache<int, EvaluationResult>(
+      // L2a: Constant expressions use expression as key (uses == and hashCode)
+      _constantCache = _createCache<Expression, EvaluationResult>(
         config.evaluationResultCacheSize ~/ 4, // Smaller, constants are fewer
         collectStats ? _statistics.evaluationResults : null,
       );
@@ -138,9 +138,9 @@ class CacheManager {
       Expression expr, Map<String, double> variables) {
     if (_evaluationCache == null) return null;
 
-    // Fast path: constant expressions use expression hashCode directly
+    // Fast path: constant expressions (uses Expression key directly)
     if (variables.isEmpty) {
-      return _constantCache?.get(expr.hashCode) as EvaluationResult?;
+      return _constantCache?.get(expr) as EvaluationResult?;
     }
 
     // Standard path: identity-based key for expressions with variables
@@ -157,7 +157,7 @@ class CacheManager {
 
     // Fast path: constant expressions
     if (variables.isEmpty) {
-      _constantCache?.put(expr.hashCode, result);
+      _constantCache?.put(expr, result);
       return;
     }
 

@@ -204,6 +204,19 @@ class LatexCommandRegistry {
     _commands['neq'] = TokenType.notEqual;
     _commands['in'] = TokenType.member;
 
+    // Boolean operators
+    _commands['land'] = TokenType.boolAnd;
+    _commands['wedge'] = TokenType.boolAnd;
+    _commands['lor'] = TokenType.boolOr;
+    _commands['vee'] = TokenType.boolOr;
+    _commands['neg'] = TokenType.boolNot;
+    _commands['lnot'] = TokenType.boolNot;
+    _commands['oplus'] = TokenType.boolXor;
+    _commands['Rightarrow'] = TokenType.boolImplies;
+    _commands['implies'] = TokenType.boolImplies;
+    _commands['Leftrightarrow'] = TokenType.boolIff;
+    _commands['iff'] = TokenType.boolIff;
+
     // Quantifiers (parsed as variables for symbolic use)
     _commands['forall'] = TokenType.variable;
     _commands['exists'] = TokenType.variable;
@@ -212,9 +225,7 @@ class LatexCommandRegistry {
     _commands['approx'] = TokenType.ignored;
     _commands['propto'] = TokenType.ignored;
     _commands['mapsto'] = TokenType.ignored;
-    _commands['Rightarrow'] = TokenType.ignored;
     _commands['Leftarrow'] = TokenType.ignored;
-    _commands['Leftrightarrow'] = TokenType.ignored;
 
     // Set notation (ignored during evaluation)
     _commands['subset'] = TokenType.ignored;

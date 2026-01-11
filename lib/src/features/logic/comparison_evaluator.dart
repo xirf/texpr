@@ -17,7 +17,10 @@ class ComparisonEvaluator {
   /// Evaluates a simple comparison expression.
   ///
   /// Returns 1.0 if true, NaN if false.
-  double evaluateComparison(Comparison comp, Map<String, double> variables) {
+  /// Evaluates a simple comparison expression.
+  ///
+  /// Returns [true] if the comparison holds, [false] otherwise.
+  bool evaluateComparison(Comparison comp, Map<String, double> variables) {
     final left = _evaluateAsDouble(comp.left, variables);
     final right = _evaluateAsDouble(comp.right, variables);
 
@@ -37,8 +40,6 @@ class ComparisonEvaluator {
         break;
       case ComparisonOperator.member:
         // Set membership not fully supported in evaluation yet
-        // For now, return false or throw runtime error?
-        // Returning false to prevent crash, but this requires set logic.
         result = false;
         break;
       case ComparisonOperator.equal:
@@ -47,13 +48,13 @@ class ComparisonEvaluator {
         break;
     }
 
-    return result ? 1.0 : double.nan;
+    return result;
   }
 
   /// Evaluates a chained comparison expression (e.g., a < b < c).
   ///
-  /// Returns 1.0 if all comparisons are true, NaN otherwise.
-  double evaluateChainedComparison(
+  /// Returns [true] if all comparisons are true, [false] otherwise.
+  bool evaluateChainedComparison(
       ChainedComparison chain, Map<String, double> variables) {
     // Evaluate all expressions in the chain
     final values =
@@ -88,14 +89,14 @@ class ComparisonEvaluator {
           break;
       }
 
-      // If any comparison fails, return NaN
+      // If any comparison fails, return false
       if (!result) {
-        return double.nan;
+        return false;
       }
     }
 
     // All comparisons passed
-    return 1.0;
+    return true;
   }
 
   /// Evaluates a conditional expression.
@@ -103,11 +104,13 @@ class ComparisonEvaluator {
   /// Returns the expression value if condition is satisfied, NaN otherwise.
   dynamic evaluateConditional(
       ConditionalExpr cond, Map<String, double> variables) {
-    // Evaluate the condition first
-    final conditionResult = _evaluateAsDouble(cond.condition, variables);
+    // Evaluate the condition (can be bool or num)
+    final conditionResult = _evaluate(cond.condition, variables);
 
-    // If condition is not satisfied (returns NaN or 0), return NaN
-    if (conditionResult.isNaN || conditionResult == 0.0) {
+    // If condition is not satisfied, return double.nan (standard for filtered values in conditional exprs logic)
+    // Wait, if strict math, maybe we should return null? But return type is dynamic.
+    // The previous logic returned double.nan.
+    if (!_isTruthy(conditionResult)) {
       return double.nan;
     }
 
@@ -129,15 +132,22 @@ class ComparisonEvaluator {
       }
 
       // Evaluate the condition
-      final conditionResult = _evaluateAsDouble(c.condition!, variables);
+      final conditionResult = _evaluate(c.condition!, variables);
 
-      // If condition is satisfied (not NaN and not 0), evaluate and return expression
-      if (!conditionResult.isNaN && conditionResult != 0.0) {
+      // If condition is satisfied, evaluate and return expression
+      if (_isTruthy(conditionResult)) {
         return _evaluate(c.expression, variables);
       }
     }
 
     // No condition matched
     return double.nan;
+  }
+
+  /// Checks if a value is truthy (true or non-zero number).
+  bool _isTruthy(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0.0 && !value.isNaN;
+    return false;
   }
 }
