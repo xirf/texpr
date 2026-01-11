@@ -8,9 +8,9 @@
 
 :root {
   /* Brand colors inspired by UnoCSS gradient */
-  --vp-c-brand-1: oklch(54.1% 0.281 293.009);
-  --vp-c-brand-2: #8b5cf6; /* violet-500 */
-  --vp-c-brand-3: #a78bfa; /* violet-400 */
+  --vp-c-brand-1: var(--color-violet-500);
+  --vp-c-brand-2: var(--color-violet-400);
+  --vp-c-brand-3: var(--color-violet-300);
   --vp-c-brand-soft: rgba(124, 58, 237, 0.14); /* violet-600 with opacity */
 
   --vp-c-bg-alt: theme(--color-slate-100);
@@ -46,9 +46,9 @@
 }
 
 .dark {
-  --vp-c-brand-1: oklch(54.1% 0.281 293.009);
-  --vp-c-brand-2: #a78bfa; /* violet-400 */
-  --vp-c-brand-3: #c4b5fd; /* violet-300 */
+  --vp-c-brand-1: var(--color-violet-300);
+  --vp-c-brand-2: var(--color-violet-200);
+  --vp-c-brand-3: var(--color-violet-100);
 
   --vp-c-bg: theme(--color-slate-900);
   --vp-c-border: theme(--color-slate-100);
