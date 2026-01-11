@@ -4,4 +4,5 @@ layout: page
 sidebar: false
 ---
 
-<LandingPage />
+<Hero />
+<EYN />

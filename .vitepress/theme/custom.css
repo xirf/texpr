@@ -4,13 +4,14 @@
 @source "../**/*.ts";
 @source "../../doc/**/*.md";
 
+@custom-variant interact (&:hover, &:focus);
 
 :root {
   /* Brand colors inspired by UnoCSS gradient */
-  --vp-c-brand-1: #6155F5;
-  --vp-c-brand-2: #818cf8;
-  --vp-c-brand-3: #a5b4fc;
-  --vp-c-brand-soft: rgba(99, 102, 241, 0.14);
+  --vp-c-brand-1: oklch(54.1% 0.281 293.009);
+  --vp-c-brand-2: #8b5cf6; /* violet-500 */
+  --vp-c-brand-3: #a78bfa; /* violet-400 */
+  --vp-c-brand-soft: rgba(124, 58, 237, 0.14); /* violet-600 with opacity */
 
   --vp-c-bg-alt: theme(--color-slate-100);
   --vp-c-border: theme(--color-slate-100);
@@ -45,9 +46,9 @@
 }
 
 .dark {
-  --vp-c-brand-1: #aaa2ff;
-  --vp-c-brand-2: #aaa2ff;
-  --vp-c-brand-3: #aaa2ff;
+  --vp-c-brand-1: oklch(54.1% 0.281 293.009);
+  --vp-c-brand-2: #a78bfa; /* violet-400 */
+  --vp-c-brand-3: #c4b5fd; /* violet-300 */
 
   --vp-c-bg: theme(--color-slate-900);
   --vp-c-border: theme(--color-slate-100);
@@ -469,4 +470,50 @@ div[class*='language-'] {
         var(--vp-nav-height) + var(--vp-layout-top-height, 0px) +
             var(--vp-doc-top-height, 0px) + 24px
     ) !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0B0E14;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+.glass-panel {
+    background: rgba(21, 26, 35, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+.glass-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 72, 149, 0.3);
+    box-shadow: 0 10px 40px -10px rgba(255, 72, 149, 0.15);
+
+}
+.token.keyword { color: #c678dd; } /* Purple */
+.token.string { color: #98c379; } /* Green */
+.token.function { color: #61afef; } /* Blue */
+.token.number { color: #d19a66; } /* Orange */
+.token.comment { color: #5c6370; font-style: italic; } /* Grey */
+.token.class-name { color: #e5c07b; } /* Yellow */
+
+
+.math-font {
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
 }

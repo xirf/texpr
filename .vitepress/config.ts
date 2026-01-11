@@ -57,8 +57,7 @@ export default defineConfig({
       { icon: "dart", link: "https://pub.dev/packages/texpr", ariaLabel: "Pub.dev" }
     ],
     footer: {
-      message: "Released under the MIT License.",
-      copyright: "Copyright © 2025-present TeXpr Contributors",
+      message: "Made with ❤️ by TeXpr, Docs Inspired by ElysiaJS",
     },
     outline: {
       level: [2, 3],
