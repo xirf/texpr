@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 0.1.3 - 2026-01-12
 
-**Boolean Logic & Bug Fixes**
+**Boolean Logic, Bug Fixes & Doc Improvements**
 
 ### Added
-- **Boolean Algebra:** Full support for boolean operators (`\land`, `\lor`, `\neg`, `\implies`, etc.) and comparisons (`>`, `<`, `=`, `\ge`, `\le`). Comparisons returning `BooleanResult` are strictly type-checked. Mixing booleans with numbers (e.g. `1 + (x>0)`) now throws an error instead of using implicit conversion.
+- **Boolean Algebra:** Full support for boolean operators (`\land`, `\lor`, `\neg`, `\implies`, etc.) and comparisons (`>`, `<`, `=`, `\ge`, `\le`). Comparisons returning `BooleanResult` are strictly type-checked.
 - **Documentation:** Added dedicated [Boolean Logic](doc/guide/logic.md) guide.
+- **Infrastructure:** Migrated documentation site from Tailwind CSS to UnoCSS.
 
 ### Fixed
 - **Caching Bug:** Fixed a critical hash collision issue in `CacheManager` where `0 > 1` would incorrectly return `true` due to colliding with `1 > 0`.

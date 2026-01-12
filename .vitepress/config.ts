@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 import nav from "./config/nav";
 import sidebar from "./config/sidebar";
-import tailwindcss from '@tailwindcss/vite'
+import UnoCSS from 'unocss/vite'
 import llmstxt from 'vitepress-plugin-llms'
 
 const description = "LaTeX Math Expression Parser & Evaluator for Dart"
@@ -29,7 +29,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
-      tailwindcss(),
+      UnoCSS(),
       process.env.NODE_ENV === 'production'
         ? llmstxt({
           description,

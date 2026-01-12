@@ -1,4 +1,5 @@
 import DefaultTheme from 'vitepress/theme'
+import 'virtual:uno.css'
 import Playground from '../components/Playground.vue'
 import Layout from '../components/Layouts.vue'
 import Ray from '../components/Ray.vue'
