@@ -430,11 +430,15 @@ class Tokenizer {
     );
   }
 
-  /// Tries to match a known function name without backslash (e.g., sin, cos).
+  /// Tries to match a function call pattern: identifier followed by `(`.
   ///
-  /// Only matches when the function name is followed by `(` to avoid
-  /// misinterpreting variable names like `simple` or `sink`.
-  /// Returns a function token if matched, null otherwise.
+  /// Matches as function calls:
+  /// - Known built-in functions (sin, cos, log, etc.)
+  /// - Multi-letter identifiers (myFunc, f - single letter for UDFs)
+  ///
+  /// Preserves implicit multiplication for single-letter variables:
+  /// - x(y) → x * y (implicit multiplication)
+  /// - a(b+1) → a * (b+1)
   Token? _tryMatchUnprefixedFunction(int startPos) {
     // We've already consumed the first letter, so _position is at startPos+1
     // and we already advanced past it. We need to look from startPos.
@@ -450,21 +454,34 @@ class Tokenizer {
       _position++;
     }
 
-    final word = buffer.toString().toLowerCase();
+    final word = buffer.toString();
+    final wordLower = word.toLowerCase();
 
     // Skip whitespace after the word
     while (!_isAtEnd && _isWhitespace(_current)) {
       _position++;
     }
 
-    // Check if it's a known function followed by '('
-    if (_knownFunctions.contains(word) && !_isAtEnd && _current == '(') {
-      // It's a function call like sin(x)
-      return Token(
-        type: TokenType.function,
-        value: word,
-        position: startPos,
-      );
+    // Check if identifier is followed by '('
+    if (!_isAtEnd && _current == '(') {
+      final isKnownFunction = _knownFunctions.contains(wordLower);
+
+      // Heuristic for user-defined functions vs implicit multiplication:
+      // - Known functions (sin, cos, etc.) → always function call
+      // - Multi-letter identifiers → likely function call (myFunc, etc.)
+      // - Single-letter identifiers (x, a, b) → preserve as implicit mult
+      //   UNLESS they are known functions (like 'e' could be but isn't in our set)
+      //
+      // This preserves textbook notation: x(x+1) = x*(x+1)
+      // While allowing UDFs: mySquare(3), func(x), etc.
+      if (isKnownFunction || word.length > 1) {
+        final funcName = isKnownFunction ? wordLower : word;
+        return Token(
+          type: TokenType.function,
+          value: funcName,
+          position: startPos,
+        );
+      }
     }
 
     // Not a function call, restore position (only consumed first char)

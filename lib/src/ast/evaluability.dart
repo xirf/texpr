@@ -250,6 +250,20 @@ class EvaluabilityVisitor
   }
 
   @override
+  Evaluability visitBooleanBinaryExpr(
+      BooleanBinaryExpr node, Set<String>? context) {
+    final leftEval = node.left.accept(this, context);
+    final rightEval = node.right.accept(this, context);
+    return _combine([leftEval, rightEval]);
+  }
+
+  @override
+  Evaluability visitBooleanUnaryExpr(
+      BooleanUnaryExpr node, Set<String>? context) {
+    return node.operand.accept(this, context);
+  }
+
+  @override
   Evaluability visitMatrixExpr(MatrixExpr node, Set<String>? context) {
     final evals = <Evaluability>[];
     for (final row in node.rows) {

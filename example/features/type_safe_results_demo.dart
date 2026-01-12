@@ -53,6 +53,8 @@ void main() {
       case IntervalResult(:final interval):
         print('  -> Got an interval: $interval');
         print('  -> Bounds: [${interval.lower}, ${interval.upper}]');
+      case BooleanResult(:final value):
+        print('  -> Got a boolean: $value');
     }
     print('');
   }

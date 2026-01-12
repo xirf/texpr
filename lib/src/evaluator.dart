@@ -41,13 +41,19 @@ class Evaluator {
   ///
   /// [extensions] allows adding custom functions and variables to the evaluator.
   /// [cacheManager] enables sub-expression caching for better performance.
+  /// [realOnly] when true, operations that would produce complex numbers
+  /// (like sqrt of negative) return NaN instead. Useful for graphing where
+  /// Desmos-like behavior is expected. Defaults to false.
   Evaluator(
       {ExtensionRegistry? extensions,
       CacheManager? cacheManager,
-      int maxRecursionDepth = 500})
+      int maxRecursionDepth = 500,
+      bool realOnly = false})
       : _cacheManager = cacheManager {
     _visitor = EvaluationVisitor(
-        extensions: extensions, maxRecursionDepth: maxRecursionDepth);
+        extensions: extensions,
+        maxRecursionDepth: maxRecursionDepth,
+        realOnly: realOnly);
   }
 
   /// Gets the differentiation evaluator (for internal use by public API).
@@ -79,7 +85,9 @@ class Evaluator {
 
   /// Wraps a raw dynamic result into an EvaluationResult.
   EvaluationResult _wrapResult(dynamic result) {
-    if (result is num) {
+    if (result is bool) {
+      return BooleanResult(result);
+    } else if (result is num) {
       return NumericResult(result.toDouble());
     } else if (result is Complex) {
       return ComplexResult(result);
@@ -95,7 +103,7 @@ class Evaluator {
       throw EvaluatorException(
         'Invalid result type: ${result.runtimeType}',
         suggestion:
-            'Results must be either a number, complex number, matrix, vector, or interval',
+            'Results must be either a number, boolean, complex number, matrix, vector, or interval',
       );
     }
   }

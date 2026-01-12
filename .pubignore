@@ -24,3 +24,5 @@ analysis_options.yaml
 wasm/
 package-lock.json
 doc/public/
+doc/index.md
+uno.config.ts

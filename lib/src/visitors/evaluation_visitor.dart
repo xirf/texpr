@@ -35,9 +35,18 @@ class EvaluationVisitor
   late final DifferentiationEvaluator _differentiationEvaluator;
   late final IntegrationEvaluator _integrationEvaluator;
 
+  /// When true, functions like sqrt return NaN instead of complex numbers
+  /// for operations that would produce complex results.
+  final bool realOnly;
+
   /// Creates an evaluation visitor with optional extension registry.
+  ///
+  /// [realOnly] when true, operations that would produce complex numbers
+  /// (like sqrt of negative) return NaN instead. Defaults to false.
   EvaluationVisitor(
-      {ExtensionRegistry? extensions, this.maxRecursionDepth = 500})
+      {ExtensionRegistry? extensions,
+      this.maxRecursionDepth = 500,
+      this.realOnly = false})
       : _extensions = extensions {
     _binaryEvaluator = BinaryEvaluator();
     _unaryEvaluator = UnaryEvaluator();
@@ -160,6 +169,41 @@ class EvaluationVisitor
   @override
   dynamic visitBinaryOp(BinaryOp node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
+
+    // Special handling for implicit multiplication with user-defined functions.
+    // When parsing with implicit mult enabled, f(3) becomes f * 3 for single-letter
+    // function names. We detect this pattern and treat it as a function call.
+    if (node.operator == BinaryOperator.multiply && node.left is Variable) {
+      final varName = (node.left as Variable).name;
+      if (variables.containsKey(varName)) {
+        final stored = variables[varName];
+        if (stored is FunctionDefinitionExpr) {
+          // This is an implicit function call: f * (...) → f(...)
+          // We need to extract arguments from the right side
+          final args = _extractFunctionArgs(node.right);
+
+          // Validate argument count
+          if (stored.parameters.length != args.length) {
+            throw EvaluatorException(
+              'Function $varName expects ${stored.parameters.length} '
+              'argument${stored.parameters.length == 1 ? '' : 's'}, '
+              'got ${args.length}',
+              suggestion: 'Call $varName(${stored.parameters.join(', ')})',
+            );
+          }
+
+          // Create new context with parameter bindings
+          final funcContext = Map<String, dynamic>.from(variables);
+          for (var i = 0; i < stored.parameters.length; i++) {
+            funcContext[stored.parameters[i]] =
+                _evaluateRaw(args[i], variables);
+          }
+
+          return _evaluateRaw(stored.body, funcContext);
+        }
+      }
+    }
+
     final leftValue = _evaluateRaw(node.left, variables);
 
     // Special handling for Matrix Transpose: M^T
@@ -176,6 +220,14 @@ class EvaluationVisitor
         leftValue, node.operator, rightValue, node);
   }
 
+  /// Extracts function arguments from an expression.
+  /// For a single value, returns [value]. For comma-separated, returns the list.
+  List<Expression> _extractFunctionArgs(Expression expr) {
+    // For implicit mult, the "argument" is typically the right operand
+    // wrapped in parens. We just treat it as a single argument.
+    return [expr];
+  }
+
   @override
   dynamic visitUnaryOp(UnaryOp node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
@@ -186,6 +238,31 @@ class EvaluationVisitor
   @override
   dynamic visitFunctionCall(FunctionCall node, Map<String, dynamic>? context) {
     final variables = context ?? const {};
+
+    // Check for user-defined function in context
+    if (variables.containsKey(node.name)) {
+      final stored = variables[node.name];
+      if (stored is FunctionDefinitionExpr) {
+        // Validate argument count matches parameter count
+        if (stored.parameters.length != node.args.length) {
+          throw EvaluatorException(
+            'Function ${node.name} expects ${stored.parameters.length} '
+            'argument${stored.parameters.length == 1 ? '' : 's'}, '
+            'got ${node.args.length}',
+            suggestion: 'Call ${node.name}(${stored.parameters.join(', ')})',
+          );
+        }
+
+        // Create new context with parameter bindings
+        final funcContext = Map<String, dynamic>.from(variables);
+        for (var i = 0; i < stored.parameters.length; i++) {
+          funcContext[stored.parameters[i]] =
+              _evaluateRaw(node.args[i], variables);
+        }
+
+        return _evaluateRaw(stored.body, funcContext);
+      }
+    }
 
     // Special handling for abs() with vector argument
     if (node.name == 'abs') {
@@ -211,6 +288,7 @@ class EvaluationVisitor
       node,
       _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
+      realOnly: realOnly,
     );
   }
 
@@ -229,6 +307,7 @@ class EvaluationVisitor
       FunctionCall('abs', node.argument),
       _asDoubleMap(variables),
       (e) => _evaluateRaw(e, variables),
+      realOnly: realOnly,
     );
   }
 
@@ -496,5 +575,56 @@ class EvaluationVisitor
     }
 
     return node;
+  }
+
+  @override
+  dynamic visitBooleanBinaryExpr(
+      BooleanBinaryExpr node, Map<String, dynamic>? context) {
+    final variables = context ?? const {};
+
+    // Evaluate both operands - they should evaluate to truthy values
+    // (comparisons return 1.0 for true, NaN for false)
+    final leftValue = _evaluateRaw(node.left, variables);
+    final rightValue = _evaluateRaw(node.right, variables);
+
+    // Convert to boolean
+    final left = _isTruthy(leftValue);
+    final right = _isTruthy(rightValue);
+
+    final result = switch (node.operator) {
+      BooleanOperator.and => left && right,
+      BooleanOperator.or => left || right,
+      BooleanOperator.xor => left != right,
+      BooleanOperator.implies => !left || right, // A → B ≡ ¬A ∨ B
+      BooleanOperator.iff => left == right, // A ↔ B
+    };
+
+    return result;
+  }
+
+  @override
+  dynamic visitBooleanUnaryExpr(
+      BooleanUnaryExpr node, Map<String, dynamic>? context) {
+    final variables = context ?? const {};
+    final operandValue = _evaluateRaw(node.operand, variables);
+    final operand = _isTruthy(operandValue);
+
+    // NOT operation: if operand is true, return false; if false, return true
+    return !operand;
+  }
+
+  /// Checks if a value is truthy for boolean operations.
+  ///
+  /// - Numeric 1.0 (or any non-zero, non-NaN) is true
+  /// - NaN is false
+  /// - 0.0 is false
+  bool _isTruthy(dynamic value) {
+    if (value is num) {
+      return !value.isNaN && value != 0.0;
+    }
+    if (value is bool) {
+      return value;
+    }
+    return false;
   }
 }

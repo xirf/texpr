@@ -1,186 +1,72 @@
 import { defineConfig } from "vitepress";
+import nav from "./config/nav";
+import sidebar from "./config/sidebar";
+import UnoCSS from 'unocss/vite'
+import llmstxt from 'vitepress-plugin-llms'
+
+const description = "LaTeX Math Expression Parser & Evaluator for Dart"
 
 export default defineConfig({
   title: "TeXpr",
-  description: "LaTeX Math Expression Parser & Evaluator for Dart",
+  description,
   srcDir: "doc",
-
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
-
+  lastUpdated: true,
+  head: [
+    ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap', rel: 'stylesheet' }]
+  ],
+  sitemap: {
+    hostname: 'https://texpr.andka.id',
+  },
+  markdown: {
+    math: true,
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark'
+    },
+  },
+  vite: {
+    plugins: [
+      UnoCSS(),
+      process.env.NODE_ENV === 'production'
+        ? llmstxt({
+          description,
+          details: description,
+          ignoreFiles: [
+            'index.md',
+            'table-of-content.md',
+            'blog/*',
+            'public/*'
+          ],
+          domain: 'https://texprjs.com'
+        })
+        : undefined,
+    ]
+  },
   themeConfig: {
     logo: "/logo.svg",
-
-    nav: [
-      {
-        text: "Guide",
-        items: [
-          {
-            text: "Getting Started",
-            items: [
-              { text: "Introduction", link: "/guide/" },
-              { text: "Installation", link: "/guide/installation" },
-              { text: "Quick Start", link: "/guide/quick-start" },
-              { text: "Core Concepts", link: "/guide/concepts" },
-            ],
-          },
-          {
-            text: "Usage",
-            items: [
-              { text: "Custom Environments", link: "/guide/environments" },
-              { text: "Interval Arithmetic", link: "/guide/intervals" },
-              { text: "Interactive Playground", link: "/guide/playground" },
-            ],
-          },
-        ],
-        activeMatch: "^/guide/",
-      },
-      {
-        text: "How It Works",
-        items: [
-          { text: "Overview", link: "/how-it-works/" },
-          { text: "Tokenizer", link: "/how-it-works/tokenizer" },
-          { text: "Parser", link: "/how-it-works/parser" },
-          { text: "Evaluator", link: "/how-it-works/evaluator" },
-          { text: "Caching", link: "/how-it-works/caching" },
-          { text: "Performance", link: "/how-it-works/performance" },
-        ],
-        activeMatch: "^/how-it-works/",
-      },
-      {
-        text: "Reference",
-        items: [
-          { text: "Overview", link: "/reference/" },
-          {
-            text: "Syntax",
-            items: [
-              { text: "LaTeX Commands", link: "/reference/latex" },
-              { text: "Grammar Spec", link: "/reference/grammar" },
-              { text: "Functions", link: "/reference/functions" },
-              { text: "Constants", link: "/reference/constants" },
-            ],
-          },
-          {
-            text: "API",
-            items: [
-              { text: "Data Types", link: "/reference/data-types" },
-              { text: "Exceptions", link: "/reference/exceptions" },
-              { text: "Behavior", link: "/reference/behavior" },
-              { text: "API Reference", link: "/reference/api" },
-            ],
-          },
-          { text: "Known Issues", link: "/reference/known-issues" },
-        ],
-        activeMatch: "^/reference/",
-      },
-      {
-        text: "Advanced",
-        items: [
-          { text: "Overview", link: "/advanced/" },
-          { text: "Symbolic Algebra", link: "/advanced/symbolic" },
-          { text: "Calculus", link: "/advanced/calculus" },
-          { text: "Extensions", link: "/advanced/extensions" },
-          { text: "Security", link: "/advanced/security" },
-        ],
-        activeMatch: "^/advanced/",
-      },
-      {
-        text: 'v0.1.1',
-        items: [
-          {
-            text: "Changelog",
-            link: "https://github.com/xirf/texpr/blob/main/CHANGELOG.md",
-          },
-          {
-            text: "Release Notes",
-            link: "https://github.com/xirf/texpr/releases",
-          },
-          {
-            text: "Contributing",
-            link: "https://github.com/xirf/texpr/blob/main/CONTRIBUTING.md",
-          },
-          {
-            text: "Links",
-            items: [
-              { text: "pub.dev", link: "https://pub.dev/packages/texpr" },
-              { text: "GitHub", link: "https://github.com/xirf/texpr" },
-            ],
-          },
-        ],
-      },
-    ],
-
-    sidebar: {
-      "/guide/": [
-        {
-          text: "Getting Started",
-          items: [
-            { text: "Introduction", link: "/guide/" },
-            { text: "Installation", link: "/guide/installation" },
-            { text: "Quick Start", link: "/guide/quick-start" },
-            { text: "Core Concepts", link: "/guide/concepts" },
-              { text: "Custom Environments", link: "/guide/environments" },
-              { text: "Interval Arithmetic", link: "/guide/intervals" },
-              { text: "Interactive Playground", link: "/guide/playground" },
-          ],
-        },
-      ],
-      "/how-it-works/": [
-        {
-          text: "How It Works",
-          items: [
-            { text: "Overview", link: "/how-it-works/" },
-            { text: "Tokenizer", link: "/how-it-works/tokenizer" },
-            { text: "Parser", link: "/how-it-works/parser" },
-            { text: "Evaluator", link: "/how-it-works/evaluator" },
-            { text: "Caching", link: "/how-it-works/caching" },
-            { text: "Performance", link: "/how-it-works/performance" },
-          ],
-        },
-      ],
-      "/reference/": [
-        {
-          text: "Reference",
-          items: [
-            { text: "Overview", link: "/reference/" },
-            { text: "LaTeX Commands", link: "/reference/latex" },
-            { text: "Grammar Spec", link: "/reference/grammar" },
-            { text: "Functions", link: "/reference/functions" },
-            { text: "Constants", link: "/reference/constants" },
-            { text: "Data Types", link: "/reference/data-types" },
-            { text: "Exceptions", link: "/reference/exceptions" },
-            { text: "Behavior", link: "/reference/behavior" },
-            { text: "Known Issues", link: "/reference/known-issues" },
-            { text: "API Reference", link: "/reference/api" },
-          ],
-        },
-      ],
-      "/advanced/": [
-        {
-          text: "Advanced",
-          items: [
-            { text: "Overview", link: "/advanced/" },
-            { text: "Symbolic Algebra", link: "/advanced/symbolic" },
-            { text: "Calculus", link: "/advanced/calculus" },
-            { text: "Extensions", link: "/advanced/extensions" },
-            { text: "Security", link: "/advanced/security" },
-          ],
-        },
-      ],
-    },
-
-    socialLinks: [{ icon: "github", link: "https://github.com/xirf/texpr" }],
-
+    nav,
+    sidebar,
     search: {
       provider: "local",
     },
-
+    socialLinks: [
+      { icon: "github", link: "https://github.com/xirf/texpr" },
+      { icon: "dart", link: "https://pub.dev/packages/texpr", ariaLabel: "Pub.dev" }
+    ],
     footer: {
-      message: "Released under the MIT License.",
-      copyright: "Copyright © 2024-present TeXpr Contributors",
+      message: "Made with ❤️ by TeXpr, Docs Inspired by ElysiaJS",
     },
-  },
-
-  markdown: {
-    math: true,
+    outline: {
+      level: [2, 3],
+      label: 'On this page'
+    },
+    editLink: {
+      text: 'Edit this page on GitHub',
+      pattern:
+        'https://github.com/xirf/texpr/edit/main/doc/:path'
+    }
   },
 });

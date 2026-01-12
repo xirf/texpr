@@ -122,9 +122,5 @@ try {
 ```
 
 ### Piecewise Definition
-You can define piecewise functions using commas:
-```latex
-f(x) = \begin{cases} x & x > 0 \\ -x & x \leq 0 \end{cases}
-```
-In TeXpr syntax: `x, x > 0; -x, x \leq 0` (or similar depending on parser configuration).
-Currently, the most reliable syntax for piecewise is the `ConditionalExpr` which is documented in the [Advanced Calculus](../advanced/calculus) section.
+Support for piecewise functions is available via the `\begin{cases}` environment.
+See the [Piecewise Functions Guide](../guide/piecewise.md) for full details on syntax and usage.

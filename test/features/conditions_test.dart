@@ -10,44 +10,17 @@ void main() {
     });
 
     group('Curly brace notation: f(x)=expr{condition}', () {
-      test('f(x)=x^{2}-2{-1<x<2} with x=0 (valid)', () {
-        final result =
-            evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': 0}).asNumeric();
-        expect(result, -2.0);
+      test('f(x)=x^{2}-2{-1<x<2} throws type mismatch error (strict math)', () {
+        // Strict math forbids multiplying number by boolean
+        expect(
+          () => evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': 0}),
+          throwsA(isA<EvaluatorException>()),
+        );
       });
 
-      test('f(x)=x^{2}-2{-1<x<2} with x=1 (valid)', () {
-        final result =
-            evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': 1}).asNumeric();
-        expect(result, -1.0);
-      });
-
-      test('f(x)=x^{2}-2{-1<x<2} with x=3 (invalid)', () {
-        final result =
-            evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': 3}).asNumeric();
-        expect(result.isNaN, isTrue);
-      });
-
-      test('f(x)=x^{2}-2{-1<x<2} with x=-1 (boundary, invalid)', () {
-        final result =
-            evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': -1}).asNumeric();
-        expect(result.isNaN, isTrue);
-      });
-
-      test('f(x)=x^{2}-2{-1<x<2} with x=2 (boundary, invalid)', () {
-        final result =
-            evaluator.evaluate("f(x)=x^{2}-2{-1<x<2}", {'x': 2}).asNumeric();
-        expect(result.isNaN, isTrue);
-      });
-
-      test('Simple condition with curly braces: x^2{x>0} with x=2', () {
-        final result = evaluator.evaluate("x^2{x>0}", {'x': 2}).asNumeric();
-        expect(result, 4.0);
-      });
-
-      test('Simple condition with curly braces: x^2{x>0} with x=-2', () {
-        final result = evaluator.evaluate("x^2{x>0}", {'x': -2}).asNumeric();
-        expect(result.isNaN, isTrue);
+      test('Simple condition with curly braces: x^2{x>0} throws error', () {
+        expect(() => evaluator.evaluate("x^2{x>0}", {'x': 2}),
+            throwsA(isA<EvaluatorException>()));
       });
     });
 
@@ -89,29 +62,29 @@ void main() {
 
     group('Chained comparisons', () {
       test('Standalone chained comparison: -1 < x < 2 with x=0', () {
-        final result = evaluator.evaluate("-1 < x < 2", {'x': 0}).asNumeric();
-        expect(result, 1.0);
+        final result = evaluator.evaluate("-1 < x < 2", {'x': 0}).asBoolean();
+        expect(result, isTrue);
       });
 
       test('Standalone chained comparison: -1 < x < 2 with x=-2', () {
-        final result = evaluator.evaluate("-1 < x < 2", {'x': -2}).asNumeric();
-        expect(result.isNaN, isTrue);
+        final result = evaluator.evaluate("-1 < x < 2", {'x': -2}).asBoolean();
+        expect(result, isFalse);
       });
 
       test('Standalone chained comparison: 0 <= x <= 10 with x=5', () {
-        final result = evaluator.evaluate("0 <= x <= 10", {'x': 5}).asNumeric();
-        expect(result, 1.0);
+        final result = evaluator.evaluate("0 <= x <= 10", {'x': 5}).asBoolean();
+        expect(result, isTrue);
       });
 
       test('Standalone chained comparison: 0 <= x <= 10 with x=0', () {
-        final result = evaluator.evaluate("0 <= x <= 10", {'x': 0}).asNumeric();
-        expect(result, 1.0);
+        final result = evaluator.evaluate("0 <= x <= 10", {'x': 0}).asBoolean();
+        expect(result, isTrue);
       });
 
       test('Standalone chained comparison: 0 <= x <= 10 with x=11', () {
         final result =
-            evaluator.evaluate("0 <= x <= 10", {'x': 11}).asNumeric();
-        expect(result.isNaN, isTrue);
+            evaluator.evaluate("0 <= x <= 10", {'x': 11}).asBoolean();
+        expect(result, isFalse);
       });
     });
 

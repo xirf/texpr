@@ -27,6 +27,17 @@ typedef FunctionHandler = dynamic Function(
   dynamic Function(Expression) evaluate,
 );
 
+/// Handler function type for functions that support real-only mode.
+///
+/// [realOnly] when true, operations that would produce complex numbers
+/// (like sqrt of negative) should return NaN instead.
+typedef RealOnlyAwareFunctionHandler = dynamic Function(
+  FunctionCall func,
+  Map<String, double> variables,
+  dynamic Function(Expression) evaluate,
+  bool realOnly,
+);
+
 /// Registry of built-in mathematical functions.
 class FunctionRegistry {
   static final FunctionRegistry _instance = FunctionRegistry._();
@@ -35,6 +46,7 @@ class FunctionRegistry {
   static FunctionRegistry get instance => _instance;
 
   final Map<String, FunctionHandler> _handlers = {};
+  final Map<String, RealOnlyAwareFunctionHandler> _realOnlyAwareHandlers = {};
 
   FunctionRegistry._() {
     _registerBuiltins();
@@ -59,9 +71,9 @@ class FunctionRegistry {
               }));
     }
 
-    // Logarithmic (dynamic - support complex)
-    register('ln', log.handleLn);
-    register('log', log.handleLog);
+    // Logarithmic (dynamic - support complex, real-only aware)
+    registerRealOnlyAware('ln', log.handleLn);
+    registerRealOnlyAware('log', log.handleLog);
 
     // Trigonometric (dynamic - sin/cos/tan support complex)
     register('sin', trig.handleSin);
@@ -85,8 +97,8 @@ class FunctionRegistry {
     register('acosh', hyper.handleAcosh);
     register('atanh', hyper.handleAtanh);
 
-    // Power / Root (dynamic - support complex)
-    register('sqrt', pow.handleSqrt);
+    // Power / Root (dynamic - support complex, real-only aware)
+    registerRealOnlyAware('sqrt', pow.handleSqrt);
     register('exp', pow.handleExp);
 
     // Rounding
@@ -132,30 +144,50 @@ class FunctionRegistry {
     _handlers[name] = handler;
   }
 
+  /// Registers a real-only aware function handler.
+  void registerRealOnlyAware(
+      String name, RealOnlyAwareFunctionHandler handler) {
+    _realOnlyAwareHandlers[name] = handler;
+  }
+
   /// Checks if a function is registered.
-  bool hasFunction(String name) => _handlers.containsKey(name);
+  bool hasFunction(String name) =>
+      _handlers.containsKey(name) || _realOnlyAwareHandlers.containsKey(name);
 
   /// Evaluates a function call.
+  ///
+  /// [realOnly] when true, functions like sqrt will return NaN for negative
+  /// arguments instead of complex numbers. This is useful for graphing
+  /// applications that expect Desmos-like behavior.
   ///
   /// Throws [EvaluatorException] if the function is not registered,
   /// with a did-you-mean suggestion if a similar function exists.
   dynamic evaluate(
     FunctionCall func,
     Map<String, double> variables,
-    dynamic Function(Expression) evaluator,
-  ) {
-    final handler = _handlers[func.name];
-    if (handler == null) {
-      // Try to find a similar function name for did-you-mean suggestion
-      final similar = _findSimilarFunction(func.name);
-      throw EvaluatorException(
-        'Unknown function: ${func.name}',
-        suggestion: similar != null
-            ? 'Did you mean "$similar"?'
-            : 'Check that the function name is spelled correctly',
-      );
+    dynamic Function(Expression) evaluator, {
+    bool realOnly = false,
+  }) {
+    // Check real-only aware handlers first
+    final realOnlyHandler = _realOnlyAwareHandlers[func.name];
+    if (realOnlyHandler != null) {
+      return realOnlyHandler(func, variables, evaluator, realOnly);
     }
-    return handler(func, variables, evaluator);
+
+    // Fall back to standard handlers
+    final handler = _handlers[func.name];
+    if (handler != null) {
+      return handler(func, variables, evaluator);
+    }
+
+    // Try to find a similar function name for did-you-mean suggestion
+    final similar = _findSimilarFunction(func.name);
+    throw EvaluatorException(
+      'Unknown function: ${func.name}',
+      suggestion: similar != null
+          ? 'Did you mean "$similar"?'
+          : 'Check that the function name is spelled correctly',
+    );
   }
 
   /// Finds a similar function name using Levenshtein distance.
@@ -164,7 +196,8 @@ class FunctionRegistry {
     String? best;
     int bestDist = 3; // Max distance threshold
 
-    for (final name in _handlers.keys) {
+    final allNames = {..._handlers.keys, ..._realOnlyAwareHandlers.keys};
+    for (final name in allNames) {
       final dist = _levenshtein(lower, name.toLowerCase());
       if (dist < bestDist) {
         bestDist = dist;

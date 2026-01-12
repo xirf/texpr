@@ -8,10 +8,83 @@ mixin ExpressionParserMixin on BaseParser {
   Expression parseExpression() {
     enterRecursion();
     try {
-      return parseComparison();
+      return parseBooleanIff();
     } finally {
       exitRecursion();
     }
+  }
+
+  /// Parses biconditional (iff, ⇔) - lowest boolean precedence
+  Expression parseBooleanIff() {
+    var left = parseBooleanImplies();
+
+    while (matchToken(TokenType.boolIff) != null) {
+      final right = parseBooleanImplies();
+      registerNode();
+      left = BooleanBinaryExpr(left, BooleanOperator.iff, right);
+    }
+
+    return left;
+  }
+
+  /// Parses implication (⇒)
+  Expression parseBooleanImplies() {
+    var left = parseBooleanOr();
+
+    // Right-associative: A ⇒ B ⇒ C = A ⇒ (B ⇒ C)
+    if (matchToken(TokenType.boolImplies) != null) {
+      final right = parseBooleanImplies();
+      registerNode();
+      return BooleanBinaryExpr(left, BooleanOperator.implies, right);
+    }
+
+    return left;
+  }
+
+  /// Parses logical OR and XOR (∨, ⊕)
+  Expression parseBooleanOr() {
+    var left = parseBooleanAnd();
+
+    Token? mt;
+    while ((mt = matchToken(TokenType.boolOr)) != null ||
+        (mt = matchToken(TokenType.boolXor)) != null) {
+      final operator = mt!;
+      final right = parseBooleanAnd();
+      registerNode();
+      left = BooleanBinaryExpr(
+        left,
+        operator.type == TokenType.boolOr
+            ? BooleanOperator.or
+            : BooleanOperator.xor,
+        right,
+      );
+    }
+
+    return left;
+  }
+
+  /// Parses logical AND (∧)
+  Expression parseBooleanAnd() {
+    var left = parseBooleanNot();
+
+    while (matchToken(TokenType.boolAnd) != null) {
+      final right = parseBooleanNot();
+      registerNode();
+      left = BooleanBinaryExpr(left, BooleanOperator.and, right);
+    }
+
+    return left;
+  }
+
+  /// Parses logical NOT (¬) - highest boolean precedence
+  Expression parseBooleanNot() {
+    if (matchToken(TokenType.boolNot) != null) {
+      final operand = parseBooleanNot();
+      registerNode();
+      return BooleanUnaryExpr(operand);
+    }
+
+    return parseComparison();
   }
 
   Expression parseComparison() {

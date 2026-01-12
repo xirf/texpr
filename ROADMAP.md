@@ -227,7 +227,7 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 | Interactive Playground  | ✅      | Live calculator embedded in docs using WASM     |
 | Variable Assignment     | ✅      | Support `let x = ...` with context variables    |
 | Fuzz Testing            | ✅      | Randomized input generation to catch edge cases |
-| User-Defined Functions  | 📋      | Support `f(x) = x^2` style function definitions |
+| User-Defined Functions  | ✅      | Support `f(x) = x^2` style function definitions |
 
 ---
 
@@ -255,8 +255,6 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 | -------------------------- | ------ | ----------------------------------------------------------------- |
 | Evaluability enum          | ✅      | Add `Evaluability.numeric`, `.symbolic`, `.unevaluable` to nodes  |
 | Compile-time evaluability  | 📋      | Parser annotates AST with evaluability at parse time              |
-| Graceful degradation       | 📋      | Return partial results when sub-expressions are unevaluable       |
-| Cost model                 | 📋      | Complexity estimates for nested intervals/integrals/sums          |
 | Semantic invariant testing | ✅      | Property-based tests for derivative correctness, round-trip, etc. |
 
 **Why this matters:** As the parsed surface area grows (tensors, quantifiers, set notation), the gap between "parses successfully" and "has computable meaning" becomes a usability hazard. Explicit evaluability prevents false expectations.

@@ -292,6 +292,26 @@ class JsonAstVisitor implements ExpressionVisitor<Map<String, dynamic>, void> {
       'body': node.body.accept(this, context),
     };
   }
+
+  @override
+  Map<String, dynamic> visitBooleanBinaryExpr(
+      BooleanBinaryExpr node, void context) {
+    return {
+      'type': 'BooleanBinaryExpr',
+      'operator': node.operator.name,
+      'left': node.left.accept(this, context),
+      'right': node.right.accept(this, context),
+    };
+  }
+
+  @override
+  Map<String, dynamic> visitBooleanUnaryExpr(
+      BooleanUnaryExpr node, void context) {
+    return {
+      'type': 'BooleanUnaryExpr',
+      'operand': node.operand.accept(this, context),
+    };
+  }
 }
 
 /// Extension to add toJson() method to all Expression types.

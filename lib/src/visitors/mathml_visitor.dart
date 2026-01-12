@@ -400,6 +400,28 @@ class MathMLVisitor implements ExpressionVisitor<String, void> {
     return _mrow(
         '${_mi(node.name)}${_mo("(")}$params${_mo(")")}${_mo("=")}$body');
   }
+
+  @override
+  String visitBooleanBinaryExpr(BooleanBinaryExpr node, void context) {
+    final left = node.left.accept(this, context);
+    final right = node.right.accept(this, context);
+
+    final op = switch (node.operator) {
+      BooleanOperator.and => '∧',
+      BooleanOperator.or => '∨',
+      BooleanOperator.xor => '⊕',
+      BooleanOperator.implies => '⇒',
+      BooleanOperator.iff => '⇔',
+    };
+
+    return _mrow('$left${_mo(op)}$right');
+  }
+
+  @override
+  String visitBooleanUnaryExpr(BooleanUnaryExpr node, void context) {
+    final operand = node.operand.accept(this, context);
+    return _mrow('${_mo("¬")}$operand');
+  }
 }
 
 /// Extension to add toMathML() method to all Expression types.

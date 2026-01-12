@@ -47,12 +47,50 @@ g(a, b) = a * b
 - **Parameter List**: Comma-separated list of parameter names (e.g., `x`, `a, b`).
 - **Expression**: The function body, using the parameters.
 
-### Usage
+### Defining and Calling Functions
+
 Once defined, custom functions can be called just like built-in functions.
 
-```latex
-let val = f(3) // Uses f(x) = x^2 + 1, result is 10
+```dart
+final texpr = Texpr();
+
+// Define a function
+texpr.evaluate(r'f(x) = x^2');
+
+// Call the function
+print(texpr.evaluate('f(3)').asNumeric());        // 9.0
+print(texpr.evaluate('f(5)').asNumeric());        // 25.0
+
+// Multi-parameter functions
+texpr.evaluate(r'g(a, b) = a + b');
+print(texpr.evaluate('g(2, 3)').asNumeric());     // 5.0
+
+// Nested function calls
+print(texpr.evaluate('f(g(1, 2))').asNumeric());  // 9.0 (f(3) = 9)
 ```
+
+### Using LaTeX in Function Bodies
+
+Function bodies can use any valid LaTeX expressions:
+
+```dart
+texpr.evaluate(r'area(r) = \pi r^2');
+print(texpr.evaluate('area(2)').asNumeric());  // 12.566...
+
+texpr.evaluate(r'h(x) = \sin{x} + \cos{x}');
+print(texpr.evaluate('h(0)').asNumeric());     // 1.0
+```
+
+### Accessing Global Variables
+
+Functions can use variables from the global environment:
+
+```dart
+texpr.evaluate(r'let rate = 0.05');
+texpr.evaluate(r'interest(principal) = principal * rate');
+print(texpr.evaluate('interest(1000)').asNumeric()); // 50.0
+```
+
 
 ## Scoping and Shadowing
 
