@@ -68,3 +68,6 @@ wasm/build/*
 *.wasm
 *.mjs
 *.wasm.map
+
+# FVM Version Cache
+.fvm/

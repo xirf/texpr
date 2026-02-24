@@ -101,6 +101,9 @@ void main() {
       evaluator.evaluate('2 + 2');
       final time2 = DateTime.now().difference(start2);
 
+      expect(time1.inMicroseconds, greaterThanOrEqualTo(0));
+      expect(time2.inMicroseconds, greaterThanOrEqualTo(0));
+
       // Both should still evaluate correctly
       expect(
         evaluator.evaluate('1 + 1').asNumeric(),
@@ -141,6 +144,9 @@ void main() {
       final start2 = DateTime.now();
       evaluator.evaluate(r'\cos{0}');
       final cacheMiss = DateTime.now().difference(start2);
+
+      expect(cacheHit.inMicroseconds, greaterThanOrEqualTo(0));
+      expect(cacheMiss.inMicroseconds, greaterThanOrEqualTo(0));
 
       // Verify both evaluate correctly
       expect(evaluator.evaluate(r'\sin{0}').asNumeric(), equals(0.0));

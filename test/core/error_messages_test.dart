@@ -74,7 +74,15 @@ void main() {
 
     group('ValidationResult Suggestions', () {
       test('validation of unknown function provides suggestion', () {
-        final result = evaluator.validate(r'\unknownfunc{x}');
+        TexprException? parseError;
+        try {
+          evaluator.parse(r'\unknownfunc{x}');
+        } on TexprException catch (e) {
+          parseError = e;
+        }
+
+        expect(parseError, isNotNull);
+        final result = ValidationResult.fromException(parseError!);
         expect(result.isValid, isFalse);
         expect(result.suggestion, isNotNull);
       });

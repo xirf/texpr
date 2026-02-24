@@ -52,7 +52,7 @@ void main() {
 
     test('command with extremely long name should be rejected', () {
       // CVE: Command name length validation
-      final longCommand = r'\' + 'a' * 10000 + '{x}';
+      final longCommand = '${r'\'}${'a' * 10000}{x}';
 
       expect(
         () => evaluator.evaluate(longCommand),

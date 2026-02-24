@@ -453,16 +453,15 @@ void main() {
           final arg2 =
               expr.optionalParam != null ? eval(expr.optionalParam!) : null;
 
-          // Validate arguments
-          if (arg1 is! num || arg2 is! num) {
-            throw EvaluatorException('safediv requires numeric arguments');
+          if (arg2 == null) {
+            throw EvaluatorException('safediv requires two arguments');
           }
 
           if (arg2 == 0) {
             throw EvaluatorException('Division by zero');
           }
 
-          return (arg1 as num) / (arg2 as num);
+          return arg1 / arg2;
         }
         return null;
       });
@@ -567,10 +566,8 @@ void main() {
       ext.registerEvaluator((expr, vars, eval) {
         if (expr is FunctionCall && expr.name == 'slowfib') {
           final arg = eval(expr.argument);
-          if (arg is num) {
-            // This has exponential complexity
-            return fibonacci(arg.toInt());
-          }
+          // This has exponential complexity
+          return fibonacci(arg.toInt());
         }
         return null;
       });
