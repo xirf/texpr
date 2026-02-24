@@ -35,6 +35,7 @@ dart test test/integration/sympy/sympy_export_integration_test.dart
 
 # 2. Activate Python venv and run verification
 source test/integration/sympy/.venv/bin/activate
+pip install -r test/integration/sympy/requirements.txt
 python test/integration/sympy/verify_sympy_export.py
 ```
 
@@ -48,6 +49,20 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install sympy
 ```
+
+Or install from pinned requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+## CI Smoke Suite
+
+GitHub Actions runs this cross-CAS smoke verification in `.github/workflows/ci.yml`:
+
+1. Run Dart test export (`sympy_export_integration_test.dart`)
+2. Install SymPy from `requirements.txt`
+3. Run `verify_sympy_export.py`
 
 ## Files
 

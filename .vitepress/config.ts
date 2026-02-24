@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { fileURLToPath, URL } from 'node:url'
 import nav from "./config/nav";
 import sidebar from "./config/sidebar";
 import UnoCSS from 'unocss/vite'
@@ -40,10 +41,32 @@ export default defineConfig({
             'blog/*',
             'public/*'
           ],
-          domain: 'https://texprjs.com'
+          domain: 'https://texpr.andka.id'
         })
         : undefined,
-    ]
+    ],
+    resolve: {
+      alias: [
+        {
+          find: /^.*\/VPDocAsideOutline\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./components/DocOutline.vue', import.meta.url)
+          )
+        },
+        {
+          find: /^.*\/VPSwitchAppearance\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./components/ThemeSwitcher.vue', import.meta.url)
+          )
+        },
+        {
+          find: /^.*\/VPSidebarItem\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./components/VPSidebarItem.vue', import.meta.url)
+          )
+        }
+      ]
+    }
   },
   themeConfig: {
     logo: "/logo.svg",

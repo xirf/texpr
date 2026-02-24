@@ -12,6 +12,7 @@ class EvaluationCacheKey {
   final int _exprIdentity;
   final int _varsIdentity;
   final bool _isIdentityBased;
+  final List<_NormalizedVariableEntry>? _structuralEntries;
 
   /// Creates an identity-based cache key.
   ///
@@ -25,7 +26,8 @@ class EvaluationCacheKey {
       : _exprIdentity = identityHashCode(expr),
         _varsIdentity = identityHashCode(vars),
         _hash = identityHashCode(expr) ^ identityHashCode(vars),
-        _isIdentityBased = true;
+        _isIdentityBased = true,
+        _structuralEntries = null;
 
   /// Creates a structural cache key using value equality.
   ///
@@ -40,20 +42,59 @@ class EvaluationCacheKey {
   EvaluationCacheKey(Expression expression, Map<String, double> variables)
       : _exprIdentity = expression.hashCode,
         _varsIdentity = 0, // Not used for structural comparison
-        _hash = _computeStructuralHash(expression, variables),
+        _structuralEntries = _normalizedEntries(variables),
+        _hash = _computeStructuralHash(expression, _normalizedEntries(variables)),
         _isIdentityBased = false;
 
-  static int _computeStructuralHash(
-      Expression expression, Map<String, double> variables) {
-    // Create a stable hash from the expression and sorted variable entries
-    final sortedEntries = variables.entries.toList()
+  static List<_NormalizedVariableEntry> _normalizedEntries(
+      Map<String, double> variables) {
+    final entries = variables.entries
+        .map((entry) =>
+            _NormalizedVariableEntry(entry.key, _normalizeDouble(entry.value)))
+        .toList()
       ..sort((a, b) => a.key.compareTo(b.key));
+    return List<_NormalizedVariableEntry>.unmodifiable(entries);
+  }
 
+  static int _computeStructuralHash(
+      Expression expression, List<_NormalizedVariableEntry> entries) {
+    // Create a stable hash from expression and sorted normalized entries.
     var hash = expression.hashCode;
-    for (final entry in sortedEntries) {
-      hash = hash ^ entry.key.hashCode ^ entry.value.hashCode;
+    for (final entry in entries) {
+      hash = Object.hash(hash, entry.key, _normalizedDoubleHash(entry.value));
     }
     return hash;
+  }
+
+  static double _normalizeDouble(double value) {
+    if (value.isNaN) {
+      return double.nan;
+    }
+    // Canonicalize signed zero to avoid -0.0/+0.0 cache key divergence.
+    if (value == 0.0) {
+      return 0.0;
+    }
+    return value;
+  }
+
+  static int _normalizedDoubleHash(double value) {
+    if (value.isNaN) {
+      return 0x7ff80000;
+    }
+    if (value == 0.0) {
+      return 0;
+    }
+    return value.hashCode;
+  }
+
+  static bool _normalizedDoubleEquals(double left, double right) {
+    if (left.isNaN && right.isNaN) {
+      return true;
+    }
+    if (left == 0.0 && right == 0.0) {
+      return true;
+    }
+    return left == right;
   }
 
   @override
@@ -71,13 +112,43 @@ class EvaluationCacheKey {
           _varsIdentity == other._varsIdentity;
     }
 
-    // Fallback for mixed or structural keys (deprecated path)
-    return _exprIdentity == other._exprIdentity;
+    if (_isIdentityBased != other._isIdentityBased) {
+      return false;
+    }
+
+    final leftEntries = _structuralEntries;
+    final rightEntries = other._structuralEntries;
+    if (leftEntries == null || rightEntries == null) {
+      return false;
+    }
+
+    if (_exprIdentity != other._exprIdentity ||
+        leftEntries.length != rightEntries.length) {
+      return false;
+    }
+
+    for (var index = 0; index < leftEntries.length; index++) {
+      final left = leftEntries[index];
+      final right = rightEntries[index];
+      if (left.key != right.key ||
+          !_normalizedDoubleEquals(left.value, right.value)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
   String toString() =>
       'EvaluationCacheKey(hash: $_hash, identity: $_isIdentityBased)';
+}
+
+class _NormalizedVariableEntry {
+  final String key;
+  final double value;
+
+  const _NormalizedVariableEntry(this.key, this.value);
 }
 
 /// A cache key for differentiation results.

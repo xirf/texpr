@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { withBase } from 'vitepress'
 
 const input = ref('2 + 3 * 4')
 const output = ref('')
@@ -24,25 +25,31 @@ function loadExample(ex) {
 
 onMounted(async () => {
   try {
-    // Determine base URL (handle production/dev paths if needed)
-    const wasmUrl = '/wasm/main.wasm'
-    const mjsUrl = '/wasm/main.mjs'
+    const wasmUrl = withBase('/wasm/main.wasm')
+    const mjsUrl = withBase('/wasm/main.mjs')
 
-    // Vite workaround: fetch the .mjs file as text, create a Blob, and import it.
-    // This avoids "file is in /public and ... should not be imported" errors.
     const mjsResponse = await fetch(mjsUrl)
-    if (!mjsResponse.ok) throw new Error(`Failed to fetch runtime: ${mjsResponse.statusText}`)
-    const mjsText = await mjsResponse.text()
-    const mjsBlob = new Blob([mjsText], { type: 'text/javascript' })
-    const mjsBlobUrl = URL.createObjectURL(mjsBlob)
+    if (!mjsResponse.ok) {
+      throw new Error(`Failed to fetch runtime (${mjsResponse.status}): ${mjsUrl}`)
+    }
+    const mjsContentType = mjsResponse.headers.get('content-type') || ''
+    if (mjsContentType.includes('text/html')) {
+      throw new Error(`Runtime URL returned HTML instead of JavaScript: ${mjsUrl}`)
+    }
 
-    const dartModulePromise = WebAssembly.compileStreaming(fetch(wasmUrl))
-    const dart2wasm_runtime = await import(/* @vite-ignore */ mjsBlobUrl)
-    const moduleInstance = await dart2wasm_runtime.instantiate(dartModulePromise, {})
-    await dart2wasm_runtime.invoke(moduleInstance)
-    
-    // Clean up
-    URL.revokeObjectURL(mjsBlobUrl)
+    const wasmResponse = await fetch(wasmUrl)
+    if (!wasmResponse.ok) {
+      throw new Error(`Failed to fetch WASM (${wasmResponse.status}): ${wasmUrl}`)
+    }
+    const wasmContentType = wasmResponse.headers.get('content-type') || ''
+    if (wasmContentType.includes('text/html')) {
+      throw new Error(`WASM URL returned HTML (likely missing file): ${wasmUrl}`)
+    }
+
+    const dart2wasm_runtime = await import(/* @vite-ignore */ mjsUrl)
+    const compiledApp = await dart2wasm_runtime.compileStreaming(Promise.resolve(wasmResponse))
+    const app = await compiledApp.instantiate({})
+    app.invokeMain()
 
     // Wait for dart main to attach to window
     // It should happen synchronously after invoke, but let's be safe

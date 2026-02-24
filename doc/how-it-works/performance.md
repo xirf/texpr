@@ -197,10 +197,13 @@ final evaluator = Texpr(
    }
    ```
 
-2. **Validate before evaluating**
+2. **Parse-check before evaluating**
    ```dart
-   final validation = texpr.validate(input);
-   if (!validation.isValid) return handleError(validation);
+   try {
+     texpr.parse(input);
+   } on TexprException catch (e) {
+     return handleError(e);
+   }
    ```
 
 3. **Consider timeouts**

@@ -81,4 +81,5 @@ print(slope.asNumeric());  // 12.0
 - [Core Concepts](/guide/concepts) – Understand key ideas
 - [Boolean Logic](/guide/logic) – Logic operators and comparisons
 - [Piecewise Functions](/guide/piecewise) – Conditional expressions and cases
+- [Deprecation Migration](/guide/migration-validate) – Replace `validate()` / `isValid()` with `parse()`
 - [API Reference](/reference/) – Complete method documentation

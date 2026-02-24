@@ -27,7 +27,9 @@ class Parser extends BaseParser
           consume(TokenType.variable, 'Expected variable name after let').value;
       consume(TokenType.equals, 'Expected = after variable name');
       final value = parseExpression();
-      return AssignmentExpr(variable, value);
+      final assignment = AssignmentExpr(variable, value);
+      annotateCompileTimeEvaluability(assignment);
+      return assignment;
     }
 
     // 2. Check for function definition: f(x, y) = ...
@@ -86,7 +88,9 @@ class Parser extends BaseParser
         consume(TokenType.equals, 'Expected =');
 
         final body = parseExpression();
-        return FunctionDefinitionExpr(name, params, body);
+        final functionDefinition = FunctionDefinitionExpr(name, params, body);
+        annotateCompileTimeEvaluability(functionDefinition);
+        return functionDefinition;
       }
     }
 
@@ -113,6 +117,7 @@ class Parser extends BaseParser
       }
     }
 
+    annotateCompileTimeEvaluability(expr);
     return expr;
   }
 }

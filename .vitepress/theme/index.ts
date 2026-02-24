@@ -5,7 +5,9 @@ import Layout from '../components/Layouts.vue'
 import Ray from '../components/Ray.vue'
 import Hero from '../components/Hero.vue'
 import EYN from '../components/EYN.vue'
-import './custom.css'
+
+import './vars.css'
+import './override.css'
 
 export default {
   extends: DefaultTheme,
