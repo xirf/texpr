@@ -4,7 +4,7 @@
 
 ---
 
-## Current State (v0.2.0)
+## Current State (v0.1.4)
 
 ### ✅ What Works
 
@@ -205,7 +205,7 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 
 > These are acknowledged limitations in our test suite:
 
-- **No automated cross-CAS validation** — Results are manually verified, not programmatically compared to SymPy/Mathematica
+- **Cross-CAS coverage is smoke-level** — CI compares representative cases against SymPy, but not exhaustive property-level equivalence
 - **No mutation testing** — Code coverage is measured, but mutation coverage is not
 
 ---
@@ -254,7 +254,7 @@ We aim to be the **best Dart library for evaluating mathematical expressions wri
 | Task                       | Status | Description                                                       |
 | -------------------------- | ------ | ----------------------------------------------------------------- |
 | Evaluability enum          | ✅      | Add `Evaluability.numeric`, `.symbolic`, `.unevaluable` to nodes  |
-| Compile-time evaluability  | 📋      | Parser annotates AST with evaluability at parse time              |
+| Compile-time evaluability  | ✅      | Parser annotates AST with evaluability at parse time              |
 | Semantic invariant testing | ✅      | Property-based tests for derivative correctness, round-trip, etc. |
 
 **Why this matters:** As the parsed surface area grows (tensors, quantifiers, set notation), the gap between "parses successfully" and "has computable meaning" becomes a usability hazard. Explicit evaluability prevents false expectations.
@@ -281,5 +281,26 @@ enum Evaluability {
 
 ---
 
-**Last Updated:** 2026-01-08
+### Phase 7: Next Release Plan (v0.1.4)
+
+**Goal:** Improve correctness at numeric edges, strengthen validation rigor, and reduce developer confusion without introducing major API churn.
+
+| Task                                                | Status | Description                                                                 |
+| --------------------------------------------------- | ------ | --------------------------------------------------------------------------- |
+| Cache key normalization for `-0.0` and `NaN`       | ✅      | Canonicalize floating-point edge values in cache keys to prevent collisions |
+| Evaluability metadata visibility in JSON export     | ✅      | Optionally include compile-time evaluability info in AST JSON output        |
+| Automated cross-CAS validation smoke suite          | ✅      | Add CI-level numeric tolerance checks against SymPy for representative cases |
+| Benchmark guardrail for evaluability fast-path      | ✅      | Add micro-benchmark comparing cached vs visitor-based evaluability lookup   |
+| README and docs consistency pass                    | ✅      | Align version examples, test-count claims, and links with current release   |
+| Deprecation migration guide (`validate`/`isValid`)  | ✅      | Add explicit migration snippets before eventual 1.0 removal                 |
+
+**Release Gate (v0.1.4):**
+- Cache key edge-case tests pass for signed zero and NaN.
+- Benchmark artifact is reproducible in CI and checked into benchmark docs.
+- Docs no longer contain stale version or outdated compatibility claims.
+- Public API changes remain additive only (no breaking changes).
+
+---
+
+**Last Updated:** 2026-02-24
 

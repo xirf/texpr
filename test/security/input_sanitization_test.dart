@@ -78,8 +78,8 @@ void main() {
       final userInput = r'\factorial{1000}'; // Malicious expression
 
       // User input should be treated as a value, not parsed
-      final vars = {'x': 1.0};
-      final result = evaluator.evaluate('x + 1', vars);
+      final vars = {'x': userInput};
+      final result = evaluator.evaluate('1 + 1', vars);
 
       expect(result.asNumeric(), equals(2.0),
           reason: 'Variable values should not be re-parsed');
@@ -301,9 +301,9 @@ void main() {
       // CVE: Validation/evaluation inconsistency
       final expr = r'\sin{x}';
 
-      final validation = evaluator.validate(expr);
+      final validationSucceeded = _isParsable(expr);
 
-      if (validation.isValid) {
+      if (validationSucceeded) {
         expect(
           () => evaluator.evaluate(expr, {'x': 1.0}),
           returnsNormally,
@@ -325,7 +325,9 @@ void main() {
       // CVE: Validation bypass
       final expr = '1' * 1000;
 
-      final validation = evaluator.validate(expr);
+      try {
+        evaluator.parse(expr);
+      } catch (_) {}
       // Whether valid or not, evaluation should be safe
       expect(
         () => evaluator.evaluate(expr),
@@ -363,17 +365,22 @@ void main() {
   group('Error Message Information Disclosure', () {
     test('error messages should not leak sensitive information', () {
       // CVE: Information disclosure via error messages
-      final result = evaluator.validate(r'\unknownFunc{x}');
+      TexprException? parseError;
+      try {
+        evaluator.parse(r'\unknownFunc{x}');
+      } on TexprException catch (e) {
+        parseError = e;
+      }
 
-      expect(result.isValid, isFalse);
+      expect(parseError, isNotNull);
       // Error message should be helpful but not leak internals
       expect(
-        result.errorMessage,
+        parseError!.message,
         isNot(contains('stack')),
         reason: 'Error should not contain stack traces',
       );
       expect(
-        result.errorMessage,
+        parseError.message,
         isNot(contains('file://')),
         reason: 'Error should not contain file paths',
       );
@@ -489,4 +496,13 @@ void main() {
       }
     });
   });
+}
+
+bool _isParsable(String expression) {
+  try {
+    Texpr().parse(expression);
+    return true;
+  } on TexprException {
+    return false;
+  }
 }

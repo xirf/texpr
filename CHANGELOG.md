@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## 0.1.4 - 2026-02-24
+
+### Added
+
+- Compile-time evaluability annotation: parser now annotates every AST node with `EvaluabilityInfo` during parse.
+- New AST metadata API via `Expression.compileTimeEvaluabilityInfo` for tooling and diagnostics.
+- Added TDD coverage for parser-time annotation and context-aware resolution in `test/core/compile_time_evaluability_test.dart`.
+- Added v0.1.4 improvement plan to roadmap (correctness, benchmarks, docs, migration guidance).
+- JSON AST export now supports `toJson(includeEvaluability: true)` to include optional compile-time evaluability metadata.
+- Added CI workflow with SymPy smoke verification (Dart export + Python validation with tolerance checks).
+- Added evaluability fast-path micro-benchmark and CI guardrail artifact generation.
+- Added migration guide for deprecated `isValid()` / `validate()` APIs: `doc/guide/migration-validate.md`.
+
+### Fixed
+
+- `getEvaluability()` now uses compile-time metadata when available, avoiding repeated full-tree traversals for parsed expressions.
+- Normalized structural cache keys for floating-point edge values so `-0.0` and `0.0` map to the same key and `NaN` is handled consistently.
+- Updated README and docs links/examples to match current project structure and versioning.
+
+### Removed
+
 ## 0.1.3 - 2026-01-12
 
 **Boolean Logic, Bug Fixes & Doc Improvements**

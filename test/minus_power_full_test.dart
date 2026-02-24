@@ -5,7 +5,7 @@ void main() {
   final evaluator = Texpr();
 
   test('isValid should accept expression with unary minus and power', () {
-    expect(evaluator.isValid(r'-(x-1)^{2}+4'), isTrue);
+    expect(() => evaluator.parse(r'-(x-1)^{2}+4'), returnsNormally);
   });
 
   test('evaluate numeric matches expected value', () {

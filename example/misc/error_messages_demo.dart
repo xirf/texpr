@@ -79,16 +79,18 @@ void main() {
   }
   print("\n${'-' * 60}\n");
 
-  // Example 8: Validation API with error details
-  print('Example 8: Using Validation API');
+  // Example 8: parse() with error details
+  print('Example 8: Using parse() errors');
   print('Expression: \\sin{x\n');
-  final result = evaluator.validate(r'\sin{x');
-  if (!result.isValid) {
-    print('Valid: ${result.isValid}');
-    print('Error: ${result.errorMessage}');
-    print('Position: ${result.position}');
-    print('Suggestion: ${result.suggestion}');
-    print('Exception Type: ${result.exceptionType}');
+  try {
+    evaluator.parse(r'\sin{x');
+    print('Valid: true');
+  } on TexprException catch (e) {
+    print('Valid: false');
+    print('Error: ${e.message}');
+    print('Position: ${e.position}');
+    print('Suggestion: ${e.suggestion}');
+    print('Exception Type: ${e.runtimeType}');
   }
   print("\n${'-' * 60}\n");
 

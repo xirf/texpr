@@ -6,9 +6,9 @@ void main() {
 
   final evaluator = Texpr();
 
-  // Example 1: Basic isValid() usage
-  print('1. Basic Validation with isValid()');
-  print('   ---------------------------------');
+  // Example 1: Basic parse() + try/catch usage
+  print('1. Basic Validation with parse()');
+  print('   --------------------------------');
   _checkValid(evaluator, '2 + 3');
   _checkValid(evaluator, r'\sin{0}');
   _checkValid(evaluator, r'x^{2} + 1');
@@ -16,9 +16,9 @@ void main() {
   _checkValid(evaluator, r'\unknown{5}'); // Invalid: unknown command
   print('');
 
-  // Example 2: Detailed validation with validate()
-  print('2. Detailed Validation with validate()');
-  print('   ------------------------------------');
+  // Example 2: Detailed validation with parse() errors
+  print('2. Detailed Validation with parse() errors');
+  print('   -----------------------------------------');
   _detailedValidation(evaluator, r'\frac{1}{2}'); // Valid
   _detailedValidation(evaluator, r'\log_{2}{8}'); // Valid
   _detailedValidation(evaluator, r'\sin{'); // Invalid
@@ -57,14 +57,14 @@ void main() {
   ];
 
   for (final input in userInputs) {
-    final result = evaluator.validate(input);
-    if (result.isValid) {
+    try {
+      evaluator.parse(input);
       print('   ✓ "$input" - Valid');
-    } else {
+    } on TexprException catch (e) {
       print('   ✗ "$input"');
-      print('     Error: ${result.errorMessage}');
-      if (result.suggestion != null) {
-        print('     Suggestion: ${result.suggestion}');
+      print('     Error: ${e.message}');
+      if (e.suggestion != null) {
+        print('     Suggestion: ${e.suggestion}');
       }
     }
   }
@@ -77,53 +77,65 @@ void main() {
   final evalNoImplicit = Texpr(allowImplicitMultiplication: false);
 
   print('   With implicit multiplication enabled:');
-  print('     2x is valid: ${evalWithImplicit.isValid('2x')}');
-  print('     3xy is valid: ${evalWithImplicit.isValid('3xy')}');
+  print('     2x is valid: ${_isParseValid(evalWithImplicit, '2x')}');
+  print('     3xy is valid: ${_isParseValid(evalWithImplicit, '3xy')}');
 
   print('   With implicit multiplication disabled:');
-  print('     2x is valid: ${evalNoImplicit.isValid('2x')}');
-  final timesXValid = evalNoImplicit.isValid(r'2 \times x');
+  print('     2x is valid: ${_isParseValid(evalNoImplicit, '2x')}');
+  final timesXValid = _isParseValid(evalNoImplicit, r'2 \times x');
   print('     2 \\times x is valid: $timesXValid');
   print('');
 
-  // Example 7: Using ValidationResult properties
-  print('7. ValidationResult Properties');
-  print('   ---------------------------');
-  final invalidResult = evaluator.validate(r'\sin{');
+  // Example 7: TexprException properties
+  print('7. TexprException Properties');
+  print('   -------------------------');
   print('   Expression: r\'\\sin{\'');
-  print('   isValid: ${invalidResult.isValid}');
-  print('   errorMessage: ${invalidResult.errorMessage}');
-  print('   position: ${invalidResult.position}');
-  print('   suggestion: ${invalidResult.suggestion}');
-  print('   exceptionType: ${invalidResult.exceptionType}');
+  try {
+    evaluator.parse(r'\sin{');
+    print('   isValid: true');
+  } on TexprException catch (e) {
+    print('   isValid: false');
+    print('   errorMessage: ${e.message}');
+    print('   position: ${e.position}');
+    print('   suggestion: ${e.suggestion}');
+    print('   exceptionType: ${e.runtimeType}');
+  }
   print('');
 
   print('=== Demo Complete ===');
 }
 
-/// Helper function to demonstrate isValid()
+bool _isParseValid(Texpr evaluator, String expression) {
+  try {
+    evaluator.parse(expression);
+    return true;
+  } on TexprException {
+    return false;
+  }
+}
+
+/// Helper function to demonstrate parse() validation
 void _checkValid(Texpr evaluator, String expression) {
-  final isValid = evaluator.isValid(expression);
+  final isValid = _isParseValid(evaluator, expression);
   final status = isValid ? '✓' : '✗';
   print('   $status "$expression" - ${isValid ? 'Valid' : 'Invalid'}');
 }
 
-/// Helper function to demonstrate validate()
+/// Helper function to demonstrate parse() error reporting
 void _detailedValidation(Texpr evaluator, String expression) {
-  final result = evaluator.validate(expression);
-
-  if (result.isValid) {
+  try {
+    evaluator.parse(expression);
     print('   ✓ "$expression"');
     print('     Status: Valid');
-  } else {
+  } on TexprException catch (e) {
     print('   ✗ "$expression"');
     print('     Status: Invalid');
-    print('     Error: ${result.errorMessage}');
-    if (result.position != null) {
-      print('     Position: ${result.position}');
+    print('     Error: ${e.message}');
+    if (e.position != null) {
+      print('     Position: ${e.position}');
     }
-    if (result.suggestion != null) {
-      print('     Suggestion: ${result.suggestion}');
+    if (e.suggestion != null) {
+      print('     Suggestion: ${e.suggestion}');
     }
   }
   print('');

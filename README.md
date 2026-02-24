@@ -1,6 +1,6 @@
 # TeXpr 🧮
 
-[![Tests](https://img.shields.io/badge/tests-1874%20passed-brightgreen)](https://github.com/xirf/texpr)
+[![CI](https://github.com/xirf/texpr/actions/workflows/ci.yml/badge.svg)](https://github.com/xirf/texpr/actions/workflows/ci.yml)
 [![Dart](https://img.shields.io/badge/dart-%3E%3D3.0.0-blue)](https://github.com/xirf/texpr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Pub Version](https://img.shields.io/pub/v/texpr)](https://pub.dev/packages/texpr)
@@ -29,7 +29,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  texpr: ^0.0.1
+  texpr: ^0.1.4
 
 ```
 
@@ -100,19 +100,20 @@ final matrixResult = evaluator.evaluate(r'''
 
 ## Exceptions
 
-*   [TexprException](exceptions.md): Base class for all library exceptions.
-*   [ValidationResult](exceptions.md#validationresult): Detailed validation information.
+* [TexprException](doc/reference/exceptions.md): Base class for all library exceptions.
+* [ValidationResult](doc/reference/exceptions.md): Detailed validation information.
 
 ## Security
 
-*   [Security Considerations](../security.md): Overview of security mitigations and limits.
+* [Security Considerations](doc/advanced/security.md): Overview of security mitigations and limits.
 The parser provides error location offsets and suggestions for syntax errors.
 
 ```dart
-final validation = evaluator.validate(r'\frac{1{2}');
-if (!validation.isValid) {
-  print('Error at ${validation.position}: ${validation.errorMessage}');
-  // Suggestion: "Add a closing brace '}'"
+try {
+  evaluator.parse(r'\frac{1{2}');
+} on TexprException catch (e) {
+  print('Error at ${e.position}: ${e.message}');
+  print('Suggestion: ${e.suggestion}');
 }
 
 // Function name suggestions
@@ -197,14 +198,15 @@ Below is a selection of examples showcasing the library's capabilities.
 
 ## 📖 Documentation
 
-* **[Getting Started](doc/getting_started.md)**
-* **[LaTeX Commands Reference](doc/latex_commands.md)**
-* **[Symbolic Algebra](doc/symbolic_algebra.md)**
-* **[Boolean Logic](doc/guide/logic.md)**
-* **[Function Reference](doc/functions/README.md)**
-* **[Extending the Library](doc/extensions.md)**
-* **[Export Features](doc/features/export.md)**
-* **[Security Considerations](doc/security.md)**
+* **[Guide Index](doc/guide/index.md)**
+* **[Quick Start](doc/guide/quick-start.md)**
+* **[Installation](doc/guide/installation.md)**
+* **[API Reference](doc/reference/api.md)**
+* **[LaTeX Grammar](doc/reference/grammar.md)**
+* **[Functions](doc/reference/functions.md)**
+* **[Known Issues](doc/reference/known-issues.md)**
+* **[Performance](doc/how-it-works/performance.md)**
+* **[Deprecation Migration (`validate` / `isValid`)](doc/guide/migration-validate.md)**
 
 ## 🤝 Contributing
 

@@ -144,8 +144,8 @@ void main() {
       });
 
       test('validates multi-char variable expressions', () {
-        expect(evalNoImplicit.isValid('abc'), isTrue);
-        expect(evalNoImplicit.isValid('mass'), isTrue);
+        expect(() => evalNoImplicit.parse('abc'), returnsNormally);
+        expect(() => evalNoImplicit.parse('mass'), returnsNormally);
       });
     });
   });

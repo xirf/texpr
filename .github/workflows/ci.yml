@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dart-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Run test suite
+        run: dart test
+
+  sympy-smoke:
+    runs-on: ubuntu-latest
+    needs: dart-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dart dependencies
+        run: dart pub get
+
+      - name: Install SymPy dependencies
+        run: pip install -r test/integration/sympy/requirements.txt
+
+      - name: Generate cross-CAS test vectors
+        run: dart test test/integration/sympy/sympy_export_integration_test.dart
+
+      - name: Verify against SymPy
+        run: python test/integration/sympy/verify_sympy_export.py
+
+      - name: Upload SymPy verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sympy-smoke-artifacts
+          path: |
+            test/integration/sympy/test_cases.json
+            test/integration/sympy/verification_results.json
+
+  evaluability-guardrail:
+    runs-on: ubuntu-latest
+    needs: dart-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Run evaluability fast-path benchmark guardrail
+        run: dart run benchmark/evaluability_fast_path_benchmark.dart --enforce --min-speedup=1.02 --json-out=benchmark/results/evaluability_fast_path.json
+
+      - name: Upload benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluability-fast-path-benchmark
+          path: benchmark/results/evaluability_fast_path.json

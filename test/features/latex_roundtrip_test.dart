@@ -344,9 +344,10 @@ void main() {
     test('piecewise conditional via cases (doc reference)', () {
       // This test documents the correct approach for conditionals
       expect(
-          evaluator
-              .isValid(r'\begin{cases} x & x > 0 \\ -x & x \leq 0 \end{cases}'),
-          isTrue);
+        () => evaluator
+            .parse(r'\begin{cases} x & x > 0 \\ -x & x \leq 0 \end{cases}'),
+        returnsNormally,
+      );
     });
   });
 

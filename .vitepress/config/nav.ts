@@ -94,7 +94,7 @@ export default [
         activeMatch: "^/advanced/",
     },
     {
-        text: 'v0.1.3',
+        text: 'v0.1.4',
         items: [
             {
                 text: "Project Info",
@@ -102,6 +102,7 @@ export default [
                     { text: "Changelog", link: "https://github.com/xirf/texpr/blob/main/CHANGELOG.md" },
                     { text: "Release Notes", link: "https://github.com/xirf/texpr/releases" },
                     { text: "Contributing", link: "https://github.com/xirf/texpr/blob/main/CONTRIBUTING.md" },
+                    { text: "Migration Guide", link: "/guide/migration-validate" },
                 ],
             },
             {

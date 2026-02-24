@@ -301,6 +301,42 @@ void main() {
     });
 
     group('JSON Serialization', () {
+      test('does not include evaluability by default', () {
+        final expr = evaluator.parse('x + 1');
+        final json = expr.toJson();
+
+        expect(json.containsKey('evaluability'), isFalse);
+        expect((json['left'] as Map<String, dynamic>).containsKey('evaluability'),
+            isFalse);
+      });
+
+      test('includes evaluability when explicitly requested', () {
+        final expr = evaluator.parse('x + 1');
+        final json = expr.toJson(includeEvaluability: true);
+
+        expect(json['evaluability'], isA<Map<String, dynamic>>());
+        expect(json['evaluability']['kind'], equals('unevaluable'));
+        expect(json['evaluability']['freeVariables'], equals(['x']));
+
+        final left = json['left'] as Map<String, dynamic>;
+        final right = json['right'] as Map<String, dynamic>;
+        expect(left['evaluability']['kind'], equals('unevaluable'));
+        expect(left['evaluability']['freeVariables'], equals(['x']));
+        expect(right['evaluability']['kind'], equals('numeric'));
+        expect(right['evaluability']['freeVariables'], isEmpty);
+      });
+
+      test('omits evaluability when metadata is unavailable', () {
+        final manualExpr = BinaryOp(
+          const NumberLiteral(1),
+          BinaryOperator.add,
+          const NumberLiteral(2),
+        );
+
+        final json = manualExpr.toJson(includeEvaluability: true);
+        expect(json.containsKey('evaluability'), isFalse);
+      });
+
       test('can be encoded to JSON string', () {
         final expr = evaluator.parse(r'\frac{x^{2} + 1}{2}');
         final json = expr.toJson();
